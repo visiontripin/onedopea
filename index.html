@@ -9,7 +9,7 @@
 html, body {
   width: 100%;
   height: 100%;
-  height: 100dvh; /* Динамическая высота для мобильных браузеров */
+  height: 100dvh;
   background: #000;
   overflow: hidden;
   user-select: none;
@@ -106,8 +106,6 @@ canvas {
     0 0 28px #0f0,
     0 0 55px #0f0;
 }
-
-/* Усиленный глитч-эффект для ONEDOPEA */
 #oracle.onedopea-mode {
   animation: glitch-skew 0.4s infinite linear alternate-reverse;
 }
@@ -124,7 +122,6 @@ canvas {
     0 0 40px #0f0;
   animation: glitch-anim 0.15s infinite;
 }
-
 @keyframes pulse {
   0%, 100% { filter: brightness(1) drop-shadow(0 0 8px #0f0); }
   50% { filter: brightness(1.35) drop-shadow(0 0 22px #0f0); }
@@ -145,8 +142,6 @@ canvas {
   80% { transform: skew(1deg); }
   100% { transform: skew(0deg); }
 }
-
-/* Анимация выключения телевизора */
 #tv-effect {
   position: fixed;
   inset: 0;
@@ -176,15 +171,17 @@ canvas {
 
 <script>
 const C = document.getElementById('c');
-const X = C.getContext('2d', { alpha: false }); // Оптимизация: отключаем альфа-канал фона canvas
+const X = C.getContext('2d', { alpha: false });
 const oracleEl = document.getElementById('oracle');
 const GLYPHS = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-const S = 18;          // размер шрифта дождя
-const N = 10;          // строк до рассыпания
-const MAX_CRUMBS = 300; // Оптимизация: снижено с 700 для мобильных устройств
+const S = 18;
+const N = 10;
+const MAX_CRUMBS = 300;
 let drops = [];
 let crumbs = [];
 let maxDrops = 40;
+let rainActive = true;
+let collapseStart = 0;
 
 const TITLES = [
   { word: 'ORACLE', url: 'https://t.me/OneDope_bot' },
@@ -214,37 +211,29 @@ function randomGlyph() {
   return GLYPHS[(Math.random() * GLYPHS.length) | 0];
 }
 
-function setupTitle(index, startAt = performance.now()) {
-  if (index === -1) {
-    currentTitleIndex = -1;
-    const item = SPECIAL_TITLE;
-    oracleEl.href = item.url;
-    oracleEl.title = item.word + ' → ' + item.url;
-    oracleEl.setAttribute('aria-label', item.word + ' Telegram link');
-    oracleEl.classList.remove('done');
-    oracleEl.classList.add('inactive', 'onedopea-mode');
-    oracleEl.innerHTML = '';
-    letters = item.word.split('').map(ch => {
-      const span = document.createElement('span');
-      span.dataset.target = ch;
-      span.dataset.locked = '0';
-      span.dataset.hidden = '0';
-      span.textContent = '';
-      oracleEl.appendChild(span);
-      return span;
-    });
-    titlePhase = 'appearing';
-    phaseStart = startAt;
-    return;
-  }
+function getSafeZone() {
+  const w = Math.min(C.width * 0.85, 800);
+  const h = C.height * 0.30;
+  return {
+    x: (C.width - w) / 2,
+    y: (C.height - h) / 2,
+    w, h
+  };
+}
 
+function setupTitle(index, startAt = performance.now()) {
   currentTitleIndex = index;
-  const item = TITLES[currentTitleIndex];
+  const item = index === -1 ? SPECIAL_TITLE : TITLES[index];
   oracleEl.href = item.url;
   oracleEl.title = item.word + ' → ' + item.url;
   oracleEl.setAttribute('aria-label', item.word + ' Telegram link');
-  oracleEl.classList.remove('done', 'onedopea-mode');
-  oracleEl.classList.add('inactive');
+  oracleEl.classList.remove('done');
+  if (index === -1) {
+    oracleEl.classList.add('inactive', 'onedopea-mode');
+  } else {
+    oracleEl.classList.remove('onedopea-mode');
+    oracleEl.classList.add('inactive');
+  }
   oracleEl.innerHTML = '';
   letters = item.word.split('').map(ch => {
     const span = document.createElement('span');
@@ -262,14 +251,18 @@ function setupTitle(index, startAt = performance.now()) {
 setupTitle(0, performance.now() + START_DELAY);
 
 function triggerTvOff() {
-  titlePhase = 'tv_off';
-  const tvOverlay = document.getElementById('tv-effect');
-  tvOverlay.classList.add('active');
+  titlePhase = 'tv_collapse';
+  collapseStart = performance.now();
+  rainActive = false;
   
-  setTimeout(() => {
-    tvOverlay.classList.remove('active');
-    setupTitle(-1, performance.now());
-  }, 600);
+  drops.forEach(d => {
+    d.collapsing = true;
+    d.vx = 0;
+    d.vy = 0;
+  });
+  crumbs.forEach(c => {
+    c.collapsing = true;
+  });
 }
 
 function updateCenterTitle(now) {
@@ -279,10 +272,9 @@ function updateCenterTitle(now) {
     }
     return;
   }
-  if (titlePhase === 'tv_off') return;
+  if (titlePhase === 'tv_collapse' || titlePhase === 'tv_off') return;
   if (now < phaseStart) return;
 
-  /* --- Появление надписи --- */
   if (titlePhase === 'appearing') {
     const t = now - phaseStart;
     letters.forEach((el, i) => {
@@ -307,12 +299,10 @@ function updateCenterTitle(now) {
     return;
   }
 
-  /* --- Надпись собрана и является ссылкой --- */
   if (titlePhase === 'hold') {
     const holdDuration = currentTitleIndex === -1 ? 7000 : HOLD_TIME;
     
     if (currentTitleIndex === -1) {
-      // Усиленный глитч для ONEDOPEA
       letters.forEach(el => {
         if (Math.random() < 0.08) {
           const target = el.dataset.target;
@@ -327,7 +317,6 @@ function updateCenterTitle(now) {
         }
       });
     } else {
-      // Лёгкий редкий glitch у обычной надписи
       letters.forEach(el => {
         if (Math.random() < 0.0015) {
           const target = el.dataset.target;
@@ -353,7 +342,6 @@ function updateCenterTitle(now) {
     return;
   }
 
-  /* --- Исчезновение надписи (рассыпание на символы) --- */
   if (titlePhase === 'disappearing') {
     const t = now - phaseStart;
     const scrambleTime = currentTitleIndex === -1 ? DISAPPEAR_SCRAMBLE_TIME * 0.8 : DISAPPEAR_SCRAMBLE_TIME;
@@ -373,11 +361,11 @@ function updateCenterTitle(now) {
     const allHidden = letters.every(el => el.dataset.hidden === '1');
     if (allHidden) {
       if (currentTitleIndex === -1) {
-        // Цикл начинается заново
         completedCycles = 0;
         pendingTitleIndex = 0;
         titlePhase = 'between';
         phaseStart = now + BETWEEN_WORDS_TIME;
+        rainActive = true; // Возобновляем дождь в новом цикле
       } else {
         if (currentTitleIndex === TITLES.length - 1) {
           completedCycles++;
@@ -395,11 +383,9 @@ function updateCenterTitle(now) {
   }
 }
 
-/* ---------- Canvas resize (оптимизировано для мобильных) ---------- */
 function resize() {
   C.width = window.innerWidth;
   C.height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-  // Оптимизация: снижено количество капель для плавности на смартфонах
   maxDrops = Math.max(15, Math.floor(C.width / S) * 0.25);
 }
 resize();
@@ -408,7 +394,6 @@ if (window.visualViewport) {
   window.visualViewport.addEventListener('resize', resize);
 }
 
-/* ---------- Matrix rain ---------- */
 function glyphAt(d, i) {
   return GLYPHS[((d.glyph - i) % GLYPHS.length + GLYPHS.length) % GLYPHS.length];
 }
@@ -421,6 +406,9 @@ function spawnDrop() {
     speed: 1.2 + Math.random() * 2.2,
     glyph: (Math.random() * GLYPHS.length) | 0,
     shattered: false,
+    collapsing: false,
+    vx: 0,
+    vy: 0,
     alpha: 1
   });
 }
@@ -430,7 +418,7 @@ function shatterDrop(d) {
   for (let i = 0; i < N; i++) {
     const py = d.y - i * S;
     if (py < -S || py > C.height + S) continue;
-    const count = 4 + ((Math.random() * 4) | 0); // Оптимизация: меньше осколков
+    const count = 4 + ((Math.random() * 4) | 0);
     for (let j = 0; j < count; j++) {
       crumbs.push({
         x: d.x + Math.random() * S,
@@ -445,13 +433,42 @@ function shatterDrop(d) {
         ch: glyphAt(d, i),
         chSize: S * (0.28 + Math.random() * 0.5),
         rot: (Math.random() - 0.5) * 4,
-        rotV: (Math.random() - 0.5) * 0.28
+        rotV: (Math.random() - 0.5) * 0.28,
+        collapsing: false
       });
     }
   }
 }
 
 function updateDrop(d) {
+  // Затягивание в центр (эффект чёрной дыры перед TV off)
+  if (d.collapsing) {
+    const cx = C.width / 2;
+    const cy = C.height / 2;
+    const dx = cx - d.x;
+    const dy = cy - d.y;
+    const dist = Math.hypot(dx, dy) || 1;
+    const elapsed = performance.now() - collapseStart;
+    const accel = 0.8 + elapsed / 800;
+    d.vx = (d.vx || 0) + (dx / dist) * accel;
+    d.vy = (d.vy || 0) + (dy / dist) * accel;
+    d.vx *= 0.94;
+    d.vy *= 0.94;
+    d.x += d.vx;
+    d.y += d.vy;
+    d.alpha = Math.min(1, dist / 100);
+    return dist > 15;
+  }
+  
+  // Безопасная зона: рассыпаем букву, если она входит в центральную область надписи
+  if (!d.shattered) {
+    const sz = getSafeZone();
+    if (d.y >= sz.y && d.y <= sz.y + sz.h && 
+        d.x >= sz.x && d.x <= sz.x + sz.w) {
+      shatterDrop(d);
+    }
+  }
+  
   if (d.shattered) {
     d.alpha -= 0.07;
     return d.alpha > 0;
@@ -465,6 +482,24 @@ function updateDrop(d) {
 }
 
 function updateCrumb(c) {
+  if (c.collapsing) {
+    const cx = C.width / 2;
+    const cy = C.height / 2;
+    const dx = cx - c.x;
+    const dy = cy - c.y;
+    const dist = Math.hypot(dx, dy) || 1;
+    const elapsed = performance.now() - collapseStart;
+    const accel = 1.5 + elapsed / 400;
+    c.vx += (dx / dist) * accel;
+    c.vy += (dy / dist) * accel;
+    c.vx *= 0.92;
+    c.vy *= 0.92;
+    c.x += c.vx;
+    c.y += c.vy;
+    c.life = Math.min(1, dist / 60);
+    return dist > 10;
+  }
+  
   c.x += c.vx;
   c.y += c.vy;
   c.vy += 0.16;
@@ -481,7 +516,6 @@ function drawDrop(d) {
     if (py < -S || py > C.height) continue;
     const ch = glyphAt(d, i);
     if (i === 0 && !d.shattered) {
-      // Оптимизация: shadowBlur только для "головы" капли и с меньшим радиусом
       X.shadowColor = '#0F0';
       X.shadowBlur = 8;
       X.fillStyle = `rgba(200,255,200,${d.alpha})`;
@@ -513,12 +547,12 @@ function drawCrumb(c) {
   X.restore();
 }
 
-/* ---------- Main loop ---------- */
 function loop(now) {
   X.fillStyle = '#000';
   X.fillRect(0, 0, C.width, C.height);
   
-  if (Math.random() < 0.45 && drops.length < maxDrops) {
+  // Спавн только если дождь активен
+  if (rainActive && Math.random() < 0.45 && drops.length < maxDrops) {
     spawnDrop();
   }
   
@@ -539,6 +573,21 @@ function loop(now) {
       drawCrumb(crumbs[i]);
     } else {
       crumbs.splice(i, 1);
+    }
+  }
+  
+  // Проверка завершения фазы коллапса
+  if (titlePhase === 'tv_collapse') {
+    const allGone = drops.length === 0 && crumbs.length === 0;
+    if (allGone || now - collapseStart > 1500) {
+      titlePhase = 'tv_off';
+      const tvOverlay = document.getElementById('tv-effect');
+      tvOverlay.classList.add('active');
+      
+      setTimeout(() => {
+        tvOverlay.classList.remove('active');
+        setupTitle(-1, performance.now());
+      }, 600);
     }
   }
   
