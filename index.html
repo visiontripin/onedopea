@@ -1,173 +1,199 @@
-Ниже готовая версия.  
-Теперь:
-
-- **ORACLE** появляется в центре в стиле Matrix;
-- когда надпись полностью собрана — она становится ссылкой на `https://t.me/OneDope_bot`;
-- затем **ORACLE** исчезает таким же «декодированием»;
-- после неё появляется **DAROMVPL** со ссылкой на `https://t.me/daromvpl`;
-- после DAROMVPL цикл повторяется.
-
-```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Matrix Links</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ONEDOPEA</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 100%;
+  height: 100%;
+  height: 100dvh; /* Динамическая высота для мобильных браузеров */
+  background: #000;
+  overflow: hidden;
+  user-select: none;
+  position: fixed;
+  inset: 0;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.scanlines {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.18) 2px,
+    rgba(0, 0, 0, 0.18) 4px
+  );
+}
+#oracle-wrap {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  pointer-events: none;
+}
+#oracle-wrap::before {
+  content: "";
+  position: absolute;
+  width: 80%;
+  height: 40%;
+  background: radial-gradient(ellipse, rgba(0,0,0,0.72) 0%, transparent 70%);
+}
+#oracle {
+  position: relative;
+  display: flex;
+  gap: 0.12em;
+  font-family: "Courier New", Consolas, "Lucida Console", monospace;
+  font-size: clamp(42px, 11vw, 132px);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  pointer-events: auto;
+}
+#oracle.inactive {
+  pointer-events: none;
+  cursor: default;
+}
+#oracle span {
+  display: inline-block;
+  min-width: 0.7em;
+  text-align: center;
+  color: #00c83a;
+  text-shadow: 0 0 6px #00ff55;
+  opacity: 0;
+  will-change: transform, opacity, color;
+  transition:
+    color 0.2s,
+    text-shadow 0.2s,
+    opacity 0.18s,
+    transform 0.18s;
+}
+#oracle span.show {
+  opacity: 1;
+}
+#oracle span.locked {
+  color: #d4ffd4;
+  text-shadow:
+    0 0 4px #fff,
+    0 0 8px #6f6,
+    0 0 18px #0f0,
+    0 0 36px #0a0,
+    0 0 72px #050;
+}
+#oracle.done {
+  animation: pulse 2.8s ease-in-out infinite;
+}
+#oracle.done:hover span.locked {
+  color: #ffffff;
+  text-shadow:
+    0 0 5px #fff,
+    0 0 12px #9f9,
+    0 0 28px #0f0,
+    0 0 55px #0f0;
+}
 
-  html, body {
-    width: 100%;
-    height: 100%;
-    background: #000;
-    overflow: hidden;
-    user-select: none;
-  }
+/* Усиленный глитч-эффект для ONEDOPEA */
+#oracle.onedopea-mode {
+  animation: glitch-skew 0.4s infinite linear alternate-reverse;
+}
+#oracle.onedopea-mode span {
+  text-shadow: 2px 0 #ff00ff, -2px 0 #00ffff;
+}
+#oracle.onedopea-mode span.locked {
+  color: #fff;
+  text-shadow: 
+    2px 0 #ff00ff, 
+    -2px 0 #00ffff,
+    0 0 10px #0f0,
+    0 0 20px #0f0,
+    0 0 40px #0f0;
+  animation: glitch-anim 0.15s infinite;
+}
 
-  canvas {
-    display: block;
-  }
+@keyframes pulse {
+  0%, 100% { filter: brightness(1) drop-shadow(0 0 8px #0f0); }
+  50% { filter: brightness(1.35) drop-shadow(0 0 22px #0f0); }
+}
+@keyframes glitch-anim {
+  0% { transform: translate(0); }
+  20% { transform: translate(-3px, 2px); }
+  40% { transform: translate(3px, -2px); }
+  60% { transform: translate(-2px, 3px); }
+  80% { transform: translate(2px, -3px); }
+  100% { transform: translate(0); }
+}
+@keyframes glitch-skew {
+  0% { transform: skew(0deg); }
+  20% { transform: skew(-3deg); }
+  40% { transform: skew(3deg); }
+  60% { transform: skew(-1deg); }
+  80% { transform: skew(1deg); }
+  100% { transform: skew(0deg); }
+}
 
-  .scanlines {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 10;
-    background: repeating-linear-gradient(
-      to bottom,
-      transparent 0px,
-      transparent 2px,
-      rgba(0, 0, 0, 0.18) 2px,
-      rgba(0, 0, 0, 0.18) 4px
-    );
-  }
-
-  #oracle-wrap {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 5;
-    pointer-events: none;
-  }
-
-  #oracle-wrap::before {
-    content: "";
-    position: absolute;
-    width: 80%;
-    height: 40%;
-    background: radial-gradient(ellipse, rgba(0,0,0,0.72) 0%, transparent 70%);
-  }
-
-  #oracle {
-    position: relative;
-    display: flex;
-    gap: 0.12em;
-    font-family: "Courier New", Consolas, "Lucida Console", monospace;
-    font-size: clamp(42px, 11vw, 132px);
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    line-height: 1;
-    text-decoration: none;
-    cursor: pointer;
-    pointer-events: auto;
-  }
-
-  #oracle.inactive {
-    pointer-events: none;
-    cursor: default;
-  }
-
-  #oracle span {
-    display: inline-block;
-    min-width: 0.7em;
-    text-align: center;
-    color: #00c83a;
-    text-shadow: 0 0 6px #00ff55;
-    opacity: 0;
-    transition:
-      color 0.2s,
-      text-shadow 0.2s,
-      opacity 0.18s,
-      transform 0.18s;
-  }
-
-  #oracle span.show {
-    opacity: 1;
-  }
-
-  #oracle span.locked {
-    color: #d4ffd4;
-    text-shadow:
-      0 0 4px #fff,
-      0 0 8px #6f6,
-      0 0 18px #0f0,
-      0 0 36px #0a0,
-      0 0 72px #050;
-  }
-
-  #oracle.done {
-    animation: pulse 2.8s ease-in-out infinite;
-  }
-
-  #oracle.done:hover span.locked {
-    color: #ffffff;
-    text-shadow:
-      0 0 5px #fff,
-      0 0 12px #9f9,
-      0 0 28px #0f0,
-      0 0 55px #0f0;
-  }
-
-  @keyframes pulse {
-    0%, 100% {
-      filter: brightness(1) drop-shadow(0 0 8px #0f0);
-    }
-    50% {
-      filter: brightness(1.35) drop-shadow(0 0 22px #0f0);
-    }
-  }
+/* Анимация выключения телевизора */
+#tv-effect {
+  position: fixed;
+  inset: 0;
+  background: #fff;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transform-origin: center center;
+}
+#tv-effect.active {
+  animation: tvTurnOff 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+@keyframes tvTurnOff {
+  0% { opacity: 1; transform: scaleY(1) scaleX(1); filter: brightness(1); }
+  20% { opacity: 1; transform: scaleY(0.005) scaleX(1); filter: brightness(5); }
+  100% { opacity: 0; transform: scaleY(0.005) scaleX(0.005); filter: brightness(0); }
+}
 </style>
 </head>
 <body>
-
 <canvas id="c"></canvas>
-
 <div id="oracle-wrap">
   <a id="oracle" class="inactive" href="#" target="_blank" rel="noopener noreferrer"></a>
 </div>
-
 <div class="scanlines"></div>
+<div id="tv-effect"></div>
 
 <script>
 const C = document.getElementById('c');
-const X = C.getContext('2d');
+const X = C.getContext('2d', { alpha: false }); // Оптимизация: отключаем альфа-канал фона canvas
 const oracleEl = document.getElementById('oracle');
-
 const GLYPHS = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
 const S = 18;          // размер шрифта дождя
 const N = 10;          // строк до рассыпания
-const MAX_CRUMBS = 700;
-
+const MAX_CRUMBS = 300; // Оптимизация: снижено с 700 для мобильных устройств
 let drops = [];
 let crumbs = [];
 let maxDrops = 40;
 
-/* ---------- Центральные надписи со ссылками ---------- */
-
 const TITLES = [
-  {
-    word: 'ORACLE',
-    url: 'https://t.me/OneDope_bot'
-  },
-  {
-    word: 'DAROMVPL',
-    url: 'https://t.me/daromvpl'
-  }
+  { word: 'ORACLE', url: 'https://t.me/OneDope_bot' },
+  { word: 'DAROMVPL', url: 'https://t.me/daromvpl' }
 ];
+const SPECIAL_TITLE = {
+  word: 'ONEDOPEA',
+  url: 'https://t.me/onedopea'
+};
 
 const START_DELAY = 1400;
 const LETTER_STEP = 230;
@@ -175,11 +201,12 @@ const APPEAR_SCRAMBLE_TIME = 760;
 const DISAPPEAR_SCRAMBLE_TIME = 680;
 const HOLD_TIME = 3600;
 const BETWEEN_WORDS_TIME = 650;
+const MAX_CYCLES_BEFORE_TV = 3;
 
 let currentTitleIndex = 0;
 let pendingTitleIndex = 0;
+let completedCycles = 0;
 let letters = [];
-
 let titlePhase = 'appearing';
 let phaseStart = performance.now() + START_DELAY;
 
@@ -188,18 +215,37 @@ function randomGlyph() {
 }
 
 function setupTitle(index, startAt = performance.now()) {
+  if (index === -1) {
+    currentTitleIndex = -1;
+    const item = SPECIAL_TITLE;
+    oracleEl.href = item.url;
+    oracleEl.title = item.word + ' → ' + item.url;
+    oracleEl.setAttribute('aria-label', item.word + ' Telegram link');
+    oracleEl.classList.remove('done');
+    oracleEl.classList.add('inactive', 'onedopea-mode');
+    oracleEl.innerHTML = '';
+    letters = item.word.split('').map(ch => {
+      const span = document.createElement('span');
+      span.dataset.target = ch;
+      span.dataset.locked = '0';
+      span.dataset.hidden = '0';
+      span.textContent = '';
+      oracleEl.appendChild(span);
+      return span;
+    });
+    titlePhase = 'appearing';
+    phaseStart = startAt;
+    return;
+  }
+
   currentTitleIndex = index;
-
   const item = TITLES[currentTitleIndex];
-
   oracleEl.href = item.url;
   oracleEl.title = item.word + ' → ' + item.url;
   oracleEl.setAttribute('aria-label', item.word + ' Telegram link');
-
-  oracleEl.classList.remove('done');
+  oracleEl.classList.remove('done', 'onedopea-mode');
   oracleEl.classList.add('inactive');
   oracleEl.innerHTML = '';
-
   letters = item.word.split('').map(ch => {
     const span = document.createElement('span');
     span.dataset.target = ch;
@@ -209,12 +255,22 @@ function setupTitle(index, startAt = performance.now()) {
     oracleEl.appendChild(span);
     return span;
   });
-
   titlePhase = 'appearing';
   phaseStart = startAt;
 }
 
 setupTitle(0, performance.now() + START_DELAY);
+
+function triggerTvOff() {
+  titlePhase = 'tv_off';
+  const tvOverlay = document.getElementById('tv-effect');
+  tvOverlay.classList.add('active');
+  
+  setTimeout(() => {
+    tvOverlay.classList.remove('active');
+    setupTitle(-1, performance.now());
+  }, 600);
+}
 
 function updateCenterTitle(now) {
   if (titlePhase === 'between') {
@@ -223,117 +279,136 @@ function updateCenterTitle(now) {
     }
     return;
   }
-
+  if (titlePhase === 'tv_off') return;
   if (now < phaseStart) return;
 
   /* --- Появление надписи --- */
   if (titlePhase === 'appearing') {
     const t = now - phaseStart;
-
     letters.forEach((el, i) => {
       const delay = i * LETTER_STEP;
-
       if (t < delay) return;
-
       el.classList.add('show');
-
       if (el.dataset.locked === '1') return;
-
       el.textContent = randomGlyph();
-
       if (t > delay + APPEAR_SCRAMBLE_TIME) {
         el.dataset.locked = '1';
         el.textContent = el.dataset.target;
         el.classList.add('locked');
       }
     });
-
     const allLocked = letters.every(el => el.dataset.locked === '1');
-
     if (allLocked) {
       titlePhase = 'hold';
       phaseStart = now;
-
       oracleEl.classList.remove('inactive');
       oracleEl.classList.add('done');
     }
-
     return;
   }
 
   /* --- Надпись собрана и является ссылкой --- */
   if (titlePhase === 'hold') {
-    // лёгкий редкий glitch у уже собранной надписи
-    letters.forEach(el => {
-      if (Math.random() < 0.0015) {
-        const target = el.dataset.target;
-        el.textContent = randomGlyph();
+    const holdDuration = currentTitleIndex === -1 ? 7000 : HOLD_TIME;
+    
+    if (currentTitleIndex === -1) {
+      // Усиленный глитч для ONEDOPEA
+      letters.forEach(el => {
+        if (Math.random() < 0.08) {
+          const target = el.dataset.target;
+          el.textContent = randomGlyph();
+          el.style.color = Math.random() > 0.5 ? '#ff00ff' : '#00ffff';
+          setTimeout(() => {
+            if (titlePhase === 'hold') {
+              el.textContent = target;
+              el.style.color = '';
+            }
+          }, 60);
+        }
+      });
+    } else {
+      // Лёгкий редкий glitch у обычной надписи
+      letters.forEach(el => {
+        if (Math.random() < 0.0015) {
+          const target = el.dataset.target;
+          el.textContent = randomGlyph();
+          setTimeout(() => {
+            if (titlePhase === 'hold') {
+              el.textContent = target;
+            }
+          }, 70);
+        }
+      });
+    }
 
-        setTimeout(() => {
-          if (titlePhase === 'hold') {
-            el.textContent = target;
-          }
-        }, 70);
-      }
-    });
-
-    if (now - phaseStart > HOLD_TIME) {
+    if (now - phaseStart > holdDuration) {
       titlePhase = 'disappearing';
       phaseStart = now;
-
-      oracleEl.classList.remove('done');
+      oracleEl.classList.remove('done', 'onedopea-mode');
       oracleEl.classList.add('inactive');
-
       letters.forEach(el => {
         el.dataset.hidden = '0';
       });
     }
-
     return;
   }
 
-  /* --- Исчезновение надписи таким же matrix-эффектом --- */
+  /* --- Исчезновение надписи (рассыпание на символы) --- */
   if (titlePhase === 'disappearing') {
     const t = now - phaseStart;
-
+    const scrambleTime = currentTitleIndex === -1 ? DISAPPEAR_SCRAMBLE_TIME * 0.8 : DISAPPEAR_SCRAMBLE_TIME;
+    
     letters.forEach((el, i) => {
       const delay = i * LETTER_STEP;
-
       if (t < delay) return;
       if (el.dataset.hidden === '1') return;
-
       el.classList.remove('locked');
       el.textContent = randomGlyph();
-
-      if (t > delay + DISAPPEAR_SCRAMBLE_TIME) {
+      if (t > delay + scrambleTime) {
         el.classList.remove('show');
         el.dataset.hidden = '1';
       }
     });
-
+    
     const allHidden = letters.every(el => el.dataset.hidden === '1');
-
     if (allHidden) {
-      pendingTitleIndex = (currentTitleIndex + 1) % TITLES.length;
-      titlePhase = 'between';
-      phaseStart = now + BETWEEN_WORDS_TIME;
+      if (currentTitleIndex === -1) {
+        // Цикл начинается заново
+        completedCycles = 0;
+        pendingTitleIndex = 0;
+        titlePhase = 'between';
+        phaseStart = now + BETWEEN_WORDS_TIME;
+      } else {
+        if (currentTitleIndex === TITLES.length - 1) {
+          completedCycles++;
+        }
+        
+        if (completedCycles >= MAX_CYCLES_BEFORE_TV) {
+          triggerTvOff();
+        } else {
+          pendingTitleIndex = (currentTitleIndex + 1) % TITLES.length;
+          titlePhase = 'between';
+          phaseStart = now + BETWEEN_WORDS_TIME;
+        }
+      }
     }
   }
 }
 
-/* ---------- Canvas resize ---------- */
-
+/* ---------- Canvas resize (оптимизировано для мобильных) ---------- */
 function resize() {
-  C.width = innerWidth;
-  C.height = innerHeight;
-  maxDrops = Math.max(24, Math.floor(C.width / S) * 0.55);
+  C.width = window.innerWidth;
+  C.height = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+  // Оптимизация: снижено количество капель для плавности на смартфонах
+  maxDrops = Math.max(15, Math.floor(C.width / S) * 0.25);
 }
-
 resize();
 addEventListener('resize', resize);
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', resize);
+}
 
 /* ---------- Matrix rain ---------- */
-
 function glyphAt(d, i) {
   return GLYPHS[((d.glyph - i) % GLYPHS.length + GLYPHS.length) % GLYPHS.length];
 }
@@ -352,14 +427,10 @@ function spawnDrop() {
 
 function shatterDrop(d) {
   d.shattered = true;
-
   for (let i = 0; i < N; i++) {
     const py = d.y - i * S;
-
     if (py < -S || py > C.height + S) continue;
-
-    const count = 6 + ((Math.random() * 6) | 0);
-
+    const count = 4 + ((Math.random() * 4) | 0); // Оптимизация: меньше осколков
     for (let j = 0; j < count; j++) {
       crumbs.push({
         x: d.x + Math.random() * S,
@@ -385,14 +456,11 @@ function updateDrop(d) {
     d.alpha -= 0.07;
     return d.alpha > 0;
   }
-
   d.y += d.speed;
   d.glyph = (d.glyph + 1) % GLYPHS.length;
-
   if (d.y - d.startY >= N * S) {
     shatterDrop(d);
   }
-
   return d.y - N * S < C.height + S;
 }
 
@@ -403,23 +471,19 @@ function updateCrumb(c) {
   c.vx *= 0.985;
   c.rot += c.rotV;
   c.life -= c.decay;
-
   return c.life > 0;
 }
 
 function drawDrop(d) {
   X.font = S + 'px monospace';
-
   for (let i = 0; i < N; i++) {
     const py = d.y - i * S;
-
     if (py < -S || py > C.height) continue;
-
     const ch = glyphAt(d, i);
-
     if (i === 0 && !d.shattered) {
+      // Оптимизация: shadowBlur только для "головы" капли и с меньшим радиусом
       X.shadowColor = '#0F0';
-      X.shadowBlur = 14;
+      X.shadowBlur = 8;
       X.fillStyle = `rgba(200,255,200,${d.alpha})`;
     } else {
       X.shadowBlur = 0;
@@ -427,21 +491,17 @@ function drawDrop(d) {
       const g = (255 * f * d.alpha) | 0;
       X.fillStyle = `rgba(0,${g},0,${d.alpha})`;
     }
-
     X.fillText(ch, d.x, py);
   }
-
   X.shadowBlur = 0;
 }
 
 function drawCrumb(c) {
   const a = Math.max(0, c.life);
   const g = (220 * a) | 0;
-
   X.save();
   X.translate(c.x, c.y);
   X.rotate(c.rot);
-
   if (c.isChar) {
     X.font = c.chSize + 'px monospace';
     X.fillStyle = `rgba(0,${g},40,${a})`;
@@ -450,20 +510,18 @@ function drawCrumb(c) {
     X.fillStyle = `rgba(0,${g},30,${a})`;
     X.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
   }
-
   X.restore();
 }
 
 /* ---------- Main loop ---------- */
-
 function loop(now) {
   X.fillStyle = '#000';
   X.fillRect(0, 0, C.width, C.height);
-
+  
   if (Math.random() < 0.45 && drops.length < maxDrops) {
     spawnDrop();
   }
-
+  
   for (let i = drops.length - 1; i >= 0; i--) {
     if (updateDrop(drops[i])) {
       drawDrop(drops[i]);
@@ -471,11 +529,11 @@ function loop(now) {
       drops.splice(i, 1);
     }
   }
-
+  
   if (crumbs.length > MAX_CRUMBS) {
     crumbs.splice(0, crumbs.length - MAX_CRUMBS);
   }
-
+  
   for (let i = crumbs.length - 1; i >= 0; i--) {
     if (updateCrumb(crumbs[i])) {
       drawCrumb(crumbs[i]);
@@ -483,9 +541,8 @@ function loop(now) {
       crumbs.splice(i, 1);
     }
   }
-
+  
   updateCenterTitle(now);
-
   requestAnimationFrame(loop);
 }
 
@@ -493,6 +550,3 @@ requestAnimationFrame(loop);
 </script>
 </body>
 </html>
-```
-
-Ссылка становится активной, когда надпись полностью собрана и светится. Затем она отключается, надпись исчезает, и появляется следующая.
