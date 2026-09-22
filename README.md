@@ -1,2 +1,0 @@
-# onedopea
-Landing page
