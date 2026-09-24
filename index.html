@@ -18,11 +18,7 @@ html, body {
   touch-action: none;
   -webkit-tap-highlight-color: transparent;
 }
-canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
+canvas { display: block; width: 100%; height: 100%; }
 .scanlines {
   position: fixed;
   inset: 0;
@@ -30,10 +26,8 @@ canvas {
   z-index: 10;
   background: repeating-linear-gradient(
     to bottom,
-    transparent 0px,
-    transparent 2px,
-    rgba(0, 0, 0, 0.18) 2px,
-    rgba(0, 0, 0, 0.18) 4px
+    transparent 0px, transparent 2px,
+    rgba(0, 0, 0, 0.18) 2px, rgba(0, 0, 0, 0.18) 4px
   );
 }
 #oracle-wrap {
@@ -55,20 +49,21 @@ canvas {
 #oracle {
   position: relative;
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
   gap: 0.12em;
   font-family: "Courier New", Consolas, "Lucida Console", monospace;
-  font-size: clamp(42px, 11vw, 132px);
+  font-size: clamp(29px, 7.7vw, 92px);
   font-weight: 700;
   letter-spacing: 0.12em;
   line-height: 1;
   text-decoration: none;
   cursor: pointer;
   pointer-events: auto;
+  text-align: center;
 }
-#oracle.inactive {
-  pointer-events: none;
-  cursor: default;
-}
+#oracle.inactive { pointer-events: none; cursor: default; }
 #oracle span {
   display: inline-block;
   min-width: 0.7em;
@@ -97,7 +92,72 @@ canvas {
   animation: glitch-anim 0.15s infinite;
 }
 
-/* Эффект печатания текста */
+#bottom-btn {
+  position: fixed;
+  bottom: 8vh;
+  left: 50%;
+  width: 120px;
+  height: 44px;
+  border: 1px solid #0f0;
+  background: rgba(0, 255, 0, 0.03);
+  z-index: 6;
+  pointer-events: auto;
+  display: none;
+  text-decoration: none;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.3), inset 0 0 10px rgba(0, 255, 0, 0.1);
+  overflow: visible;
+  animation: btnFlicker 3s infinite;
+  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              width 0.15s ease,
+              height 0.15s ease,
+              border-radius 0.15s ease;
+}
+#bottom-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 255, 0, 0.15) 0px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+}
+#bottom-btn span {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-family: "Courier New", monospace;
+  color: #0f0;
+  font-size: 16px;
+  letter-spacing: 2px;
+  text-shadow: 0 0 5px #0f0;
+  pointer-events: none;
+}
+#bottom-btn.collapsing {
+  transition: all 1.2s cubic-bezier(0.8, 0, 1, 0.2) !important;
+  bottom: auto !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: 6px !important;
+  height: 2px !important;
+  transform: translate(-50%, -50%) scale(0.5) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+@keyframes btnFlicker {
+  0%, 100% { opacity: 1; border-color: #0f0; }
+  48% { opacity: 1; }
+  50% { opacity: 0.3; border-color: #050; }
+  52% { opacity: 1; }
+}
+
 #typing-el {
   position: fixed;
   top: 50%;
@@ -112,6 +172,8 @@ canvas {
   white-space: pre;
   display: flex;
   gap: 0;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 #typing-el span {
   display: inline-block;
@@ -165,6 +227,7 @@ canvas {
 <div id="oracle-wrap">
   <a id="oracle" class="inactive" href="#" target="_blank" rel="noopener noreferrer"></a>
 </div>
+<a id="bottom-btn" href="#" target="_blank" rel="noopener noreferrer"><span id="btn-text"></span></a>
 <div id="typing-el"></div>
 <div class="scanlines"></div>
 <div id="tv-effect"></div>
@@ -174,6 +237,9 @@ const C = document.getElementById('c');
 const X = C.getContext('2d', { alpha: false });
 const oracleEl = document.getElementById('oracle');
 const typingEl = document.getElementById('typing-el');
+const bottomBtn = document.getElementById('bottom-btn');
+const btnText = document.getElementById('btn-text');
+
 const GLYPHS = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const S = 18;
 const N = 10;
@@ -183,16 +249,14 @@ let crumbs = [];
 let maxDrops = 40;
 let rainActive = true;
 let collapseStart = 0;
+let cycleFallMultiplier = 1.0;
 
 const TITLES = [
   { word: 'ORACLE', url: 'https://t.me/OneDope_bot' },
   { word: 'DAROMVPL', url: 'https://t.me/daromvpl' },
-  { word: 'BotControl App', url: 'https://t.me/AppBotcontrol_bot' }
+  { word: 'BotControl\nApp', url: 'https://t.me/AppBotcontrol_bot' }
 ];
-const SPECIAL_TITLE = {
-  word: 'ONEDOPEA',
-  url: 'https://t.me/onedopea'
-};
+const SPECIAL_TITLE = { word: 'ONEDOPEA', url: 'https://t.me/onedopea' };
 
 const START_DELAY = 1400;
 const LETTER_STEP = 230;
@@ -200,7 +264,7 @@ const APPEAR_SCRAMBLE_TIME = 760;
 const DISAPPEAR_SCRAMBLE_TIME = 680;
 const HOLD_TIME = 3600;
 const BETWEEN_WORDS_TIME = 650;
-const MAX_CYCLES_BEFORE_TV = 1; // Оставлен 1 цикл
+const MAX_CYCLES_BEFORE_TV = 1;
 
 let currentTitleIndex = 0;
 let pendingTitleIndex = 0;
@@ -209,29 +273,214 @@ let letters = [];
 let titlePhase = 'appearing';
 let phaseStart = performance.now() + START_DELAY;
 
-// Переменные для фазы печатания
-const TYPING_STRING = "............wake up Neo!";
+const TYPING_STRING = "............wake up, Neo!";
 let typingSpans = [];
-let typingState = 'idle'; // 'typing', 'holding', 'crumbling'
+let typingState = 'idle';
 let typingStartTime = 0;
 let currentTypingIndex = 0;
+
+let btnGlitchInterval = null;
+let btnRespawnTimeout = null;
+
+let btnOffsetX = 0;
+let btnOffsetY = 0;
+let btnEscaping = false;
+let btnEscapeCooldown = false;
+let mouseX = -9999;
+let mouseY = -9999;
 
 function randomGlyph() {
   return GLYPHS[(Math.random() * GLYPHS.length) | 0];
 }
 
 function getSafeZone() {
+  const rect = oracleEl.getBoundingClientRect();
+  if (rect.width > 0 && rect.height > 0) {
+    const padding = 30;
+    return {
+      x: rect.left - padding,
+      y: rect.top - padding,
+      w: rect.width + padding * 2,
+      h: rect.height + padding * 2
+    };
+  }
   const w = Math.min(C.width * 0.85, 800);
   const h = C.height * 0.30;
   return { x: (C.width - w) / 2, y: (C.height - h) / 2, w, h };
+}
+
+function shatterButton() {
+  const rect = bottomBtn.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+
+  for (let i = 0; i < 25; i++) {
+    crumbs.push({
+      x: cx + (Math.random() - 0.5) * rect.width,
+      y: cy + (Math.random() - 0.5) * rect.height,
+      vx: (Math.random() - 0.5) * 12,
+      vy: (Math.random() - 0.5) * 10 - 2,
+      life: 1,
+      decay: 0.015 + Math.random() * 0.02,
+      w: 2 + Math.random() * 6,
+      h: 2 + Math.random() * 6,
+      isChar: Math.random() < 0.5,
+      ch: randomGlyph(),
+      chSize: S * (0.3 + Math.random() * 0.6),
+      rot: (Math.random() - 0.5) * 6,
+      rotV: (Math.random() - 0.5) * 0.4,
+      collapsing: false
+    });
+  }
+
+  bottomBtn.style.display = 'none';
+  btnEscaping = false;
+
+  if (btnRespawnTimeout) clearTimeout(btnRespawnTimeout);
+  btnRespawnTimeout = setTimeout(() => {
+    if (currentTitleIndex !== -1 && titlePhase !== 'tv_collapse' && titlePhase !== 'tv_off') {
+      btnOffsetX = 0;
+      btnOffsetY = 0;
+      bottomBtn.style.display = 'block';
+      bottomBtn.style.transform = 'translateX(-50%)';
+    }
+  }, 2000);
+}
+
+function checkButtonCollision() {
+  if (bottomBtn.style.display === 'none' || currentTitleIndex === -1) return;
+  const btnRect = bottomBtn.getBoundingClientRect();
+  const titleRect = oracleEl.getBoundingClientRect();
+  if (btnRect.left < titleRect.right &&
+      btnRect.right > titleRect.left &&
+      btnRect.top < titleRect.bottom &&
+      btnRect.bottom > titleRect.top) {
+    shatterButton();
+  }
+}
+
+function applyBtnTransform() {
+  bottomBtn.style.transform = `translate(calc(-50% + ${btnOffsetX}px), ${btnOffsetY}px)`;
+}
+
+function escapeButton() {
+  if (btnEscaping || btnEscapeCooldown) return;
+  btnEscaping = true;
+
+  if (btnGlitchInterval) { clearInterval(btnGlitchInterval); btnGlitchInterval = null; }
+
+  const rect = bottomBtn.getBoundingClientRect();
+  const btnCX = rect.left + rect.width / 2;
+  const btnCY = rect.top + rect.height / 2;
+  let dx = btnCX - mouseX;
+  let dy = btnCY - mouseY;
+  const dist = Math.hypot(dx, dy) || 1;
+  dx /= dist;
+  dy /= dist;
+
+  const angle = Math.atan2(dy, dx) + (Math.random() - 0.5) * 1.2;
+  const escapeDist = 100 + Math.random() * 300;
+
+  btnOffsetX += Math.cos(angle) * escapeDist;
+  btnOffsetY += Math.sin(angle) * escapeDist;
+
+  const maxOff = Math.max(C.width, C.height) * 0.4;
+  btnOffsetX = Math.max(-maxOff, Math.min(maxOff, btnOffsetX));
+  btnOffsetY = Math.max(-maxOff, Math.min(maxOff, btnOffsetY));
+
+  applyBtnTransform();
+  setTimeout(checkButtonCollision, 400);
+
+  btnEscapeCooldown = true;
+  setTimeout(() => {
+    btnEscaping = false;
+    btnEscapeCooldown = false;
+    if (bottomBtn.style.display !== 'none' && !bottomBtn.classList.contains('collapsing')) {
+      startBtnGlitch();
+    }
+  }, 600);
+}
+
+document.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+});
+
+function checkMouseProximity() {
+  if (bottomBtn.style.display === 'none' || btnEscaping || btnEscapeCooldown) return;
+  if (currentTitleIndex === -1) return;
+
+  const rect = bottomBtn.getBoundingClientRect();
+  const btnCX = rect.left + rect.width / 2;
+  const btnCY = rect.top + rect.height / 2;
+  const dist = Math.hypot(mouseX - btnCX, mouseY - btnCY);
+
+  if (dist < 80) {
+    escapeButton();
+  }
+}
+
+function startBtnGlitch() {
+  if (btnGlitchInterval) clearInterval(btnGlitchInterval);
+  btnGlitchInterval = setInterval(() => {
+    if (bottomBtn.classList.contains('collapsing') || btnEscaping) return;
+
+    const w = 40 + Math.random() * 160;
+    const h = 20 + Math.random() * 60;
+    const borderRadius = Math.random() < 0.3 ? (5 + Math.random() * 20) + 'px' : '0';
+
+    bottomBtn.style.width = w + 'px';
+    bottomBtn.style.height = h + 'px';
+    bottomBtn.style.borderRadius = borderRadius;
+
+    let txt = '';
+    const len = 3 + Math.floor(Math.random() * 8);
+    for (let i = 0; i < len; i++) txt += randomGlyph();
+    btnText.textContent = txt;
+
+    const jitterX = (Math.random() > 0.5 ? 1 : -1) * Math.random() * 100;
+    const jitterY = (Math.random() > 0.5 ? 1 : -1) * Math.random() * 100;
+    btnOffsetX += jitterX;
+    btnOffsetY += jitterY;
+
+    const maxOff = Math.max(C.width, C.height) * 0.4;
+    btnOffsetX = Math.max(-maxOff, Math.min(maxOff, btnOffsetX));
+    btnOffsetY = Math.max(-maxOff, Math.min(maxOff, btnOffsetY));
+
+    applyBtnTransform();
+    setTimeout(checkButtonCollision, 400);
+  }, 150);
+}
+
+function updateBottomBtn(index) {
+  if (btnGlitchInterval) { clearInterval(btnGlitchInterval); btnGlitchInterval = null; }
+  if (btnRespawnTimeout) { clearTimeout(btnRespawnTimeout); btnRespawnTimeout = null; }
+
+  btnOffsetX = 0;
+  btnOffsetY = 0;
+  btnEscaping = false;
+  btnEscapeCooldown = false;
+
+  if (index === -1) {
+    bottomBtn.style.display = 'none';
+  } else {
+    bottomBtn.style.display = 'block';
+    bottomBtn.href = TITLES[index].url;
+    bottomBtn.classList.remove('collapsing');
+    bottomBtn.style.width = '120px';
+    bottomBtn.style.height = '44px';
+    bottomBtn.style.borderRadius = '0';
+    bottomBtn.style.transform = 'translateX(-50%)';
+    startBtnGlitch();
+  }
 }
 
 function setupTitle(index, startAt = performance.now()) {
   currentTitleIndex = index;
   const item = index === -1 ? SPECIAL_TITLE : TITLES[index];
   oracleEl.href = item.url;
-  oracleEl.title = item.word + ' → ' + item.url;
-  oracleEl.setAttribute('aria-label', item.word + ' Telegram link');
+  oracleEl.title = item.word.replace('\n', ' ') + ' → ' + item.url;
+  oracleEl.setAttribute('aria-label', item.word.replace('\n', ' ') + ' Telegram link');
   oracleEl.classList.remove('done');
   if (index === -1) {
     oracleEl.classList.add('inactive', 'onedopea-mode');
@@ -240,17 +489,29 @@ function setupTitle(index, startAt = performance.now()) {
     oracleEl.classList.add('inactive');
   }
   oracleEl.innerHTML = '';
+
   letters = item.word.split('').map(ch => {
     const span = document.createElement('span');
-    span.dataset.target = ch;
-    span.dataset.locked = '0';
-    span.dataset.hidden = '0';
-    span.textContent = '';
+    if (ch === '\n') {
+      span.style.display = 'block';
+      span.style.width = '100%';
+      span.style.height = '0.5em';
+      span.dataset.locked = '1';
+      span.dataset.hidden = '1';
+      span.classList.add('show');
+    } else {
+      span.dataset.target = ch;
+      span.dataset.locked = '0';
+      span.dataset.hidden = '0';
+      span.textContent = '';
+    }
     oracleEl.appendChild(span);
     return span;
   });
+
   titlePhase = 'appearing';
   phaseStart = startAt;
+  updateBottomBtn(index);
 }
 
 setupTitle(0, performance.now() + START_DELAY);
@@ -269,12 +530,13 @@ function setupTyping(now) {
   typingState = 'typing';
   currentTypingIndex = 0;
   typingStartTime = now;
+  bottomBtn.style.display = 'none';
 }
 
 function updateTyping(now) {
   if (typingState === 'typing') {
     const elapsed = now - typingStartTime;
-    const charsToShow = Math.floor(elapsed / 70); // Скорость печатания
+    const charsToShow = Math.floor(elapsed / 70);
     if (charsToShow > currentTypingIndex && currentTypingIndex < typingSpans.length) {
       currentTypingIndex = charsToShow;
       for (let i = 0; i < currentTypingIndex; i++) {
@@ -287,14 +549,14 @@ function updateTyping(now) {
       typingStartTime = now;
     }
   } else if (typingState === 'holding') {
-    if (now - typingStartTime > 1800) { // Пауза перед рассыпанием
+    if (now - typingStartTime > 1800) {
       typingState = 'crumbling';
       typingStartTime = now;
     }
   } else if (typingState === 'crumbling') {
     const elapsed = now - typingStartTime;
     typingSpans.forEach((span, i) => {
-      const delay = i * 25; // Каскадное рассыпание
+      const delay = i * 25;
       if (elapsed > delay && span.dataset.hidden === '0') {
         span.dataset.hidden = '1';
         span.textContent = randomGlyph();
@@ -304,7 +566,6 @@ function updateTyping(now) {
     });
     const allHidden = typingSpans.every(s => s.dataset.hidden === '1');
     if (allHidden && elapsed > typingSpans.length * 25 + 600) {
-      // Переход к ONEDOPEA
       titlePhase = 'between';
       pendingTitleIndex = -1;
       phaseStart = now + 400;
@@ -316,19 +577,16 @@ function triggerTvOff() {
   titlePhase = 'tv_collapse';
   collapseStart = performance.now();
   rainActive = false;
+  bottomBtn.classList.add('collapsing');
+  if (btnGlitchInterval) { clearInterval(btnGlitchInterval); btnGlitchInterval = null; }
   drops.forEach(d => { d.collapsing = true; d.vx = 0; d.vy = 0; });
   crumbs.forEach(c => { c.collapsing = true; });
 }
 
 function updateCenterTitle(now) {
-  if (titlePhase === 'typing_phase') {
-    updateTyping(now);
-    return;
-  }
+  if (titlePhase === 'typing_phase') { updateTyping(now); return; }
   if (titlePhase === 'between') {
-    if (now >= phaseStart) {
-      setupTitle(pendingTitleIndex, now);
-    }
+    if (now >= phaseStart) setupTitle(pendingTitleIndex, now);
     return;
   }
   if (titlePhase === 'tv_collapse' || titlePhase === 'tv_off') return;
@@ -337,10 +595,10 @@ function updateCenterTitle(now) {
   if (titlePhase === 'appearing') {
     const t = now - phaseStart;
     letters.forEach((el, i) => {
+      if (el.dataset.locked === '1') return;
       const delay = i * LETTER_STEP;
       if (t < delay) return;
       el.classList.add('show');
-      if (el.dataset.locked === '1') return;
       el.textContent = randomGlyph();
       if (t > delay + APPEAR_SCRAMBLE_TIME) {
         el.dataset.locked = '1';
@@ -360,38 +618,37 @@ function updateCenterTitle(now) {
 
   if (titlePhase === 'hold') {
     const holdDuration = currentTitleIndex === -1 ? 7000 : HOLD_TIME;
-    if (currentTitleIndex === -1) {
+    if (currentTitleIndex !== -1) {
       letters.forEach(el => {
+        if (el.dataset.locked === '1' && el.dataset.hidden === '0') {
+          if (Math.random() < 0.02) {
+            const target = el.dataset.target;
+            el.textContent = randomGlyph();
+            setTimeout(() => {
+              if (titlePhase === 'hold' && el.dataset.target === target) el.textContent = target;
+            }, 40 + Math.random() * 60);
+          }
+        }
+      });
+    } else {
+      letters.forEach(el => {
+        if (el.dataset.locked === '1') return;
         if (Math.random() < 0.08) {
           const target = el.dataset.target;
           el.textContent = randomGlyph();
           el.style.color = Math.random() > 0.5 ? '#ff00ff' : '#00ffff';
           setTimeout(() => {
-            if (titlePhase === 'hold') {
-              el.textContent = target;
-              el.style.color = '';
-            }
+            if (titlePhase === 'hold') { el.textContent = target; el.style.color = ''; }
           }, 60);
         }
       });
-    } else {
-      letters.forEach(el => {
-        if (Math.random() < 0.0015) {
-          const target = el.dataset.target;
-          el.textContent = randomGlyph();
-          setTimeout(() => {
-            if (titlePhase === 'hold') { el.textContent = target; }
-          }, 70);
-        }
-      });
     }
-
     if (now - phaseStart > holdDuration) {
       titlePhase = 'disappearing';
       phaseStart = now;
       oracleEl.classList.remove('done', 'onedopea-mode');
       oracleEl.classList.add('inactive');
-      letters.forEach(el => { el.dataset.hidden = '0'; });
+      letters.forEach(el => { if (el.dataset.locked !== '1') el.dataset.hidden = '0'; });
     }
     return;
   }
@@ -400,17 +657,13 @@ function updateCenterTitle(now) {
     const t = now - phaseStart;
     const scrambleTime = currentTitleIndex === -1 ? DISAPPEAR_SCRAMBLE_TIME * 0.8 : DISAPPEAR_SCRAMBLE_TIME;
     letters.forEach((el, i) => {
+      if (el.dataset.hidden === '1') return;
       const delay = i * LETTER_STEP;
       if (t < delay) return;
-      if (el.dataset.hidden === '1') return;
       el.classList.remove('locked');
       el.textContent = randomGlyph();
-      if (t > delay + scrambleTime) {
-        el.classList.remove('show');
-        el.dataset.hidden = '1';
-      }
+      if (t > delay + scrambleTime) { el.classList.remove('show'); el.dataset.hidden = '1'; }
     });
-    
     const allHidden = letters.every(el => el.dataset.hidden === '1');
     if (allHidden) {
       if (currentTitleIndex === -1) {
@@ -418,11 +671,10 @@ function updateCenterTitle(now) {
         pendingTitleIndex = 0;
         titlePhase = 'between';
         phaseStart = now + BETWEEN_WORDS_TIME;
-        rainActive = true; // Возобновляем дождь для нового цикла
+        rainActive = true;
+        cycleFallMultiplier = Math.min(16.0, cycleFallMultiplier * 2);
       } else {
-        if (currentTitleIndex === TITLES.length - 1) {
-          completedCycles++;
-        }
+        if (currentTitleIndex === TITLES.length - 1) completedCycles++;
         if (completedCycles >= MAX_CYCLES_BEFORE_TV) {
           triggerTvOff();
         } else {
@@ -442,9 +694,7 @@ function resize() {
 }
 resize();
 addEventListener('resize', resize);
-if (window.visualViewport) {
-  window.visualViewport.addEventListener('resize', resize);
-}
+if (window.visualViewport) window.visualViewport.addEventListener('resize', resize);
 
 function glyphAt(d, i) {
   return GLYPHS[((d.glyph - i) % GLYPHS.length + GLYPHS.length) % GLYPHS.length];
@@ -453,12 +703,10 @@ function glyphAt(d, i) {
 function spawnDrop() {
   drops.push({
     x: Math.floor(Math.random() * (C.width / S)) * S,
-    y: -S,
-    startY: -S,
+    y: -S, startY: -S,
     speed: 1.2 + Math.random() * 2.2,
     glyph: (Math.random() * GLYPHS.length) | 0,
-    shattered: false,
-    collapsing: false,
+    shattered: false, collapsing: false,
     vx: 0, vy: 0, alpha: 1
   });
 }
@@ -471,19 +719,13 @@ function shatterDrop(d) {
     const count = 4 + ((Math.random() * 4) | 0);
     for (let j = 0; j < count; j++) {
       crumbs.push({
-        x: d.x + Math.random() * S,
-        y: py + Math.random() * S,
-        vx: (Math.random() - 0.5) * 7,
-        vy: (Math.random() - 0.5) * 6 - 1,
-        life: 1,
-        decay: 0.012 + Math.random() * 0.02,
-        w: 1 + Math.random() * 4,
-        h: 1 + Math.random() * 4,
-        isChar: Math.random() < 0.35,
-        ch: glyphAt(d, i),
+        x: d.x + Math.random() * S, y: py + Math.random() * S,
+        vx: (Math.random() - 0.5) * 7, vy: (Math.random() - 0.5) * 6 - 1,
+        life: 1, decay: 0.012 + Math.random() * 0.02,
+        w: 1 + Math.random() * 4, h: 1 + Math.random() * 4,
+        isChar: Math.random() < 0.35, ch: glyphAt(d, i),
         chSize: S * (0.28 + Math.random() * 0.5),
-        rot: (Math.random() - 0.5) * 4,
-        rotV: (Math.random() - 0.5) * 0.28,
+        rot: (Math.random() - 0.5) * 4, rotV: (Math.random() - 0.5) * 0.28,
         collapsing: false
       });
     }
@@ -504,19 +746,14 @@ function updateDrop(d) {
     d.alpha = Math.min(1, dist / 100);
     return dist > 15;
   }
-  if (!d.shattered) {
+  if (!d.shattered && currentTitleIndex !== 2) {
     const sz = getSafeZone();
-    if (d.y >= sz.y && d.y <= sz.y + sz.h && d.x >= sz.x && d.x <= sz.x + sz.w) {
-      shatterDrop(d);
-    }
+    if (d.y >= sz.y && d.y <= sz.y + sz.h && d.x >= sz.x && d.x <= sz.x + sz.w) shatterDrop(d);
   }
-  if (d.shattered) {
-    d.alpha -= 0.07;
-    return d.alpha > 0;
-  }
+  if (d.shattered) { d.alpha -= 0.07; return d.alpha > 0; }
   d.y += d.speed;
   d.glyph = (d.glyph + 1) % GLYPHS.length;
-  if (d.y - d.startY >= N * S) shatterDrop(d);
+  if (d.y - d.startY >= N * S * cycleFallMultiplier) shatterDrop(d);
   return d.y - N * S < C.height + S;
 }
 
@@ -527,8 +764,7 @@ function updateCrumb(c) {
     const dist = Math.hypot(dx, dy) || 1;
     const elapsed = performance.now() - collapseStart;
     const accel = 1.5 + elapsed / 400;
-    c.vx += (dx / dist) * accel;
-    c.vy += (dy / dist) * accel;
+    c.vx += (dx / dist) * accel; c.vy += (dy / dist) * accel;
     c.vx *= 0.92; c.vy *= 0.92;
     c.x += c.vx; c.y += c.vy;
     c.life = Math.min(1, dist / 60);
@@ -580,23 +816,19 @@ function drawCrumb(c) {
 function loop(now) {
   X.fillStyle = '#000';
   X.fillRect(0, 0, C.width, C.height);
-  
-  if (rainActive && Math.random() < 0.45 && drops.length < maxDrops) {
-    spawnDrop();
-  }
-  
+
+  if (rainActive && Math.random() < 0.45 && drops.length < maxDrops) spawnDrop();
+
   for (let i = drops.length - 1; i >= 0; i--) {
     if (updateDrop(drops[i])) drawDrop(drops[i]);
     else drops.splice(i, 1);
   }
-  
   if (crumbs.length > MAX_CRUMBS) crumbs.splice(0, crumbs.length - MAX_CRUMBS);
-  
   for (let i = crumbs.length - 1; i >= 0; i--) {
     if (updateCrumb(crumbs[i])) drawCrumb(crumbs[i]);
     else crumbs.splice(i, 1);
   }
-  
+
   if (titlePhase === 'tv_collapse') {
     const allGone = drops.length === 0 && crumbs.length === 0;
     if (allGone || now - collapseStart > 1500) {
@@ -610,7 +842,9 @@ function loop(now) {
       }, 600);
     }
   }
-  
+
+  checkMouseProximity();
+
   updateCenterTitle(now);
   requestAnimationFrame(loop);
 }
