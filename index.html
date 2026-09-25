@@ -158,9 +158,6 @@ canvas { display: block; width: 100%; height: 100%; }
   padding: clamp(24px, 4vw, 52px);
   border-radius: 24px;
   background: linear-gradient(180deg, rgba(6, 14, 9, 0.72), rgba(2, 5, 4, 0.88));
-  box-shadow:
-    0 0 50px rgba(0, 255, 85, 0.10),
-    0 0 120px rgba(0, 255, 85, 0.05);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   text-align: center;
@@ -274,17 +271,15 @@ canvas { display: block; width: 100%; height: 100%; }
   letter-spacing: 0.12em;
   text-transform: uppercase;
   text-decoration: none;
-  box-shadow: 0 0 22px rgba(125, 251, 164, 0.12);
   transition:
-    transform 0.18s ease, box-shadow 0.18s ease,
+    transform 0.18s ease,
     background 0.18s ease, filter 0.18s ease;
 }
 .mlink::before { content: "↗"; font-size: 1.05em; opacity: 0.9; }
 .mlink:hover {
   transform: translateY(-2px);
-  background: rgba(125, 251, 164, 0.14);
-  box-shadow: 0 0 30px rgba(125, 251, 164, 0.28);
-  filter: brightness(1.1);
+  background: rgba(125, 251, 164, 0.15);
+  filter: brightness(1.15);
 }
 .mlink--alt { color: var(--green-soft); }
 .mlink.static { animation: linkStatic 110ms steps(2, jump-none) 1; }
@@ -308,7 +303,7 @@ canvas { display: block; width: 100%; height: 100%; }
   border-radius: 5px;
 }
 
-/* ============ NAV (‹ ›) ============ */
+/* ============ NAV (‹ ›) — без рамок, без блика ============ */
 .tv-nav {
   position: fixed;
   top: 50%;
@@ -324,11 +319,9 @@ canvas { display: block; width: 100%; height: 100%; }
   cursor: pointer;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  box-shadow:
-    0 0 22px rgba(125, 251, 164, 0.16);
   transform: translateY(-50%);
   transition:
-    transform 0.18s ease, box-shadow 0.18s ease,
+    transform 0.18s ease,
     background 0.18s ease, filter 0.18s ease;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
@@ -338,34 +331,18 @@ canvas { display: block; width: 100%; height: 100%; }
   transform: translateY(-1px);
   text-shadow: 0 0 12px currentColor;
 }
-.tv-nav::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 36%, rgba(0, 0, 0, 0.18));
-  opacity: 0.65;
-}
 .tv-nav--prev { left: var(--nav-offset); border-radius: 18px 8px 8px 18px; }
 .tv-nav--next { right: var(--nav-offset); border-radius: 8px 18px 18px 8px; }
 .tv-nav:hover {
   transform: translateY(-50%) scale(1.06);
   background: rgba(5, 14, 8, 0.72);
-  box-shadow:
-    0 0 30px rgba(125, 251, 164, 0.26);
 }
 .tv-nav:focus-visible { outline: 2px solid var(--green); outline-offset: 4px; }
-.tv-nav.gone { display: none; }
+.tv-nav.gone, #hud.gone, #bug.gone { display: none; }
 .tv-nav.is-sucked { pointer-events: none; }
 .tv-nav--prev.is-sucked { animation: suckPrev 680ms cubic-bezier(0.2, 0.7, 0.15, 1) forwards; }
 .tv-nav--next.is-sucked { animation: suckNext 680ms cubic-bezier(0.2, 0.7, 0.15, 1) forwards; }
-.tv-nav.nav-in { animation: navIn 420ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
 .tv-nav.pulse { animation: navPulse 240ms ease; }
-@keyframes navIn {
-  0% { opacity: 0; transform: translateY(-50%) scale(0.5); filter: brightness(3); }
-  100% { opacity: 1; transform: translateY(-50%) scale(1); filter: brightness(1); }
-}
 @keyframes navPulse {
   0% { filter: brightness(1); }
   35% { transform: translateY(-50%) scale(1.07); filter: brightness(2.4); }
@@ -410,7 +387,26 @@ canvas { display: block; width: 100%; height: 100%; }
   }
 }
 
-/* ============ HUD (пауза / звук) ============ */
+/* ============ ГЛИТЧ-ПОЯВЛЕНИЕ КНОПОК ============ */
+.glitch-in {
+  --base-tf: translate(0, 0);
+  animation: glitchIn 480ms linear both;
+}
+.tv-nav.glitch-in { --base-tf: translateY(-50%); }
+#hud.glitch-in { --base-tf: translateX(-50%); }
+@keyframes glitchIn {
+  0%   { opacity: 0; transform: var(--base-tf) skewX(18deg); filter: brightness(6) saturate(2); }
+  10%  { opacity: 0.9; transform: var(--base-tf) translateX(-5px) skewX(-12deg); }
+  20%  { opacity: 0.3; transform: var(--base-tf) translateX(6px); filter: brightness(2); }
+  32%  { opacity: 1; transform: var(--base-tf) translateX(-4px) skewX(8deg); filter: brightness(3.5); }
+  44%  { opacity: 0.45; transform: var(--base-tf) translateX(4px) skewX(-5deg); }
+  58%  { opacity: 1; transform: var(--base-tf) translateX(-2px) skewX(3deg); filter: brightness(1.8); }
+  72%  { opacity: 0.7; transform: var(--base-tf) translateX(2px) skewX(-2deg); }
+  86%  { opacity: 1; transform: var(--base-tf) translateX(-1px) skewX(1deg); }
+  100% { opacity: 1; transform: var(--base-tf); filter: brightness(1); }
+}
+
+/* ============ HUD (пауза / звук) — без рамок ============ */
 #hud {
   position: fixed;
   left: 50%;
@@ -432,15 +428,15 @@ canvas { display: block; width: 100%; height: 100%; }
   cursor: pointer;
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  transition: color 0.18s ease, box-shadow 0.18s ease, opacity 0.3s;
+  transition: color 0.18s ease, opacity 0.3s, filter 0.18s ease;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
 }
-.hud-btn:hover { color: #bfffd0; }
+.hud-btn:hover { color: #bfffd0; filter: brightness(1.2); }
 .hud-btn:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
 #pauseBtn.active {
   color: #eaffef;
-  box-shadow: 0 0 16px rgba(125, 251, 164, 0.3);
+  filter: brightness(1.4);
 }
 #soundBtn.muted { opacity: 0.35; }
 #nightBadge {
@@ -456,6 +452,21 @@ canvas { display: block; width: 100%; height: 100%; }
 }
 body.night #nightBadge { display: inline-block; }
 
+/* HUD и баг засасываются в центр */
+#hud.is-sucked, #bug.is-sucked { pointer-events: none; }
+#hud.is-sucked { animation: hudSuck 700ms cubic-bezier(0.2, 0.7, 0.15, 1) forwards; }
+#bug.is-sucked { animation: bugSuck 700ms cubic-bezier(0.2, 0.7, 0.15, 1) forwards; }
+@keyframes hudSuck {
+  0% { transform: translateX(-50%) translateY(0) scale(1); opacity: 1; filter: brightness(1); }
+  40% { transform: translateX(-50%) translateY(calc(-50vh + 42px)) scale(0.55); opacity: 0.95; filter: brightness(2.6); }
+  100% { transform: translateX(-50%) translateY(calc(-50vh + 26px)) scale(0.02); opacity: 0; filter: brightness(6) blur(2px); }
+}
+@keyframes bugSuck {
+  0% { transform: translate(0, 0) scale(1); opacity: 1; filter: brightness(1); }
+  40% { transform: translate(calc(-50vw + 150px), calc(50vh - 30px)) scale(0.55); opacity: 0.95; filter: brightness(2.6); }
+  100% { transform: translate(calc(-50vw + 100px), calc(50vh - 18px)) scale(0.02); opacity: 0; filter: brightness(6) blur(2px); }
+}
+
 /* ============ TV BUG (кнопка ONEDOPEA MODE) ============ */
 #bug {
   position: fixed;
@@ -467,7 +478,7 @@ body.night #nightBadge { display: inline-block; }
   gap: 7px;
   padding: 8px 10px;
   border-radius: 999px;
-  background: transparent;
+  background: rgba(0, 0, 0, 0.30);
   font: 700 10px / 1 var(--mono);
   letter-spacing: 0.3em;
   color: rgba(125, 251, 164, 0.5);
@@ -734,7 +745,9 @@ body.night #oracle.onedopea-mode span.locked {
   #slide-panel.crt-off,
   #slide-panel.suck,
   .tv-nav.is-sucked,
-  .tv-nav.nav-in,
+  #hud.is-sucked,
+  #bug.is-sucked,
+  .glitch-in,
   #tv-effect.active,
   #zap.go,
   .mlink.static,
@@ -781,13 +794,13 @@ body.night #oracle.onedopea-mode span.locked {
 <button type="button" class="tv-nav tv-nav--prev gone" id="navPrev" aria-label="Предыдущий"><span>‹</span></button>
 <button type="button" class="tv-nav tv-nav--next gone" id="navNext" aria-label="Следующий"><span>›</span></button>
 
-<div id="hud">
+<div id="hud" class="gone">
   <button type="button" id="pauseBtn" class="hud-btn" aria-label="Пауза (пробел)" title="Пауза (пробел)">||</button>
   <span id="nightBadge">NIGHT</span>
   <button type="button" id="soundBtn" class="hud-btn" aria-label="Звук" title="Звук вкл/выкл">♪</button>
 </div>
 
-<button type="button" id="bug" aria-label="ONEDOPEA MODE" title="ONEDOPEA MODE // 10S">ONEDOPEA<span class="bug-dot">●</span></button>
+<button type="button" id="bug" class="gone" aria-label="ONEDOPEA MODE" title="ONEDOPEA MODE // 10S">ONEDOPEA<span class="bug-dot">●</span></button>
 <div id="osd" aria-hidden="true"></div>
 <div id="toast"></div>
 <div id="mode-label">ONEDOPEA MODE // 10S</div>
@@ -815,6 +828,7 @@ const navPrev = document.getElementById('navPrev');
 const navNext = document.getElementById('navNext');
 const zapEl = document.getElementById('zap');
 const tvOverlay = document.getElementById('tv-effect');
+const hudEl = document.getElementById('hud');
 const pauseBtn = document.getElementById('pauseBtn');
 const soundBtn = document.getElementById('soundBtn');
 const toastEl = document.getElementById('toast');
@@ -844,7 +858,7 @@ const ITEMS = [
 ];
 const SPECIAL = { type: 'title', word: 'ONEDOPEA', url: 'https://t.me/onedopea' };
 const SLIDE_BADGE = '01 / BotControl';
-const SLIDE_LEAD = 'Управление ботами в матричном стиле. Репозиторий — по ссылке ниже.';
+const SLIDE_LEAD = 'Это BotControl — Telegram-боты прямо с телефона.';
 
 const START_DELAY = 1400;
 const LETTER_STEP = 230;
@@ -899,6 +913,46 @@ let goldenTimer = null;
 let modeTimer = null;
 let osdTimer = null;
 let toastTimer = null;
+
+/* ============ ВОЗРОЖДЕНИЕ КНОПОК (генерации) ============ */
+let uiGen = 0;
+let pauseBaseLabel = '||';
+const BTN_GLYPHS = {
+  prev: ['‹', '←'],
+  next: ['›', '→'],
+  pause: ['||', '‖'],
+  sound: ['♪', '♫']
+};
+function glitchText(el, finalText) {
+  const chars = '▓▒░#%&@$!<>/\\|=+*';
+  let k = 0;
+  const total = 6;
+  const iv = setInterval(() => {
+    k++;
+    if (k >= total) { el.textContent = finalText; clearInterval(iv); return; }
+    el.textContent = finalText.split('').map(ch =>
+      (ch === ' ' || Math.random() > 0.6) ? ch : chars[(Math.random() * chars.length) | 0]
+    ).join('');
+  }, 45);
+}
+function rebirthUI() {
+  uiGen++;
+  const v = uiGen % 2;
+  pauseBaseLabel = BTN_GLYPHS.pause[v];
+  [navPrev, navNext, hudEl, bugEl].forEach(b => b.classList.remove('gone', 'is-sucked'));
+  glitchText(navPrev.querySelector('span'), BTN_GLYPHS.prev[v]);
+  glitchText(navNext.querySelector('span'), BTN_GLYPHS.next[v]);
+  glitchText(pauseBtn, BTN_GLYPHS.pause[v]);
+  glitchText(soundBtn, BTN_GLYPHS.sound[v]);
+  [navPrev, navNext, hudEl, bugEl].forEach(b => {
+    b.classList.remove('glitch-in');
+    void b.offsetWidth;
+    b.classList.add('glitch-in');
+  });
+  setTimeout(() => {
+    [navPrev, navNext, hudEl, bugEl].forEach(b => b.classList.remove('glitch-in'));
+  }, 520);
+}
 
 function randomGlyph() {
   return GLYPHS[(Math.random() * GLYPHS.length) | 0];
@@ -1032,7 +1086,7 @@ function resumeCycle() {
   if (!paused) return;
   paused = false;
   pauseBtn.classList.remove('active');
-  pauseBtn.textContent = '||';
+  pauseBtn.textContent = pauseBaseLabel;
   if (autoResumeTimer) { clearTimeout(autoResumeTimer); autoResumeTimer = null; }
 }
 function togglePause() {
@@ -1177,7 +1231,7 @@ function showOsd(text) {
   osdTimer = setTimeout(() => osdEl.classList.remove('show'), 1500);
 }
 
-console.log('%cONEDOPEA %c// v3.1 %c— фразы: "onedopea" "konami" "stats" | свайп↑↓ / [ ] — время, ↑↓ — дождь, пробел — пауза, F — fullscreen', 'color:#0f0;font-weight:bold;font-size:14px', 'color:#7dfba4', 'color:#0a0');
+console.log('%cONEDOPEA %c// v3.2 %c— фразы: "onedopea" "konami" "stats" | свайп↑↓ / [ ] — время, ↑↓ — дождь, пробел — пауза, F — fullscreen', 'color:#0f0;font-weight:bold;font-size:14px', 'color:#7dfba4', 'color:#0a0');
 
 /* ============ KEYBOARD ============ */
 document.addEventListener('keydown', (e) => {
@@ -1405,16 +1459,7 @@ function startEnter(i, now) {
 
 function updateNavVisibility() {
   if (idx === -1) return;
-  if (navPrev.classList.contains('gone')) {
-    [navPrev, navNext].forEach(b => {
-      b.classList.remove('gone', 'is-sucked', 'pulse');
-      b.classList.add('nav-in');
-    });
-    setTimeout(() => {
-      navPrev.classList.remove('nav-in');
-      navNext.classList.remove('nav-in');
-    }, 460);
-  }
+  if (navPrev.classList.contains('gone')) rebirthUI();
 }
 
 function goToZap(t, now) {
@@ -1471,12 +1516,12 @@ function triggerTvOff(now) {
   }
 
   [navPrev, navNext].forEach(b => {
-    b.classList.remove('nav-in', 'pulse');
+    b.classList.remove('pulse', 'glitch-in');
     b.classList.add('is-sucked');
   });
+  [hudEl, bugEl].forEach(b => b.classList.add('is-sucked'));
   setTimeout(() => {
-    navPrev.classList.add('gone');
-    navNext.classList.add('gone');
+    [navPrev, navNext, hudEl, bugEl].forEach(b => b.classList.add('gone'));
   }, 720);
 }
 
