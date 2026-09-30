@@ -169,19 +169,16 @@ canvas { display: block; width: 100%; height: 100%; }
 #slide-panel.crt-off.fast { animation-duration: 340ms; }
 #slide-panel.suck { animation: suckContent 1.05s cubic-bezier(0.5, 0, 0.9, 0.4) forwards; }
 
-.badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 30px;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: rgba(125, 251, 164, 0.06);
-  color: var(--green-soft);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+.logo-badge {
+  width: 46px;
+  height: 46px;
+  margin: 0 auto 10px;
+}
+.logo-badge svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 6px rgba(0, 255, 85, 0.5)) drop-shadow(0 0 22px rgba(0, 255, 85, 0.22));
 }
 #slide-title {
   margin: 18px 0 12px;
@@ -264,7 +261,7 @@ canvas { display: block; width: 100%; height: 100%; }
   min-height: 46px;
   padding: 0.85rem 1.3rem;
   border-radius: 999px;
-  background: rgba(125, 251, 164, 0.07);
+  background: transparent;
   color: var(--green);
   font-size: 13px;
   font-weight: 800;
@@ -273,13 +270,13 @@ canvas { display: block; width: 100%; height: 100%; }
   text-decoration: none;
   transition:
     transform 0.18s ease,
-    background 0.18s ease, filter 0.18s ease;
+    color 0.18s ease, filter 0.18s ease;
 }
 .mlink::before { content: "↗"; font-size: 1.05em; opacity: 0.9; }
 .mlink:hover {
   transform: translateY(-2px);
-  background: rgba(125, 251, 164, 0.15);
-  filter: brightness(1.15);
+  color: #eafff0;
+  filter: brightness(1.2);
 }
 .mlink--alt { color: var(--green-soft); }
 .mlink.static { animation: linkStatic 110ms steps(2, jump-none) 1; }
@@ -313,12 +310,10 @@ canvas { display: block; width: 100%; height: 100%; }
   display: grid;
   place-items: center;
   border-radius: 18px;
-  background: rgba(3, 8, 5, 0.55);
+  background: transparent;
   color: var(--green);
   font: 700 clamp(26px, 3vw, 36px) / 1 var(--mono);
   cursor: pointer;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
   transform: translateY(-50%);
   transition:
     transform 0.18s ease,
@@ -329,13 +324,12 @@ canvas { display: block; width: 100%; height: 100%; }
 .tv-nav span {
   display: block;
   transform: translateY(-1px);
-  text-shadow: 0 0 12px currentColor;
 }
 .tv-nav--prev { left: var(--nav-offset); border-radius: 18px 8px 8px 18px; }
 .tv-nav--next { right: var(--nav-offset); border-radius: 8px 18px 18px 8px; }
 .tv-nav:hover {
   transform: translateY(-50%) scale(1.06);
-  background: rgba(5, 14, 8, 0.72);
+  filter: brightness(1.45);
 }
 .tv-nav:focus-visible { outline: 2px solid var(--green); outline-offset: 4px; }
 .tv-nav.gone, #hud.gone, #bug.gone { display: none; }
@@ -392,6 +386,12 @@ canvas { display: block; width: 100%; height: 100%; }
   --base-tf: translate(0, 0);
   animation: glitchIn 480ms linear both;
 }
+/* обратное появление (для VHS-перемотки): элемент «раз-возникает» и исчезает */
+.glitch-out {
+  --base-tf: translate(0, 0);
+  animation: glitchIn 480ms linear both reverse;
+  pointer-events: none;
+}
 .tv-nav.glitch-in { --base-tf: translateY(-50%); }
 #hud.glitch-in { --base-tf: translateX(-50%); }
 @keyframes glitchIn {
@@ -422,23 +422,16 @@ canvas { display: block; width: 100%; height: 100%; }
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.35);
+  background: transparent;
   color: rgba(125, 251, 164, 0.75);
   font: 700 13px / 1 var(--mono);
   cursor: pointer;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
   transition: color 0.18s ease, opacity 0.3s, filter 0.18s ease;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
 }
-.hud-btn:hover { color: #bfffd0; filter: brightness(1.2); }
+.hud-btn:hover { color: #bfffd0; filter: brightness(1.25); }
 .hud-btn:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
-#pauseBtn.active {
-  color: #eaffef;
-  filter: brightness(1.4);
-}
-#soundBtn.muted { opacity: 0.35; }
 #nightBadge {
   display: none;
   padding: 5px 9px;
@@ -478,11 +471,10 @@ body.night #nightBadge { display: inline-block; }
   gap: 7px;
   padding: 8px 10px;
   border-radius: 999px;
-  background: rgba(0, 0, 0, 0.30);
+  background: transparent;
   font: 700 10px / 1 var(--mono);
   letter-spacing: 0.3em;
   color: rgba(125, 251, 164, 0.5);
-  text-shadow: 0 0 8px rgba(0, 255, 85, 0.4);
   cursor: pointer;
   white-space: nowrap;
   transition: color 0.2s ease, filter 0.2s ease;
@@ -504,6 +496,47 @@ body.night #nightBadge { display: inline-block; }
   0% { opacity: 1; transform: translateX(0) skewX(0); }
   50% { opacity: 0.25; transform: translateX(2px) skewX(8deg); }
   100% { opacity: 1; transform: translateX(0) skewX(0); }
+}
+
+/* ============ VHS REW (кнопка обратной перемотки) ============ */
+#rew {
+  position: fixed;
+  bottom: 12px;
+  right: 12px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: transparent;
+  font: 700 10px / 1 var(--mono);
+  letter-spacing: 0.3em;
+  color: rgba(125, 251, 164, 0.5);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.2s ease, filter 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+#rew:hover { color: rgba(125, 251, 164, 0.95); filter: brightness(1.3); }
+#rew:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
+#rew-osd {
+  position: fixed;
+  left: 20px;
+  top: 18px;
+  z-index: 130;
+  font: 700 clamp(15px, 3.4vw, 24px) / 1 var(--mono);
+  letter-spacing: 0.22em;
+  color: rgba(210, 255, 225, 0.92);
+  text-shadow: 0 0 10px rgba(0, 255, 85, 0.8), 0 0 2px rgba(255, 255, 255, 0.8);
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+}
+body.rewing #rew-osd { animation: rewBlink 0.5s steps(1, end) infinite; }
+@keyframes rewBlink {
+  0%, 60% { opacity: 1; }
+  61%, 100% { opacity: 0.12; }
 }
 
 #osd {
@@ -730,7 +763,7 @@ body.night #oracle.onedopea-mode span.locked {
     text-align: left;
     padding: 26px 44px;
   }
-  .badge, #slide-title, #slide-lead { grid-column: 1; }
+  .logo-badge, #slide-title, #slide-lead { grid-column: 1; }
   #slide-cta { grid-column: 2; grid-row: 1 / span 3; }
   #slide-title { margin: 10px 0 8px; font-size: clamp(30px, 7vh, 58px); }
   #slide-lead { margin: 0; max-width: 52ch; }
@@ -765,7 +798,32 @@ body.night #oracle.onedopea-mode span.locked {
 <!-- 01. BotControl App -->
 <div id="slide-wrap" class="hidden">
   <div id="slide-panel">
-    <div class="badge" id="slide-badge">01 / BotControl</div>
+    <div class="logo-badge" role="img" aria-label="BotControl — логотип">
+<svg viewBox="-1 -1 448.66 446.57" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <radialGradient id="gSphere" cx="0.34" cy="0.3" r="0.85">
+      <stop offset="0" stop-color="#eafff2"/>
+      <stop offset="0.45" stop-color="#86f7b2"/>
+      <stop offset="0.8" stop-color="#1d8a4c"/>
+      <stop offset="1" stop-color="#0a4022"/>
+    </radialGradient>
+    <linearGradient id="gPlane" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#b0ffd4"/>
+    </linearGradient>
+  </defs>
+  <path d="M 55.13 369.70 C 55.10 364.50 56.15 361.53 59.74 359.66 L 61.33 358.97 C 65.52 357.22 66.88 357.57 71.11 359.48 L 89.49 343.46 C 89.62 343.66 89.89 343.68 89.95 343.99 C 90.01 344.31 90.34 344.46 90.41 344.55 C 90.48 344.64 90.77 345.03 90.84 345.12 C 90.92 345.21 91.14 345.50 91.27 345.70 C 90.46 337.08 94.78 332.51 103.65 333.33 C 104.57 328.94 115.08 323.04 118.75 319.71 L 150.50 293.46 C 155.76 289.58 161.09 283.64 166.81 280.46 L 158.00 252.80 C 152.33 252.14 132.66 245.30 123.37 242.54 C 122.16 242.18 121.34 242.02 120.33 241.72 C 112.58 239.45 94.23 234.72 91.16 230.08 C 87.43 224.46 88.06 216.00 96.98 211.93 C 110.45 205.79 125.15 200.61 139.07 195.04 C 158.69 187.18 343.74 111.93 350.48 111.41 C 331.62 97.62 321.27 76.65 322.57 51.41 C 323.14 40.23 326.58 34.69 327.95 26.19 C 323.46 24.83 307.09 16.30 293.92 11.88 C 252.55 -2.00 208.37 -3.64 166.44 7.14 C 128.02 17.01 99.98 34.31 71.99 57.98 L 38.23 97.26 C -11.59 167.42 -12.26 269.99 34.18 341.72 C 44.20 357.19 50.88 363.42 55.13 369.70" fill="url(#gSphere)"/>
+  <path d="M 132.46 318.30 L 131.38 319.15 L 130.55 327.58 L 131.42 328.57 L 132.34 330.83 L 133.19 331.55 L 135.41 332.56 L 136.37 333.38 C 150.82 334.21 154.80 321.38 144.68 315.30 L 143.61 314.49 C 137.09 314.53 136.40 315.97 132.46 318.30" fill="#a5ffcb"/>
+  <path d="M 91.27 345.70 L 92.33 348.76 L 93.21 349.76 L 94.06 350.69 L 102.68 352.41 L 103.68 351.68 C 108.91 349.40 110.55 346.98 110.43 339.40 L 109.66 338.30 L 108.75 336.09 L 107.79 335.15 L 106.86 334.33 C 103.91 333.92 106.39 334.88 103.65 333.33 C 94.78 332.51 90.46 337.08 91.27 345.70" fill="#a5ffcb"/>
+  <path d="M 55.13 369.70 L 56.03 372.25 C 56.10 372.45 56.24 372.86 56.31 373.03 C 56.36 373.19 56.48 373.52 56.58 373.77 L 57.12 374.46 L 61.30 376.72 L 62.55 377.40 C 66.70 377.34 64.61 377.45 68.62 376.53 L 69.64 375.56 C 74.15 371.85 75.07 369.57 73.62 362.09 L 72.56 361.21 C 70.88 360.38 71.69 361.57 71.11 359.48 C 66.88 357.57 65.52 357.22 61.33 358.97 L 59.74 359.66 C 56.15 361.53 55.10 364.50 55.13 369.70" fill="#a5ffcb"/>
+  <path d="M 23.90 401.60 L 24.43 401.92 C 30.24 412.25 43.61 406.84 42.20 394.12 L 41.40 393.30 C 39.58 389.31 41.21 391.49 37.95 389.39 L 37.82 388.70 C 29.94 387.00 21.73 390.33 23.90 401.60" fill="#a5ffcb"/>
+  <path d="M 136.37 333.38 L 135.41 332.56 L 133.19 331.55 L 132.34 330.83 L 131.42 328.57 C 130.05 328.57 130.32 328.92 130.55 327.58 L 131.38 319.15 L 132.46 318.30 C 136.40 315.97 137.09 314.53 143.61 314.49 C 145.00 314.23 144.68 313.92 144.68 315.30 C 154.80 321.38 150.82 334.21 136.37 333.38 Z M 371.27 122.49 L 371.88 123.65 C 372.65 125.94 373.17 125.45 370.85 125.45 L 370.88 127.44 C 371.64 129.97 372.24 129.45 369.75 129.45 L 369.97 130.85 C 371.20 135.14 370.53 132.22 368.68 133.45 L 367.88 138.44 C 368.65 140.97 369.25 140.45 366.74 140.45 L 366.97 141.84 C 368.20 146.13 367.53 143.22 365.68 144.45 L 364.88 149.43 C 365.65 151.97 366.25 151.45 363.74 151.45 L 363.96 152.84 C 365.20 157.13 364.53 154.21 362.68 155.45 L 362.90 156.63 C 363.65 158.94 364.17 158.45 361.84 158.45 L 360.96 163.83 C 362.20 168.13 361.53 165.21 359.67 166.45 L 359.90 167.63 C 360.65 169.94 361.17 169.45 358.84 169.45 L 358.87 171.42 C 359.65 173.97 360.25 173.45 357.73 173.45 L 357.96 174.83 C 359.20 179.13 358.53 176.21 356.67 177.45 L 356.90 178.62 C 357.65 180.95 358.17 180.45 355.83 180.45 L 355.87 182.42 C 356.65 184.97 357.26 184.45 354.73 184.45 L 354.96 185.83 C 356.21 190.13 355.53 187.21 353.66 188.45 L 353.90 189.62 C 354.79 193.57 354.53 191.05 352.57 192.25 L 351.95 196.90 C 353.24 201.15 352.50 198.24 350.66 199.45 L 350.92 200.69 C 351.72 204.57 351.48 202.05 349.57 203.21 L 348.95 207.90 C 350.25 212.15 349.50 209.24 347.66 210.45 L 347.92 211.68 C 348.58 215.41 348.43 213.02 346.56 214.14 L 345.95 218.89 C 347.22 223.15 346.49 220.23 344.65 221.45 L 344.92 222.68 C 345.48 226.28 345.40 223.99 343.55 225.08 L 342.95 229.89 C 344.11 234.16 343.45 231.23 341.65 232.45 L 341.91 233.68 C 342.50 237.87 342.32 235.01 340.55 236.04 L 339.94 240.89 C 341.02 245.15 340.42 242.23 338.64 243.45 L 338.91 244.68 C 339.45 248.82 339.30 246.00 337.55 247.01 L 336.94 251.89 C 337.91 256.15 337.38 253.23 335.64 254.45 L 335.91 255.67 C 336.30 259.69 336.26 256.96 334.54 257.93 L 333.94 262.89 C 334.87 267.15 334.37 264.23 332.64 265.45 L 332.91 266.67 C 333.19 270.58 333.22 267.94 331.54 268.87 L 330.94 273.89 C 331.77 278.15 331.33 275.23 329.63 276.45 L 329.90 277.66 C 330.10 281.49 330.19 278.92 328.53 279.82 L 327.93 284.88 C 328.67 289.13 328.30 286.23 326.63 287.45 L 326.90 288.66 C 327.65 290.95 328.15 290.45 325.83 290.45 L 324.93 295.88 C 325.56 300.05 325.26 297.21 323.63 298.42 L 323.90 299.65 C 324.65 301.95 325.16 301.45 322.83 301.45 L 321.93 306.87 C 323.10 311.12 322.44 308.23 320.66 309.45 L 318.92 317.87 C 320.03 322.12 319.42 319.23 317.66 320.45 L 316.92 324.72 C 317.68 327.03 318.09 326.45 315.67 326.45 L 315.88 326.58 C 316.50 328.92 316.91 328.27 314.43 328.37 C 312.68 329.10 312.06 329.85 311.32 331.46 C 311.32 333.83 311.93 333.44 309.69 332.86 L 309.49 332.66 C 309.49 335.02 310.07 334.64 307.84 333.92 L 306.99 333.52 C 305.99 335.26 308.05 335.25 304.76 334.85 L 297.08 334.88 C 292.82 336.01 295.72 335.39 294.50 333.59 L 293.75 333.03 L 292.15 332.98 C 289.87 333.63 290.50 334.00 290.50 331.57 C 289.70 330.01 277.67 320.22 273.28 319.02 C 270.59 319.67 271.28 319.89 272.49 317.42 C 269.09 315.13 271.34 316.59 269.28 316.02 C 266.59 316.67 267.28 316.89 268.49 314.42 C 265.08 312.12 267.35 313.60 265.28 313.02 C 262.59 313.67 263.28 313.89 264.49 311.42 C 261.14 309.18 263.30 310.59 261.28 310.02 C 258.59 310.67 259.28 310.89 260.49 308.43 C 257.15 306.19 259.30 307.59 257.28 307.03 C 254.59 307.67 255.28 307.89 256.49 305.43 C 253.19 303.23 255.28 304.59 253.27 304.03 C 250.59 304.67 251.28 304.89 252.49 302.44 C 249.20 300.24 251.27 301.60 249.27 301.03 C 246.59 301.67 247.28 301.89 248.49 299.44 C 245.24 297.42 247.21 298.63 245.12 298.06 C 242.84 298.61 243.50 298.98 243.50 296.51 L 243.71 295.36 L 241.12 295.06 C 238.57 295.67 239.31 295.83 240.49 293.51 C 237.01 294.12 237.74 294.07 237.10 296.83 C 237.65 299.11 238.02 298.45 235.55 298.45 L 234.41 298.25 L 234.13 300.90 C 234.64 303.09 234.99 302.45 232.61 302.45 L 226.07 311.76 C 226.65 314.10 227.05 313.45 224.55 313.45 L 223.39 313.24 L 223.10 315.89 C 223.65 318.09 224.00 317.45 221.61 317.45 C 218.04 319.13 220.69 317.42 220.13 319.89 C 220.64 322.08 221.00 321.45 218.64 321.45 C 217.51 322.18 217.70 321.88 216.51 323.55 C 213.85 327.24 215.75 324.31 215.07 326.69 C 215.65 329.11 216.08 328.45 213.51 328.45 L 212.39 328.24 L 212.10 330.82 C 212.65 333.12 213.02 332.45 210.54 332.45 C 207.08 334.05 209.65 332.44 209.13 334.89 C 209.65 337.12 209.99 336.45 207.55 336.45 C 205.71 337.01 205.95 337.27 205.49 338.53 C 205.49 341.02 206.13 340.62 203.79 340.00 L 193.55 341.79 C 191.00 342.61 191.50 343.24 191.50 340.72 L 186.03 336.12 C 183.96 333.38 178.77 316.57 177.45 312.60 C 173.97 302.19 170.55 290.65 166.81 280.46 C 161.09 283.64 155.76 289.58 150.50 293.46 L 118.75 319.71 C 115.08 323.04 104.57 328.94 103.65 333.33 C 106.39 334.88 103.91 333.92 106.86 334.33 L 107.79 335.15 L 108.75 336.09 L 109.66 338.30 C 111.03 338.30 110.71 337.99 110.43 339.40 C 110.55 346.98 108.91 349.40 103.68 351.68 L 102.68 352.41 L 94.06 350.69 L 93.21 349.76 L 92.33 348.76 L 91.27 345.70 C 91.14 345.50 90.92 345.21 90.84 345.12 C 90.77 345.03 90.48 344.64 90.41 344.55 C 90.34 344.46 90.01 344.31 89.95 343.99 C 89.89 343.68 89.62 343.66 89.49 343.46 L 71.11 359.48 C 71.69 361.57 70.88 360.38 72.56 361.21 L 73.62 362.09 C 75.07 369.57 74.15 371.85 69.64 375.56 C 69.64 376.94 69.99 376.63 68.62 376.53 C 70.75 384.58 106.11 408.52 113.18 412.82 C 116.91 415.08 127.54 419.13 129.53 422.49 C 127.41 423.19 129.41 422.78 126.59 422.96 C 127.78 424.58 125.67 423.50 129.47 425.63 C 130.02 425.94 132.35 426.82 132.98 427.08 C 135.21 428.01 137.22 428.90 139.35 429.73 C 213.63 458.51 298.54 447.68 359.51 398.48 C 387.54 375.86 408.04 352.13 425.90 313.78 C 440.93 281.49 451.64 225.41 441.81 184.34 C 440.32 185.11 439.63 185.45 438.49 186.10 L 434.73 168.48 C 433.42 162.99 431.42 156.88 429.54 151.52 C 427.71 146.31 425.62 140.90 423.24 135.75 C 421.39 131.75 417.35 125.02 416.63 121.39 C 401.30 126.59 387.18 126.26 371.27 122.49" fill="url(#gPlane)"/>
+  <path d="M 166.81 280.46 C 170.55 290.65 173.97 302.19 177.45 312.60 C 178.77 316.57 183.96 333.38 186.03 336.12 L 191.50 340.72 L 193.55 341.79 L 203.79 340.00 C 203.79 338.23 203.42 338.89 205.49 338.53 C 205.95 337.27 205.71 337.01 207.55 336.45 C 208.02 334.51 207.38 334.89 209.13 334.89 C 209.65 332.44 207.08 334.05 210.54 332.45 C 210.94 330.43 210.29 330.82 212.10 330.82 L 212.39 328.24 L 213.51 328.45 C 213.86 326.28 213.17 326.69 215.07 326.69 C 215.75 324.31 213.85 327.24 216.51 323.55 C 217.70 321.88 217.51 322.18 218.64 321.45 C 219.00 319.51 218.39 319.89 220.13 319.89 C 220.69 317.42 218.04 319.13 221.61 317.45 C 222.01 315.52 221.38 315.89 223.10 315.89 L 223.39 313.24 L 224.55 313.45 C 224.94 311.38 224.27 311.76 226.07 311.76 L 232.61 302.45 C 233.02 300.52 232.39 300.90 234.13 300.90 L 234.41 298.25 L 235.55 298.45 C 235.94 296.44 235.30 296.83 237.10 296.83 C 237.74 294.07 237.01 294.12 240.49 293.51 L 241.12 295.06 L 243.71 295.36 L 243.50 296.51 C 245.52 296.90 245.12 296.26 245.12 298.06 C 247.21 298.63 245.24 297.42 248.49 299.44 L 249.27 301.03 C 251.27 301.60 249.20 300.24 252.49 302.44 L 253.27 304.03 C 255.28 304.59 253.19 303.23 256.49 305.43 L 257.28 307.03 C 259.30 307.59 257.15 306.19 260.49 308.43 L 261.28 310.02 C 263.30 310.59 261.14 309.18 264.49 311.42 L 265.28 313.02 C 267.35 313.60 265.08 312.12 268.49 314.42 L 269.28 316.02 C 271.34 316.59 269.09 315.13 272.49 317.42 L 273.28 319.02 C 277.67 320.22 289.70 330.01 290.50 331.57 C 292.50 331.94 292.15 331.29 292.15 332.98 L 293.75 333.03 L 294.50 333.59 L 297.08 334.88 L 304.76 334.85 L 306.99 333.52 L 307.84 333.92 C 307.84 332.29 307.51 332.91 309.49 332.66 L 309.69 332.86 C 309.69 331.15 309.33 331.78 311.32 331.46 C 312.06 329.85 312.68 329.10 314.43 328.37 C 314.83 326.23 314.13 326.58 315.88 326.58 L 315.67 326.45 C 315.95 324.41 315.30 324.72 316.92 324.72 L 317.66 320.45 L 318.92 317.87 L 320.66 309.45 L 321.93 306.87 L 322.83 301.45 C 322.93 299.35 322.27 299.65 323.90 299.65 L 323.63 298.42 L 324.93 295.88 L 325.83 290.45 C 325.93 288.35 325.28 288.66 326.90 288.66 L 326.63 287.45 L 327.93 284.88 L 328.53 279.82 L 329.90 277.66 L 329.63 276.45 L 330.94 273.89 L 331.54 268.87 L 332.91 266.67 L 332.64 265.45 L 333.94 262.89 L 334.54 257.93 L 335.91 255.67 L 335.64 254.45 C 336.20 250.79 335.58 252.36 336.94 251.89 L 337.55 247.01 L 338.91 244.68 L 338.64 243.45 C 339.20 239.80 338.59 241.36 339.94 240.89 L 340.55 236.04 L 341.91 233.68 L 341.65 232.45 C 342.20 228.81 341.59 230.37 342.95 229.89 L 343.55 225.08 L 344.92 222.68 L 344.65 221.45 C 345.20 217.81 344.59 219.37 345.95 218.89 L 346.56 214.14 C 347.13 210.33 346.51 212.30 347.92 211.68 L 347.66 210.45 C 348.20 206.81 347.59 208.37 348.95 207.90 L 349.57 203.21 C 350.12 199.32 349.51 201.30 350.92 200.69 L 350.66 199.45 C 351.20 195.81 350.59 197.37 351.95 196.90 L 352.57 192.25 C 353.12 188.20 352.54 190.28 353.90 189.62 L 353.66 188.45 C 354.13 184.61 353.56 186.34 354.96 185.83 L 354.73 184.45 C 354.81 182.08 354.07 182.42 355.87 182.42 L 355.83 180.45 L 356.90 178.62 L 356.67 177.45 C 357.13 173.62 356.56 175.34 357.96 174.83 L 357.73 173.45 C 357.81 171.09 357.08 171.42 358.87 171.42 L 358.84 169.45 L 359.90 167.63 L 359.67 166.45 C 360.13 162.61 359.56 164.34 360.96 163.83 L 361.84 158.45 L 362.90 156.63 L 362.68 155.45 C 363.14 151.63 362.56 153.35 363.96 152.84 L 363.74 151.45 C 363.82 149.10 363.09 149.43 364.88 149.43 L 365.68 144.45 C 366.14 140.63 365.57 142.35 366.97 141.84 L 366.74 140.45 C 366.82 138.10 366.09 138.44 367.88 138.44 L 368.68 133.45 C 369.14 129.64 368.57 131.35 369.97 130.85 L 369.75 129.45 C 369.83 127.11 369.10 127.44 370.88 127.44 L 370.85 125.45 L 371.88 123.65 L 371.27 122.49 L 370.95 122.31 L 369.67 121.47 L 368.20 121.49 L 368.16 121.25 L 366.78 120.37 L 365.29 120.48 L 364.27 119.70 L 363.16 119.54 L 362.27 118.70 L 361.16 118.54 L 360.16 117.73 L 359.16 117.58 L 358.37 116.64 L 357.68 116.33 L 356.78 115.34 L 354.29 114.56 L 353.47 113.51 L 351.82 112.34 L 350.48 111.41 C 343.74 111.93 158.69 187.18 139.07 195.04 C 125.15 200.61 110.45 205.79 96.98 211.93 C 88.06 216.00 87.43 224.46 91.16 230.08 C 94.23 234.72 112.58 239.45 120.33 241.72 C 121.34 242.02 122.16 242.18 123.37 242.54 C 132.66 245.30 152.33 252.14 158.00 252.80 Z" fill="#4fd486"/>
+  <path d="M 385.40 0.97 C 372.96 2.54 365.64 7.10 356.76 13.74 C 353.66 16.06 352.19 17.82 349.94 20.93 C 346.01 26.34 342.84 30.78 340.37 38.41 C 338.23 45.00 337.04 54.01 338.06 63.00 C 339.07 71.93 341.86 78.70 346.60 85.59 C 346.72 85.77 346.88 86.00 347.01 86.18 L 350.77 91.20 C 355.09 96.52 363.78 103.26 370.13 105.94 L 386.66 110.24 C 395.14 110.92 403.27 110.21 410.79 107.57 C 437.63 98.17 454.75 68.07 444.61 37.67 L 441.67 30.49 C 440.77 28.93 441.03 29.53 440.10 28.03 C 439.14 26.51 438.34 24.94 437.49 23.75 L 422.62 9.56 C 422.44 9.43 422.20 9.27 422.02 9.14 C 421.78 8.97 420.32 7.87 419.66 7.46 C 418.07 6.45 417.07 6.04 414.91 5.18 C 406.29 1.75 396.47 -0.42 385.40 0.97 Z" fill="#04150c"/>
+  <ellipse cx="391.35" cy="55.25" rx="42.5" ry="45" fill="#7dfba4"/>
+  <path d="M 371.02 22.81 C 368.77 29.44 370.04 67.08 369.94 79.44 C 369.88 86.87 369.98 92.36 377.72 87.73 L 417.93 60.89 C 419.10 60.09 420.96 58.37 422.30 57.45 C 422.16 54.06 423.19 55.02 420.84 52.40 L 407.71 43.63 C 406.58 42.88 407.01 43.16 405.91 42.43 L 399.31 38.03 C 399.14 37.92 398.89 37.75 398.71 37.63 C 398.54 37.52 398.29 37.35 398.11 37.23 L 390.91 32.43 C 390.74 32.32 390.49 32.15 390.31 32.03 L 379.53 24.83 C 376.31 22.65 374.85 21.36 371.02 22.81 Z" fill="#04150c"/>
+</svg>
+    </div>
     <h1 id="slide-title"></h1>
     <p id="slide-lead"></p>
     <div id="slide-cta">
@@ -791,16 +849,13 @@ body.night #oracle.onedopea-mode span.locked {
 
 <div id="typing-el"></div>
 
-<button type="button" class="tv-nav tv-nav--prev gone" id="navPrev" aria-label="Предыдущий"><span>‹</span></button>
-<button type="button" class="tv-nav tv-nav--next gone" id="navNext" aria-label="Следующий"><span>›</span></button>
-
-<div id="hud" class="gone">
-  <button type="button" id="pauseBtn" class="hud-btn" aria-label="Пауза (пробел)" title="Пауза (пробел)">||</button>
+<div id="hud">
   <span id="nightBadge">NIGHT</span>
-  <button type="button" id="soundBtn" class="hud-btn" aria-label="Звук" title="Звук вкл/выкл">♪</button>
 </div>
 
-<button type="button" id="bug" class="gone" aria-label="ONEDOPEA MODE" title="ONEDOPEA MODE // 10S">ONEDOPEA<span class="bug-dot">●</span></button>
+<button type="button" id="bug" aria-label="ONEDOPEA MODE" title="ONEDOPEA MODE // 10S">ONEDOPEA<span class="bug-dot">●</span></button>
+<button type="button" id="rew" aria-label="Обратная перемотка к началу" title="REW — перемотка к началу">◄◄ REW</button>
+<div id="rew-osd" aria-hidden="true">◄◄ REW</div>
 <div id="osd" aria-hidden="true"></div>
 <div id="toast"></div>
 <div id="mode-label">ONEDOPEA MODE // 10S</div>
@@ -818,23 +873,20 @@ const oracleWrap = document.getElementById('oracle-wrap');
 const typingEl = document.getElementById('typing-el');
 const slideWrap = document.getElementById('slide-wrap');
 const slidePanel = document.getElementById('slide-panel');
-const slideBadge = document.getElementById('slide-badge');
+const qrBoxEl = document.getElementById('qr-box');
 const slideTitle = document.getElementById('slide-title');
 const slideLead = document.getElementById('slide-lead');
 const ctaEl = document.getElementById('slide-cta');
 const uptimeEl = document.getElementById('uptime');
 const pingEl = document.getElementById('ping');
-const navPrev = document.getElementById('navPrev');
-const navNext = document.getElementById('navNext');
 const zapEl = document.getElementById('zap');
 const tvOverlay = document.getElementById('tv-effect');
-const hudEl = document.getElementById('hud');
-const pauseBtn = document.getElementById('pauseBtn');
-const soundBtn = document.getElementById('soundBtn');
 const toastEl = document.getElementById('toast');
 const modeLabel = document.getElementById('mode-label');
 const osdEl = document.getElementById('osd');
 const bugEl = document.getElementById('bug');
+const rewBtn = document.getElementById('rew');
+const rewOsdEl = document.getElementById('rew-osd');
 
 const GLYPHS = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const S = 18;
@@ -857,7 +909,6 @@ const ITEMS = [
   { type: 'title', word: 'DAROMVPL', url: 'https://t.me/daromvpl' }
 ];
 const SPECIAL = { type: 'title', word: 'ONEDOPEA', url: 'https://t.me/onedopea' };
-const SLIDE_BADGE = '01 / BotControl';
 const SLIDE_LEAD = 'Это BotControl — Telegram-боты прямо с телефона.';
 
 const START_DELAY = 1400;
@@ -899,9 +950,7 @@ let currentTypingIndex = 0;
 
 let lastRaw = performance.now();
 let vNow = lastRaw;
-let paused = false;
-let autoResumeTimer = null;
-const PAUSE_AUTO_RESUME_MS = 20000;
+let frozen = false;
 let timeScale = 1.0;
 let nightOn = false;
 let switchCount = 0;
@@ -913,46 +962,9 @@ let goldenTimer = null;
 let modeTimer = null;
 let osdTimer = null;
 let toastTimer = null;
-
-/* ============ ВОЗРОЖДЕНИЕ КНОПОК (генерации) ============ */
-let uiGen = 0;
-let pauseBaseLabel = '||';
-const BTN_GLYPHS = {
-  prev: ['‹', '←'],
-  next: ['›', '→'],
-  pause: ['||', '‖'],
-  sound: ['♪', '♫']
-};
-function glitchText(el, finalText) {
-  const chars = '▓▒░#%&@$!<>/\\|=+*';
-  let k = 0;
-  const total = 6;
-  const iv = setInterval(() => {
-    k++;
-    if (k >= total) { el.textContent = finalText; clearInterval(iv); return; }
-    el.textContent = finalText.split('').map(ch =>
-      (ch === ' ' || Math.random() > 0.6) ? ch : chars[(Math.random() * chars.length) | 0]
-    ).join('');
-  }, 45);
-}
-function rebirthUI() {
-  uiGen++;
-  const v = uiGen % 2;
-  pauseBaseLabel = BTN_GLYPHS.pause[v];
-  [navPrev, navNext, hudEl, bugEl].forEach(b => b.classList.remove('gone', 'is-sucked'));
-  glitchText(navPrev.querySelector('span'), BTN_GLYPHS.prev[v]);
-  glitchText(navNext.querySelector('span'), BTN_GLYPHS.next[v]);
-  glitchText(pauseBtn, BTN_GLYPHS.pause[v]);
-  glitchText(soundBtn, BTN_GLYPHS.sound[v]);
-  [navPrev, navNext, hudEl, bugEl].forEach(b => {
-    b.classList.remove('glitch-in');
-    void b.offsetWidth;
-    b.classList.add('glitch-in');
-  });
-  setTimeout(() => {
-    [navPrev, navNext, hudEl, bugEl].forEach(b => b.classList.remove('glitch-in'));
-  }, 520);
-}
+let ctaGlitched = false;
+let stuckWarned = false;
+let flickTimer = null;
 
 function randomGlyph() {
   return GLYPHS[(Math.random() * GLYPHS.length) | 0];
@@ -961,144 +973,15 @@ function pad2(n) {
   return String(n).padStart(2, '0');
 }
 
-/* ============ SOUND (WebAudio) ============ */
-let audioCtx = null;
-let masterGain = null;
-let soundOn = true;
-
-function unlockAudio() {
-  if (!audioCtx) {
-    try {
-      const AC = window.AudioContext || window.webkitAudioContext;
-      if (AC) {
-        audioCtx = new AC();
-        masterGain = audioCtx.createGain();
-        masterGain.gain.value = 0.5;
-        masterGain.connect(audioCtx.destination);
-      }
-    } catch (e) { audioCtx = null; }
-  }
-  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-}
-function sfxOk() {
-  return soundOn && audioCtx && audioCtx.state === 'running';
-}
-function osc(type, f0, f1, t0, dur, peak) {
-  const o = audioCtx.createOscillator();
-  o.type = type;
-  o.frequency.setValueAtTime(f0, t0);
-  if (f1 && f1 !== f0) o.frequency.exponentialRampToValueAtTime(Math.max(1, f1), t0 + dur);
-  const g = audioCtx.createGain();
-  g.gain.setValueAtTime(0.0001, t0);
-  g.gain.exponentialRampToValueAtTime(peak, t0 + Math.min(0.02, dur * 0.25));
-  g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
-  o.connect(g);
-  g.connect(masterGain);
-  o.start(t0);
-  o.stop(t0 + dur + 0.05);
-}
-function sfxZap() {
-  if (!sfxOk()) return;
-  const t = audioCtx.currentTime;
-  osc('square', 2200, 240, t, 0.09, 0.05);
-  const len = Math.floor(0.05 * audioCtx.sampleRate);
-  const buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
-  const data = buf.getChannelData(0);
-  for (let i = 0; i < len; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / len);
-  const src = audioCtx.createBufferSource();
-  src.buffer = buf;
-  const f = audioCtx.createBiquadFilter();
-  f.type = 'highpass';
-  f.frequency.value = 1400;
-  const g = audioCtx.createGain();
-  g.gain.value = 0.1;
-  src.connect(f); f.connect(g); g.connect(masterGain);
-  src.start(t);
-}
-function sfxPowerOff() {
-  if (!sfxOk()) return;
-  const t = audioCtx.currentTime;
-  osc('sawtooth', 300, 26, t, 0.6, 0.12);
-  osc('sine', 55, 40, t + 0.04, 0.5, 0.18);
-}
-function sfxPowerOn() {
-  if (!sfxOk()) return;
-  const t = audioCtx.currentTime;
-  osc('sine', 48, 780, t, 0.45, 0.09);
-  osc('sine', 96, 1560, t + 0.12, 0.3, 0.04);
-}
-function sfxType() {
-  if (!sfxOk()) return;
-  const t = audioCtx.currentTime;
-  osc('square', 800 + Math.random() * 1000, 0, t, 0.03, 0.02);
-}
-function sfxDecode() {
-  if (!sfxOk()) return;
-  const t = audioCtx.currentTime;
-  for (let i = 0; i < 3; i++) {
-    osc('square', 400 + Math.random() * 1400, 0, t + i * 0.07, 0.05, 0.025);
-  }
-}
-function sfxGlitch() {
-  if (!sfxOk()) return;
-  const t = audioCtx.currentTime;
-  for (let i = 0; i < 6; i++) {
-    osc('square', 150 + Math.random() * 1800, 0, t + i * 0.08, 0.07, 0.05);
-  }
-}
-function sfxNoise() {
-  if (!sfxOk()) return;
-  const t = audioCtx.currentTime;
-  const len = Math.floor(0.12 * audioCtx.sampleRate);
-  const buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
-  const data = buf.getChannelData(0);
-  for (let i = 0; i < len; i++) data[i] = Math.random() * 2 - 1;
-  const src = audioCtx.createBufferSource();
-  src.buffer = buf;
-  const f = audioCtx.createBiquadFilter();
-  f.type = 'bandpass';
-  f.frequency.value = 1100;
-  f.Q.value = 0.6;
-  const g = audioCtx.createGain();
-  g.gain.value = 0.05;
-  src.connect(f); f.connect(g); g.connect(masterGain);
-  src.start(t);
-}
-function buzz(ms) {
-  if (navigator.vibrate) { try { navigator.vibrate(ms); } catch (e) {} }
-}
-
-['pointerdown', 'keydown', 'touchstart'].forEach(ev =>
-  document.addEventListener(ev, unlockAudio, { passive: true })
-);
-soundBtn.addEventListener('click', () => {
-  unlockAudio();
-  soundOn = !soundOn;
-  soundBtn.classList.toggle('muted', !soundOn);
-  if (soundOn) sfxZap();
-});
-
-/* ============ PAUSE ============ */
-function canPause() {
-  return phase === 'enter' || phase === 'hold' || phase === 'exit';
-}
-function resumeCycle() {
-  if (!paused) return;
-  paused = false;
-  pauseBtn.classList.remove('active');
-  pauseBtn.textContent = pauseBaseLabel;
-  if (autoResumeTimer) { clearTimeout(autoResumeTimer); autoResumeTimer = null; }
-}
-function togglePause() {
-  if (paused) { resumeCycle(); return; }
-  if (!canPause()) return;
-  paused = true;
-  pauseBtn.classList.add('active');
-  pauseBtn.textContent = '▶';
-  if (autoResumeTimer) clearTimeout(autoResumeTimer);
-  autoResumeTimer = setTimeout(resumeCycle, PAUSE_AUTO_RESUME_MS);
-}
-pauseBtn.addEventListener('click', togglePause);
+/* ============ SOUND (полностью отключён) ============ */
+function sfxZap() {}
+function sfxPowerOff() {}
+function sfxPowerOn() {}
+function sfxType() {}
+function sfxDecode() {}
+function sfxGlitch() {}
+function sfxNoise() {}
+function buzz(ms) {}
 
 /* ============ TOAST ============ */
 function showToast(text, ms = 900) {
@@ -1231,15 +1114,14 @@ function showOsd(text) {
   osdTimer = setTimeout(() => osdEl.classList.remove('show'), 1500);
 }
 
-console.log('%cONEDOPEA %c// v3.2 %c— фразы: "onedopea" "konami" "stats" | свайп↑↓ / [ ] — время, ↑↓ — дождь, пробел — пауза, F — fullscreen', 'color:#0f0;font-weight:bold;font-size:14px', 'color:#7dfba4', 'color:#0a0');
+console.log('%cONEDOPEA %c// v3.3 %c— фразы: "onedopea" "konami" "stats" | свайп ←→ — слайды, свайп↑↓ / [ ] — время, ↑↓ — дождь, F — fullscreen', 'color:#0f0;font-weight:bold;font-size:14px', 'color:#7dfba4', 'color:#0a0');
 
 /* ============ KEYBOARD ============ */
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowRight') { e.preventDefault(); doNext(navNext); return; }
-  if (e.key === 'ArrowLeft') { e.preventDefault(); doPrev(navPrev); return; }
+  if (e.key === 'ArrowRight') { e.preventDefault(); doNext(); return; }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); doPrev(); return; }
   if (e.key === 'ArrowUp') { e.preventDefault(); bumpRain(1); return; }
   if (e.key === 'ArrowDown') { e.preventDefault(); bumpRain(-1); return; }
-  if (e.key === ' ') { e.preventDefault(); togglePause(); return; }
   if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); return; }
   if (e.key === '[') { e.preventDefault(); setTimeScale(-1); return; }
   if (e.key === ']') { e.preventDefault(); setTimeScale(1); return; }
@@ -1286,8 +1168,8 @@ function noiseBurst() {
 }
 function scheduleNoise() {
   setTimeout(() => {
-    if (!document.hidden && !paused &&
-        phase !== 'tv_collapse' && phase !== 'tv_flash' &&
+    if (!document.hidden && !frozen &&
+        phase !== 'tv_collapse' && phase !== 'tv_flash' && phase !== 'rewind' &&
         Math.random() < 0.85) {
       noiseBurst();
     }
@@ -1306,6 +1188,136 @@ function toggleFullscreen() {
     }
   } catch (e) {}
 }
+
+/* ============ VHS REW (обратная перемотка к началу) ============ */
+const REW_TIME = 3000;
+const CONTENT_REV_MS = 1100;
+let rewStart = 0;
+let rewKind = 'none';
+let rewContentT = 0;
+let rewStage2 = false;
+
+/* обратное воспроизведение появления слайда:
+   надпись, подзаголовок и кнопки «раз-появляются» в обратном порядке */
+function rewindSlideFrame(tRev) {
+  h1Spans.forEach((el, i) => {
+    if (el.dataset.role === 'br') return;
+    const delay = i * H1_STEP;
+    if (tRev > delay + H1_SCRAMBLE_TIME) {
+      el.style.opacity = '1';
+      el.textContent = el.dataset.target;
+    } else if (tRev > delay) {
+      el.style.opacity = '1';
+      el.textContent = randomGlyph();
+    } else {
+      el.style.opacity = '0';
+      el.textContent = '';
+    }
+  });
+  const showCount = Math.max(0, Math.floor((tRev - LEAD_DELAY_MS) / LEAD_CHAR_MS));
+  leadSpans.forEach((el, i) => {
+    if (i < showCount) {
+      el.style.opacity = '1';
+      el.textContent = el.dataset.target;
+    } else {
+      el.style.opacity = '0';
+    }
+  });
+  ctaEl.classList.toggle('show', tRev > CTA_SHOW_MS);
+}
+function rewindTitleFrame(tRev) {
+  letters.forEach((el, i) => {
+    if (el.dataset.hidden === '1') return;
+    const delay = i * LETTER_STEP;
+    if (tRev > delay + APPEAR_SCRAMBLE_TIME) {
+      el.classList.add('show', 'locked');
+      el.textContent = el.dataset.target;
+    } else if (tRev > delay) {
+      el.classList.add('show');
+      el.classList.remove('locked');
+      el.textContent = randomGlyph();
+    } else {
+      el.classList.remove('show', 'locked');
+      el.textContent = '';
+    }
+  });
+}
+function rewindTypingFrame(tRev) {
+  const showCount = Math.max(0, Math.floor(tRev / 70));
+  typingSpans.forEach((el, i) => {
+    if (i < showCount) {
+      el.style.opacity = '1';
+      el.textContent = el.dataset.target;
+    } else {
+      el.style.opacity = '0';
+    }
+  });
+}
+
+function startRewind(now) {
+  if (phase === 'rewind') return;
+  const prevPhase = phase;
+  phase = 'rewind';
+  rewStart = now;
+  frozen = false;
+  manualTarget = null;
+  fastExit = false;
+  document.body.classList.add('rewing');
+
+  /* что именно отматываем и с какой точки таймлайна */
+  rewKind = 'none';
+  rewContentT = 0;
+  if (idx >= 0 && idx < ITEMS.length && ITEMS[idx].type === 'slide' &&
+      !slideWrap.classList.contains('hidden')) {
+    rewKind = 'slide';
+    rewContentT = prevPhase === 'enter' ? Math.min(now - phaseStart, SLIDE_ENTER_MS) : SLIDE_ENTER_MS;
+  } else if (!oracleWrap.classList.contains('hidden')) {
+    rewKind = 'title';
+    const total = letters.length * LETTER_STEP + APPEAR_SCRAMBLE_TIME;
+    rewContentT = prevPhase === 'enter' ? Math.min(now - phaseStart, total) : total;
+  } else if (typingState !== 'idle' && typingSpans.length) {
+    rewKind = 'typing';
+    rewContentT = typingSpans.length * 70 + 400;
+  }
+  rewStage2 = false;
+
+  /* UI-кнопки тоже отматываются — раз-появляются глитчем */
+  [bugEl, rewBtn].forEach(b => {
+    b.classList.remove('glitch-in');
+    b.classList.add('glitch-out');
+  });
+
+  showOsd('◄◄ REW');
+}
+function finishRewind(now) {
+  document.body.classList.remove('rewing');
+  drops = [];
+  crumbs = [];
+  idx = -2;
+  pendingIdx = 0;
+  manualTarget = null;
+  fastExit = false;
+  cycleFallMultiplier = 1.0;
+  rainActive = true;
+  slideWrap.classList.add('hidden');
+  slidePanel.classList.remove('crt-on', 'crt-off', 'suck', 'fast');
+  oracleWrap.classList.add('hidden');
+  typingEl.style.display = 'none';
+  typingState = 'idle';
+  phase = 'wait';
+  phaseStart = now + 600;
+  /* кнопки возвращаются глитчем, как при первом включении */
+  [bugEl, rewBtn].forEach(b => {
+    b.classList.remove('glitch-out');
+    void b.offsetWidth;
+    b.classList.add('glitch-in');
+  });
+  setTimeout(() => {
+    [bugEl, rewBtn].forEach(b => b.classList.remove('glitch-in'));
+  }, 520);
+  showOsd('▶ PLAY');
+}
+rewBtn.addEventListener('click', () => startRewind(vNow));
 
 /* ============ AFTERGLOW GHOST ============ */
 function makeGhost(sourceWrap) {
@@ -1400,13 +1412,13 @@ function setupSlide() {
   oracleWrap.classList.add('hidden');
   slideWrap.classList.remove('hidden');
   slidePanel.classList.remove('crt-on', 'crt-off', 'suck', 'fast');
-  slideBadge.textContent = SLIDE_BADGE;
 
   slideTitle.innerHTML = '';
   h1Spans = ITEMS[0].word.split('').map(ch => {
     const span = document.createElement('span');
     if (ch === '\n') {
       span.dataset.role = 'br';
+      span.classList.add('br');
       span.dataset.locked = '1';
     } else {
       span.dataset.target = ch;
@@ -1425,6 +1437,7 @@ function setupSlide() {
   });
   currentLeadIdx = 0;
   leadStartAt = vNow;
+  ctaGlitched = false;
   ctaEl.classList.remove('show');
 
   void slidePanel.offsetWidth;
@@ -1442,6 +1455,10 @@ function startEnter(i, now) {
   idx = i;
   phase = 'enter';
   phaseStart = now;
+  stuckWarned = false;
+  frozen = false;
+  /* на финальном слайде ONEDOPEA — только надпись-ссылка, без матрицы позади */
+  rainActive = i !== -1;
   if (i === -1 || ITEMS[i].type === 'title') setupTitle(i);
   else setupSlide();
   switchCount++;
@@ -1454,12 +1471,6 @@ function startEnter(i, now) {
     else sfxDecode();
     showOsd('CH 0' + (i + 1) + ' // ' + item.word.replace('\n', ' ').toUpperCase());
   }
-  updateNavVisibility();
-}
-
-function updateNavVisibility() {
-  if (idx === -1) return;
-  if (navPrev.classList.contains('gone')) rebirthUI();
 }
 
 function goToZap(t, now) {
@@ -1514,15 +1525,6 @@ function triggerTvOff(now) {
   } else if (idx !== -2) {
     oracleWrap.classList.add('suck');
   }
-
-  [navPrev, navNext].forEach(b => {
-    b.classList.remove('pulse', 'glitch-in');
-    b.classList.add('is-sucked');
-  });
-  [hudEl, bugEl].forEach(b => b.classList.add('is-sucked'));
-  setTimeout(() => {
-    [navPrev, navNext, hudEl, bugEl].forEach(b => b.classList.add('gone'));
-  }, 720);
 }
 
 /* ============ SLIDE UPDATE ============ */
@@ -1536,7 +1538,18 @@ function typeLead(t) {
     currentLeadIdx = showCount;
     sfxType();
   }
-  if (t > CTA_SHOW_MS) ctaEl.classList.add('show');
+  if (t > CTA_SHOW_MS) {
+    ctaEl.classList.add('show');
+    if (!ctaGlitched) {
+      ctaGlitched = true;
+      document.querySelectorAll('.mlink').forEach(m => m.classList.add('glitch-in'));
+      qrBoxEl.classList.add('glitch-in');
+      setTimeout(() => {
+        document.querySelectorAll('.mlink').forEach(m => m.classList.remove('glitch-in'));
+        qrBoxEl.classList.remove('glitch-in');
+      }, 520);
+    }
+  }
 }
 
 function updateSlide(now) {
@@ -1554,6 +1567,13 @@ function updateSlide(now) {
       }
     });
     typeLead(t);
+    /* ФРИЗ: как только надпись BotControl собралась — матрица замирает
+       статичным кадром, но сценарий проигрывается дальше */
+    const titleDone = h1Spans.every(el => el.dataset.role === 'br' || el.dataset.locked === '1');
+    if (!frozen && titleDone) {
+      frozen = true;
+      rainActive = false;
+    }
     if (t > SLIDE_ENTER_MS) {
       phase = 'hold';
       phaseStart = now;
@@ -1773,11 +1793,10 @@ function updateTyping(now) {
 function canNavigate() {
   return phase === 'hold' && idx >= 0 && idx < ITEMS.length;
 }
-function pulseNav(btn) {
-  btn.classList.remove('pulse');
-  void btn.offsetWidth;
-  btn.classList.add('pulse');
-  setTimeout(() => btn.classList.remove('pulse'), 260);
+function unfreeze() {
+  if (!frozen) return;
+  frozen = false;
+  rainActive = true;
 }
 function startManualExit(target) {
   manualTarget = target;
@@ -1790,22 +1809,20 @@ function startManualExit(target) {
     slidePanel.classList.add('crt-off', 'fast');
   }
 }
-function doNext(triggerBtn) {
+function doNext() {
   if (!canNavigate()) return;
-  pulseNav(triggerBtn);
+  unfreeze();
   if (idx === ITEMS.length - 1) {
     triggerTvOff(vNow);
     return;
   }
   startManualExit(idx + 1);
 }
-function doPrev(triggerBtn) {
+function doPrev() {
   if (!canNavigate()) return;
-  pulseNav(triggerBtn);
+  unfreeze();
   startManualExit((idx + ITEMS.length - 1) % ITEMS.length);
 }
-navPrev.addEventListener('click', () => doPrev(navPrev));
-navNext.addEventListener('click', () => doNext(navNext));
 
 /* Свайп: ←→ навигация, ↑↓ — скорость времени (телефон) */
 let touchStartX = 0, touchStartY = 0;
@@ -1821,8 +1838,8 @@ document.addEventListener('touchend', (e) => {
     return;
   }
   if (Math.abs(dx) < 45) return;
-  if (dx < 0) doNext(navNext);
-  else doPrev(navPrev);
+  if (dx < 0) doNext();
+  else doPrev();
 }, { passive: true });
 
 /* ============ MATRIX RAIN ============ */
@@ -1952,12 +1969,16 @@ function drawCrumb(c) {
 function loop(rawNow) {
   const dt = Math.min(250, Math.max(0, rawNow - lastRaw));
   lastRaw = rawNow;
-  vNow += paused ? 0 : dt * timeScale;
+  vNow += dt * timeScale;
   const now = vNow;
 
+  try {
   parX += (mouseNX * 7 - parX) * 0.04;
   parY += (mouseNY * 5 - parY) * 0.04;
 
+  /* во время фриза кадр матрицы не перерисовывается — картинка застыла;
+     во время rewinds кадр рисует собственный case 'rewind' */
+  if (!frozen && phase !== 'rewind') {
   X.fillStyle = '#000';
   X.fillRect(0, 0, C.width, C.height);
 
@@ -1972,6 +1993,7 @@ function loop(rawNow) {
   for (let i = crumbs.length - 1; i >= 0; i--) {
     if (updateCrumb(crumbs[i])) drawCrumb(crumbs[i]);
     else crumbs.splice(i, 1);
+  }
   }
 
   switch (phase) {
@@ -2003,12 +2025,76 @@ function loop(rawNow) {
     case 'zap':
       if (now - phaseStart > ZAP_MS) startEnter(pendingIdx, now);
       break;
+    case 'rewind': {
+      /* VHS: контент отматывается назад, дождь летит вверх, tracking-полосы */
+      const t = now - rewStart;
+      X.fillStyle = '#000';
+      X.fillRect(0, 0, C.width, C.height);
+
+      /*_stage 1: обратное воспроизведение появления контента */
+      if (rewKind !== 'none' && t < CONTENT_REV_MS) {
+        const tRev = rewContentT * (1 - t / CONTENT_REV_MS);
+        if (rewKind === 'slide') rewindSlideFrame(tRev);
+        else if (rewKind === 'title') rewindTitleFrame(tRev);
+        else rewindTypingFrame(tRev);
+      } else if (rewKind !== 'none' && !rewStage2) {
+        /* stage 2: панель «раз-включается» как обратный crt-on */
+        rewStage2 = true;
+        if (rewKind === 'slide') {
+          slidePanel.classList.remove('crt-on');
+          void slidePanel.offsetWidth;
+          slidePanel.classList.add('crt-off', 'fast');
+          setTimeout(() => {
+            slideWrap.classList.add('hidden');
+            slidePanel.classList.remove('crt-off', 'fast');
+          }, 380);
+        } else if (rewKind === 'title') {
+          oracleWrap.classList.add('hidden');
+        } else {
+          typingEl.style.display = 'none';
+          typingState = 'idle';
+        }
+      }
+
+      if (drops.length < 12) {
+        for (let k = 0; k < 12; k++) {
+          spawnDrop();
+          drops[drops.length - 1].y = Math.random() * C.height;
+        }
+      }
+      const mult = 9 + (t / REW_TIME) * 11;
+      for (const d of drops) {
+        d.y -= d.speed * mult;
+        d.glyph = (d.glyph - 2 + GLYPHS.length) % GLYPHS.length;
+        if (d.y < -N * S) d.y = C.height + N * S;
+        drawDrop(d);
+      }
+      for (let b = 0; b < 3; b++) {
+        const bh = 3 + Math.random() * 16;
+        const by = (Math.random() * C.height) | 0;
+        const off = ((Math.random() - 0.5) * 90) | 0;
+        X.drawImage(C, 0, by, C.width, bh, off, by, C.width, bh);
+        X.fillStyle = 'rgba(190,255,200,' + (0.04 + Math.random() * 0.1).toFixed(3) + ')';
+        X.fillRect(0, by, C.width, 1 + Math.random() * 2);
+      }
+      if (t > REW_TIME) finishRewind(now);
+      break;
+    }
     case 'enter':
     case 'hold':
     case 'exit':
       if (idx !== -1 && idx >= 0 && ITEMS[idx].type === 'slide') updateSlide(now);
       else updateTitle(now);
       break;
+  }
+
+  if (!stuckWarned && now - phaseStart > 30000 &&
+      (phase === 'enter' || phase === 'hold' || phase === 'exit' || phase === 'zap' || phase === 'between')) {
+    stuckWarned = true;
+    console.error('ONEDOPEA: phase stuck at', phase, 'idx', idx, 'vNow', Math.round(now));
+  }
+  } catch (err) {
+    console.error('ONEDOPEA loop error:', err);
   }
 
   requestAnimationFrame(loop);
