@@ -29,8 +29,8 @@ html, body {
 }
 body { transition: filter 0.35s ease; }
 body.glitch-mode {
-  filter: hue-rotate(180deg) saturate(1.55);
-  animation: bodyShake 0.28s infinite linear;
+  filter: hue-rotate(calc(150deg * var(--gi, 1))) saturate(calc(1.2 + 0.6 * var(--gi, 1)));
+  animation: bodyShake calc(0.3s / var(--gi, 1)) infinite linear;
 }
 body.golden {
   filter: hue-rotate(-72deg) saturate(1.7);
@@ -586,8 +586,9 @@ body.rewing #rew-osd { animation: rewBlink 0.5s steps(1, end) infinite; }
 
 #mode-label {
   position: fixed;
-  right: 16px;
-  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 14px;
   z-index: 100;
   padding: 6px 14px;
   border-radius: 999px;
@@ -981,7 +982,9 @@ function sfxType() {}
 function sfxDecode() {}
 function sfxGlitch() {}
 function sfxNoise() {}
-function buzz(ms) {}
+function buzz(ms) {
+  if (navigator.vibrate) { try { navigator.vibrate(ms); } catch (e) {} }
+}
 
 /* ============ TOAST ============ */
 function showToast(text, ms = 900) {
@@ -1026,26 +1029,70 @@ function applyNight() {
 }
 
 /* ============ СЕКРЕТНЫЕ ФРАЗЫ ============ */
-function showModeLabel(text, ms, variant) {
-  modeLabel.textContent = text;
+/* ============ ONEDOPEA MODE: эскалация глитча по кликам ============ */
+let bugClicks = 0;
+let glitchLevel = 0;
+let colorTimer = null;
+let modeInt = null;
+let modeEndAt = 0;
+
+function showModeTimer(base, ms, variant) {
   modeLabel.classList.remove('gold');
   if (variant) modeLabel.classList.add(variant);
   modeLabel.classList.add('show');
+  modeEndAt = Date.now() + ms;
+  if (modeInt) clearInterval(modeInt);
+  const tick = () => {
+    const left = Math.max(0, modeEndAt - Date.now());
+    modeLabel.textContent = base + ' // ' + Math.ceil(left / 1000) + 'S';
+    if (left <= 0) {
+      clearInterval(modeInt);
+      modeInt = null;
+      modeLabel.classList.remove('show');
+    }
+  };
+  tick();
+  modeInt = setInterval(tick, 200);
   if (modeTimer) clearTimeout(modeTimer);
-  modeTimer = setTimeout(() => modeLabel.classList.remove('show'), ms);
+  modeTimer = setTimeout(() => {
+    modeLabel.classList.remove('show');
+    if (modeInt) { clearInterval(modeInt); modeInt = null; }
+  }, ms + 100);
 }
-function activateGlitchMode() {
+
+function randomHueColor() {
+  return 'hsl(' + ((Math.random() * 360) | 0) + ',100%,' + (55 + Math.random() * 25) + '%)';
+}
+const COLOR_TARGETS = '#slide-title span, #slide-lead span, #oracle span, #typing-el span, .mlink, #slide-status';
+function applyRandomColors() {
+  document.querySelectorAll(COLOR_TARGETS).forEach(el => { el.style.color = randomHueColor(); });
+}
+function stopGlitchMode() {
+  glitchLevel = 0;
+  document.body.classList.remove('glitch-mode');
+  document.body.style.removeProperty('--gi');
+  if (colorTimer) { clearInterval(colorTimer); colorTimer = null; }
+  document.querySelectorAll(COLOR_TARGETS).forEach(el => { el.style.color = ''; });
+}
+
+function activateGlitchMode(level) {
+  glitchLevel = Math.max(1, Math.min(4, level || 1));
   document.body.classList.add('glitch-mode');
-  showModeLabel('ONEDOPEA MODE // 10S', 10000);
-  sfxGlitch();
-  buzz(20);
+  document.body.style.setProperty('--gi', String(1 + (glitchLevel - 1) * 0.9));
+  if (glitchLevel >= 2) {
+    /* со 2-го нажатия — случайный цвет на каждую букву на странице */
+    applyRandomColors();
+    if (colorTimer) clearInterval(colorTimer);
+    colorTimer = setInterval(applyRandomColors, Math.max(90, 340 - glitchLevel * 70));
+  }
+  showModeTimer('ONEDOPEA MODE', 10000);
+  buzz(20 + glitchLevel * 10);
   if (glitchTimer) clearTimeout(glitchTimer);
-  glitchTimer = setTimeout(() => document.body.classList.remove('glitch-mode'), 10000);
+  glitchTimer = setTimeout(() => { stopGlitchMode(); bugClicks = 0; }, 10000);
 }
 function activateGoldenMode() {
   document.body.classList.add('golden');
-  showModeLabel('GOLDEN MODE // 15S', 15000, 'gold');
-  sfxGlitch();
+  showModeTimer('GOLDEN MODE', 15000, 'gold');
   buzz(40);
   if (goldenTimer) clearTimeout(goldenTimer);
   goldenTimer = setTimeout(() => document.body.classList.remove('golden'), 15000);
@@ -1090,7 +1137,17 @@ function scheduleBugFlick() {
 }
 scheduleBugFlick();
 bugEl.addEventListener('animationend', () => bugEl.classList.remove('flick'));
-bugEl.addEventListener('click', activateGlitchMode);
+bugEl.addEventListener('click', () => {
+  bugClicks++;
+  if (bugClicks >= 5) {
+    /* 5-е нажатие: всё разбивается и запускается перемотка назад */
+    bugClicks = 0;
+    stopGlitchMode();
+    shatterAll();
+    return;
+  }
+  activateGlitchMode(bugClicks);
+});
 
 /* ============ HOVER-СТАТИКА НА ССЫЛКАХ ============ */
 document.querySelectorAll('.mlink').forEach(a => {
@@ -1205,12 +1262,17 @@ function rewindSlideFrame(tRev) {
     const delay = i * H1_STEP;
     if (tRev > delay + H1_SCRAMBLE_TIME) {
       el.style.opacity = '1';
+      el.style.transform = '';
       el.textContent = el.dataset.target;
     } else if (tRev > delay) {
+      /* буква уезжает назад: скрэмбл + сдвиг */
+      const pr = 1 - (tRev - delay) / H1_SCRAMBLE_TIME;
       el.style.opacity = '1';
+      el.style.transform = 'translateY(' + (-8 * pr).toFixed(1) + 'px)';
       el.textContent = randomGlyph();
     } else {
       el.style.opacity = '0';
+      el.style.transform = '';
       el.textContent = '';
     }
   });
@@ -1223,7 +1285,17 @@ function rewindSlideFrame(tRev) {
       el.style.opacity = '0';
     }
   });
-  ctaEl.classList.toggle('show', tRev > CTA_SHOW_MS);
+  /* ссылки уезжают назад: вниз + растворение, в обратном порядке появления */
+  if (tRev > CTA_SHOW_MS) {
+    ctaEl.classList.add('show');
+    ctaEl.style.opacity = '';
+    ctaEl.style.transform = '';
+  } else {
+    const p = Math.min(1, (CTA_SHOW_MS - tRev) / 300);
+    ctaEl.style.opacity = String(1 - p);
+    ctaEl.style.transform = 'translateY(' + (p * 16).toFixed(1) + 'px)';
+    if (p >= 1) ctaEl.classList.remove('show');
+  }
 }
 function rewindTitleFrame(tRev) {
   letters.forEach((el, i) => {
@@ -1231,13 +1303,17 @@ function rewindTitleFrame(tRev) {
     const delay = i * LETTER_STEP;
     if (tRev > delay + APPEAR_SCRAMBLE_TIME) {
       el.classList.add('show', 'locked');
+      el.style.transform = '';
       el.textContent = el.dataset.target;
     } else if (tRev > delay) {
+      const pr = 1 - (tRev - delay) / APPEAR_SCRAMBLE_TIME;
       el.classList.add('show');
       el.classList.remove('locked');
+      el.style.transform = 'translateY(' + (-6 * pr).toFixed(1) + 'px)';
       el.textContent = randomGlyph();
     } else {
       el.classList.remove('show', 'locked');
+      el.style.transform = '';
       el.textContent = '';
     }
   });
@@ -1254,6 +1330,22 @@ function rewindTypingFrame(tRev) {
   });
 }
 
+/* всё на экране разбивается в осколки, затем плёнка отматывается */
+let rewSkipContent = false;
+function shatterAll() {
+  buzz(60);
+  document.querySelectorAll('#slide-title span, #slide-lead span, #oracle span, .mlink, #qr-box, .logo-badge, #slide-panel').forEach(el => {
+    if (el.dataset.role === 'br') return;
+    el.style.transition = 'transform 0.6s cubic-bezier(0.2,0.7,0.3,1), opacity 0.6s';
+    el.style.transform = 'translate(' + ((Math.random() - 0.5) * 480).toFixed(0) + 'px,' +
+      ((Math.random() - 0.5) * 480).toFixed(0) + 'px) rotate(' + ((Math.random() - 0.5) * 720).toFixed(0) + 'deg)';
+    el.style.opacity = '0';
+  });
+  drops.forEach(d => { if (!d.shattered && !d.collapsing) shatterDrop(d); });
+  rewSkipContent = true;
+  setTimeout(() => startRewind(vNow), 500);
+}
+
 function startRewind(now) {
   if (phase === 'rewind') return;
   const prevPhase = phase;
@@ -1267,10 +1359,14 @@ function startRewind(now) {
   /* что именно отматываем и с какой точки таймлайна */
   rewKind = 'none';
   rewContentT = 0;
-  if (idx >= 0 && idx < ITEMS.length && ITEMS[idx].type === 'slide' &&
+  if (rewSkipContent) {
+    /* после shatter контент не восстанавливаем — только плёнка назад */
+    rewSkipContent = false;
+  } else if (idx >= 0 && idx < ITEMS.length && ITEMS[idx].type === 'slide' &&
       !slideWrap.classList.contains('hidden')) {
     rewKind = 'slide';
     rewContentT = prevPhase === 'enter' ? Math.min(now - phaseStart, SLIDE_ENTER_MS) : SLIDE_ENTER_MS;
+    ctaEl.style.transition = 'none';
   } else if (!oracleWrap.classList.contains('hidden')) {
     rewKind = 'title';
     const total = letters.length * LETTER_STEP + APPEAR_SCRAMBLE_TIME;
@@ -1304,6 +1400,15 @@ function finishRewind(now) {
   oracleWrap.classList.add('hidden');
   typingEl.style.display = 'none';
   typingState = 'idle';
+  /* чистим осколки shatter и обратные трансформы */
+  ctaEl.style.cssText = '';
+  document.querySelectorAll('.mlink, #qr-box, .logo-badge, #slide-panel').forEach(el => {
+    el.style.transform = '';
+    el.style.opacity = '';
+    el.style.transition = '';
+  });
+  bugClicks = 0;
+  stopGlitchMode();
   phase = 'wait';
   phaseStart = now + 600;
   /* кнопки возвращаются глитчем, как при первом включении */
@@ -2104,5 +2209,5 @@ phaseStart = vNow + START_DELAY;
 applyNight();
 requestAnimationFrame(loop);
 </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a433f6306fa3bd27',t:'MTc5MDc3OTAwNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
