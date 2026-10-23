@@ -4,7 +4,7 @@
   "private": true,
   "description": "ONEDOPEA portfolio and product-planning board",
   "scripts": {
-    "test": "node tools/plan.test.mjs",
+    "test": "node tools/site.test.mjs",
     "serve": "python3 -m http.server 8080 --bind 0.0.0.0"
   },
   "devDependencies": {

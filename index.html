@@ -117,6 +117,27 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--green); outline
   border-radius: 8px;
 }
 .hud-link:hover { color: #bfffd0; }
+.hud-link-btn { border: 0; background: transparent; cursor: pointer; }
+.info-panel {
+  position: fixed; inset: 50% auto auto 50%; z-index: 190;
+  width: min(620px, calc(100vw - 28px)); max-height: min(76vh, 680px); overflow: auto;
+  transform: translate(-50%, -50%); padding: 22px;
+  border: 1px solid var(--green-dim); border-radius: 14px;
+  background: rgba(3, 10, 6, 0.97); color: #d9f5e1;
+  box-shadow: 0 24px 90px #000, 0 0 35px rgba(125,251,164,.12);
+  user-select: text; -webkit-user-select: text;
+}
+.info-panel[hidden] { display: none; }
+.info-panel h2 { margin: 0 34px 8px 0; color: var(--green); font-size: 20px; }
+.info-panel p, .info-panel li { color: rgba(217,245,225,.72); font-size: 12px; line-height: 1.6; }
+.info-panel ul { padding-left: 18px; }
+.info-panel .panel-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.info-panel .panel-links a { border: 1px solid var(--green-dim); border-radius: 8px; padding: 8px 11px; color: var(--green); text-decoration: none; }
+.panel-close { position: absolute; right: 12px; top: 12px; border: 1px solid var(--green-dim); background: transparent; color: var(--green); border-radius: 7px; padding: 5px 8px; cursor: pointer; }
+body.effects-off .scanlines, body.effects-off .crt-flicker, body.effects-off #tv-effect { display: none !important; }
+body.effects-off { filter: none !important; animation: none !important; }
+body.high-contrast { --green: #9dffb9; --green-soft: #d8ffe2; --green-dim: rgba(157,255,185,.8); }
+@media (max-width: 700px) { #hud { max-width: calc(100vw - 24px); flex-wrap: wrap; justify-content: center; } .hud-link { font-size: 9px; padding: 4px; } }
 body.glitch-mode {
   filter: hue-rotate(calc(150deg * var(--gi, 1))) saturate(calc(1.2 + 0.6 * var(--gi, 1)));
   animation: bodyShake calc(0.3s / var(--gi, 1)) infinite linear;
@@ -944,7 +965,10 @@ body.night #oracle.onedopea-mode span.locked {
 
 <div id="hud">
   <span id="nightBadge">NIGHT</span>
-  <a class="hud-link" href="plan.html">ПЛАНИРОВАНИЕ</a>
+  <button class="hud-link hud-link-btn" id="about-btn" type="button">О ПРОЕКТЕ</button>
+  <button class="hud-link hud-link-btn" id="share-btn" type="button">ПОДЕЛИТЬСЯ</button>
+  <button class="hud-link hud-link-btn" id="effects-btn" type="button" aria-pressed="false">ЭФФЕКТЫ: ON</button>
+  <a class="hud-link" href="plan.html">ИЗМЕНЕНИЯ</a>
   <a class="hud-link" href="account.html">КАБИНЕТ</a>
 </div>
 
@@ -954,6 +978,19 @@ body.night #oracle.onedopea-mode span.locked {
 <div id="osd" aria-hidden="true"></div>
 <div id="toast"></div>
 <div id="live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+<section class="info-panel" id="about-panel" hidden aria-modal="true" role="dialog" aria-labelledby="about-title">
+  <button class="panel-close" type="button" data-close-panel aria-label="Закрыть">✕</button>
+  <h2 id="about-title">ONEDOPEA // проекты</h2>
+  <p>Экспериментальная витрина продуктов и Telegram-инструментов. Полный CRT-визуал сохранён как выбранная дизайн-гипотеза, но теперь эффекты можно отключить.</p>
+  <ul>
+    <li><b>BotControl App</b> — управление Telegram-ботами прямо с телефона.</li>
+    <li><b>Oracle</b> — Telegram-проект ONEDOPEA.</li>
+    <li><b>DaromVPL</b> — проект и Telegram-канал.</li>
+    <li><b>Product Board</b> — явная демонстрация изменений сайта.</li>
+    <li><b>Account</b> — прототип личного кабинета и админки.</li>
+  </ul>
+  <div class="panel-links"><a href="https://t.me/onedopea" target="_blank" rel="noopener">Написать в Telegram</a><a href="https://github.com/visiontripin" target="_blank" rel="noopener">GitHub</a><a href="plan.html">Что изменилось</a></div>
+</section>
 <div id="mode-label">ONEDOPEA MODE // 10S</div>
 
 <div class="crt-flicker" aria-hidden="true"></div>
@@ -983,6 +1020,10 @@ const osdEl = document.getElementById('osd');
 const bugEl = document.getElementById('bug');
 const rewBtn = document.getElementById('rew');
 const rewOsdEl = document.getElementById('rew-osd');
+const aboutBtn = document.getElementById('about-btn');
+const shareBtn = document.getElementById('share-btn');
+const effectsBtn = document.getElementById('effects-btn');
+const aboutPanel = document.getElementById('about-panel');
 
 const GLYPHS = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const S = 18;
@@ -1002,7 +1043,9 @@ let mouseNX = 0, mouseNY = 0, parX = 0, parY = 0;
 const ITEMS = [
   { type: 'slide', word: 'BotControl\nApp', url: 'https://github.com/visiontripin/oracle' },
   { type: 'title', word: 'ORACLE', url: 'https://t.me/OneDope_bot' },
-  { type: 'title', word: 'DAROMVPL', url: 'https://t.me/daromvpl' }
+  { type: 'title', word: 'DAROMVPL', url: 'https://t.me/daromvpl' },
+  { type: 'title', word: 'PRODUCT BOARD', url: 'plan.html' },
+  { type: 'title', word: 'ACCOUNT', url: 'account.html' }
 ];
 const SPECIAL = { type: 'title', word: 'ONEDOPEA', url: 'https://t.me/onedopea' };
 const SLIDE_LEAD = 'Это BotControl — Telegram-боты прямо с телефона.';
@@ -1274,8 +1317,31 @@ function showOsd(text) {
 
 console.log('%cONEDOPEA %c// v3.3 %c— фразы: "onedopea" "konami" "stats" | свайп ←→ — слайды, свайп↑↓ / [ ] — время, ↑↓ — дождь, F — fullscreen', 'color:#0f0;font-weight:bold;font-size:14px', 'color:#7dfba4', 'color:#0a0');
 
+/* ============ ЯВНЫЕ КОНТРОЛЫ: about / share / effects ============ */
+const EFFECTS_KEY = 'onedopea.effects.off';
+function setEffectsOff(off) {
+  document.body.classList.toggle('effects-off', off);
+  rainActive = !off;
+  effectsBtn.textContent = 'ЭФФЕКТЫ: ' + (off ? 'OFF' : 'ON');
+  effectsBtn.setAttribute('aria-pressed', String(off));
+  try { localStorage.setItem(EFFECTS_KEY, off ? '1' : '0'); } catch (e) {}
+}
+try { setEffectsOff(localStorage.getItem(EFFECTS_KEY) === '1'); } catch (e) { setEffectsOff(false); }
+aboutBtn.addEventListener('click', () => { aboutPanel.hidden = false; aboutPanel.querySelector('.panel-close').focus(); });
+aboutPanel.addEventListener('click', e => { if (e.target.closest('[data-close-panel]')) { aboutPanel.hidden = true; aboutBtn.focus(); } });
+effectsBtn.addEventListener('click', () => setEffectsOff(!document.body.classList.contains('effects-off')));
+shareBtn.addEventListener('click', async () => {
+  const data = { title: document.title, text: 'ONEDOPEA — проекты и Telegram-инструменты', url: location.href };
+  try {
+    if (navigator.share) await navigator.share(data);
+    else if (navigator.clipboard) { await navigator.clipboard.writeText(location.href); showToast('ССЫЛКА СКОПИРОВАНА', 1600); }
+    else showToast('СКОПИРУЙ: ' + location.href, 2500);
+  } catch (e) { if (e && e.name !== 'AbortError') showToast('SHARE ERROR'); }
+});
+
 /* ============ KEYBOARD ============ */
 document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && !aboutPanel.hidden) { aboutPanel.hidden = true; aboutBtn.focus(); return; }
   if (e.key === 'ArrowRight') { e.preventDefault(); doNext(); return; }
   if (e.key === 'ArrowLeft') { e.preventDefault(); doPrev(); return; }
   if (e.key === 'ArrowUp') { e.preventDefault(); bumpRain(1); return; }
@@ -2173,6 +2239,8 @@ function drawCrumb(c) {
 
 /* ============ MAIN LOOP ============ */
 function loop(rawNow) {
+  /* Не расходуем батарею и GPU, пока вкладка скрыта. */
+  if (document.hidden) { lastRaw = rawNow; requestAnimationFrame(loop); return; }
   const dt = Math.min(250, Math.max(0, rawNow - lastRaw));
   lastRaw = rawNow;
   vNow += dt * timeScale;

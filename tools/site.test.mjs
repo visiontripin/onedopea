@@ -1,0 +1,33 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { JSDOM, VirtualConsole } from 'jsdom';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+let ok=0,bad=0;function test(n,f){try{f();console.log(' ok  '+n);ok++}catch(e){console.error('FAIL '+n+' — '+e.message);bad++}}
+function load(file){const errors=[],vc=new VirtualConsole();vc.on('jsdomError',e=>errors.push(e.message));vc.on('error',(...x)=>errors.push(x.join(' ')));const noop=()=>{};const dom=new JSDOM(fs.readFileSync(path.join(root,file),'utf8'),{runScripts:'dangerously',pretendToBeVisual:true,url:'https://example.test/'+file,virtualConsole:vc,beforeParse(w){w.HTMLCanvasElement.prototype.getContext=()=>new Proxy({},{get:(t,p)=>p==='createImageData'?()=>({data:new Uint8ClampedArray(4)}):p==='measureText'?()=>({width:10}):noop,set:()=>true});w.navigator.share=async()=>{};w.navigator.clipboard={writeText:async()=>{}}}});return{w:dom.window,d:dom.window.document,errors}}
+console.log('== plan demo ==');const p=load('plan.html');
+test('без runtime-ошибок',()=>assert.deepEqual(p.errors,[]));
+test('20 изменений отрисованы',()=>assert.equal(p.d.querySelectorAll('.change').length,20));
+test('явное сравнение БЫЛО/СТАЛО',()=>{assert.equal(p.d.querySelectorAll('.before').length,20);assert.equal(p.d.querySelectorAll('.after').length,20)});
+test('статусы сходятся с KPI',()=>{assert.equal(p.d.querySelector('#doneN').textContent,'9');assert.equal(p.d.querySelector('#newN').textContent,'6');assert.equal(p.d.querySelector('#nextN').textContent,'5')});
+test('фильтр «Новое»',()=>{p.d.querySelector('[data-filter=new]').click();assert.equal(p.d.querySelectorAll('.change').length,6)});
+test('чек сохраняется',()=>{p.d.querySelector('[data-filter=all]').click();const c=p.d.querySelector('.check');c.checked=true;c.dispatchEvent(new p.w.Event('change',{bubbles:true}));assert.equal(JSON.parse(p.w.localStorage.getItem('onedopea.change-demo.v1'))['0'],true)});
+test('есть ссылки на сайт и кабинет',()=>{assert.ok(p.d.querySelector('a[href="index.html"]'));assert.ok(p.d.querySelector('a[href="account.html"]'))});
+console.log('== main site ==');const m=load('index.html');
+test('без runtime-ошибок',()=>assert.deepEqual(m.errors,[]));
+test('SEO description и JSON-LD',()=>{assert.ok(m.d.querySelector('meta[name=description]'));assert.ok(m.d.querySelector('script[type="application/ld+json"]'))});
+test('viewport разрешает zoom',()=>assert.ok(!m.d.querySelector('meta[name=viewport]').content.includes('user-scalable=no')));
+test('5 проектов в цикле',()=>{const s=fs.readFileSync(path.join(root,'index.html'),'utf8');assert.ok(s.includes("word: 'PRODUCT BOARD'"));assert.ok(s.includes("word: 'ACCOUNT'"))});
+test('контролы About/Share/Effects',()=>{assert.ok(m.d.querySelector('#about-btn'));assert.ok(m.d.querySelector('#share-btn'));assert.ok(m.d.querySelector('#effects-btn'))});
+test('About открывается и закрывается',()=>{m.d.querySelector('#about-btn').click();assert.equal(m.d.querySelector('#about-panel').hidden,false);m.d.querySelector('[data-close-panel]').click();assert.equal(m.d.querySelector('#about-panel').hidden,true)});
+test('эффекты отключаются и сохраняются',()=>{m.d.querySelector('#effects-btn').click();assert.ok(m.d.body.classList.contains('effects-off'));assert.equal(m.w.localStorage.getItem('onedopea.effects.off'),'1')});
+test('доступность: H1, skip-link, live region',()=>{assert.ok(m.d.querySelector('h1'));assert.ok(m.d.querySelector('.skip-link'));assert.ok(m.d.querySelector('[aria-live]'))});
+test('PWA файлы существуют',()=>['manifest.webmanifest','sw.js','icons/icon-192.png'].forEach(f=>assert.ok(fs.existsSync(path.join(root,f)),f)));
+test('чужой Cloudflare snippet удалён',()=>assert.ok(!fs.readFileSync(path.join(root,'index.html'),'utf8').includes('challenge-platform')));
+console.log('== account ==');const a=load('account.html');
+test('без runtime-ошибок',()=>assert.deepEqual(a.errors,[]));
+test('4 вкладки',()=>assert.equal(a.d.querySelectorAll('[data-tab]').length,4));
+test('админка открывается',()=>{a.d.querySelector('[data-tab=admin]').click();assert.ok(a.d.querySelector('#admin').classList.contains('on'))});
+test('черновик сохраняется',()=>{a.d.querySelector('#name').value='Test';a.d.querySelector('#editor').dispatchEvent(new a.w.Event('submit',{bubbles:true,cancelable:true}));assert.equal(JSON.parse(a.w.localStorage.getItem('onedopea.account.demo')).draft.name,'Test')});
+console.log(`\n${bad?'✗':'✓'} ${ok} passed, ${bad} failed`);process.exit(bad?1:0);
