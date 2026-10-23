@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://visiontripin.github.io/onedopea/content.schema.json",
+  "title": "ONEDOPEA content",
+  "type": "object",
+  "required": ["version", "owner", "projects"],
+  "properties": {
+    "version": { "type": "integer", "minimum": 1 },
+    "owner": {
+      "type": "object",
+      "required": ["name", "telegram", "github"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "telegram": { "type": "string", "format": "uri" },
+        "github": { "type": "string", "format": "uri" }
+      },
+      "additionalProperties": false
+    },
+    "projects": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 7,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "title", "displayTitle", "description", "url", "status", "tags"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "type": { "enum": ["slide", "title"] },
+          "title": { "type": "string", "minLength": 2 },
+          "displayTitle": { "type": "string", "minLength": 2 },
+          "description": { "type": "string", "minLength": 10 },
+          "url": { "type": "string", "minLength": 1 },
+          "secondaryUrl": { "type": "string" },
+          "status": { "enum": ["active", "demo", "prototype", "archived"] },
+          "tags": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

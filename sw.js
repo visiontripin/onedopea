@@ -1,5 +1,5 @@
-const CACHE = 'onedopea-v1';
-const SHELL = ['./', './index.html', './plan.html', './account.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png'];
+const CACHE = 'onedopea-v2';
+const SHELL = ['./', './index.html', './plan.html', './account.html', './content.json', './content.schema.json', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png'];
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL)).then(() => self.skipWaiting()));

@@ -1040,13 +1040,21 @@ let cycleFallMultiplier = 1.0;
 let mouseNX = 0, mouseNY = 0, parX = 0, parY = 0;
 
 /* Цикл: 01 BotControl App (слайд) -> 02 ORACLE -> 03 DAROMVPL -> TV OFF -> "wake up, Neo!" -> ONEDOPEA -> снова 01 */
-const ITEMS = [
-  { type: 'slide', word: 'BotControl\nApp', url: 'https://github.com/visiontripin/oracle' },
-  { type: 'title', word: 'ORACLE', url: 'https://t.me/OneDope_bot' },
-  { type: 'title', word: 'DAROMVPL', url: 'https://t.me/daromvpl' },
-  { type: 'title', word: 'PRODUCT BOARD', url: 'plan.html' },
-  { type: 'title', word: 'ACCOUNT', url: 'account.html' }
+/* Fallback сохраняет работу при открытии index.html напрямую с телефона (file://).
+   На сервере содержимое обновляется из content.json до начала первого экрана. */
+let ITEMS = [
+  { id: 'botcontrol', type: 'slide', word: 'BotControl\nApp', url: 'https://github.com/visiontripin/oracle', description: 'Telegram-боты прямо с телефона.' },
+  { id: 'oracle', type: 'title', word: 'ORACLE', url: 'https://t.me/OneDope_bot', description: 'Telegram-проект ONEDOPEA.' },
+  { id: 'daromvpl', type: 'title', word: 'DAROMVPL', url: 'https://t.me/daromvpl', description: 'Проект и Telegram-канал DaromVPL.' },
+  { id: 'change-demo', type: 'title', word: 'PRODUCT BOARD', url: 'plan.html', description: 'Демонстрация изменений сайта.' },
+  { id: 'account', type: 'title', word: 'ACCOUNT', url: 'account.html', description: 'Прототип кабинета и админки.' }
 ];
+if (location.protocol !== 'file:' && typeof fetch === 'function') {
+  fetch('content.json').then(r => r.ok ? r.json() : Promise.reject()).then(data => {
+    if (!data || !Array.isArray(data.projects) || data.projects.length < 5) return;
+    ITEMS.splice(0, ITEMS.length, ...data.projects.map(p => ({ id:p.id, type:p.type, word:p.displayTitle, url:p.url, description:p.description })));
+  }).catch(() => {});
+}
 const SPECIAL = { type: 'title', word: 'ONEDOPEA', url: 'https://t.me/onedopea' };
 const SLIDE_LEAD = 'Это BotControl — Telegram-боты прямо с телефона.';
 
@@ -1126,6 +1134,18 @@ function buzz(ms) {
 
 /* ============ TOAST ============ */
 const liveRegion = document.getElementById('live-region');
+/* Privacy-friendly analytics: только агрегированные события в localStorage,
+   без cookie, IP, fingerprint и отправки на сервер. */
+const ANALYTICS_KEY = 'onedopea.analytics.v1';
+function track(name, detail = '') {
+  try {
+    const a = JSON.parse(localStorage.getItem(ANALYTICS_KEY) || '{"events":{},"recent":[]}');
+    a.events[name] = (a.events[name] || 0) + 1;
+    a.recent = (a.recent || []).concat({ name, detail:String(detail).slice(0,80), at:new Date().toISOString() }).slice(-30);
+    localStorage.setItem(ANALYTICS_KEY, JSON.stringify(a));
+  } catch (e) {}
+}
+track('page_view', location.pathname || 'index');
 /* озвучиваем служебные сообщения тем, кто пользуется скринридером */
 function announce(text) {
   if (liveRegion && text) liveRegion.textContent = text;
@@ -1293,6 +1313,9 @@ bugEl.addEventListener('click', () => {
   activateGlitchMode(bugClicks);
 });
 
+oracleEl.addEventListener('click', () => track('project_click', oracleEl.dataset.projectId || 'unknown'));
+document.querySelectorAll('.mlink').forEach(a => a.addEventListener('click', () => track('project_click', a.textContent.trim())));
+
 /* ============ HOVER-СТАТИКА НА ССЫЛКАХ ============ */
 document.querySelectorAll('.mlink').forEach(a => {
   a.addEventListener('mouseenter', () => {
@@ -1327,14 +1350,14 @@ function setEffectsOff(off) {
   try { localStorage.setItem(EFFECTS_KEY, off ? '1' : '0'); } catch (e) {}
 }
 try { setEffectsOff(localStorage.getItem(EFFECTS_KEY) === '1'); } catch (e) { setEffectsOff(false); }
-aboutBtn.addEventListener('click', () => { aboutPanel.hidden = false; aboutPanel.querySelector('.panel-close').focus(); });
+aboutBtn.addEventListener('click', () => { track('about_open'); aboutPanel.hidden = false; aboutPanel.querySelector('.panel-close').focus(); });
 aboutPanel.addEventListener('click', e => { if (e.target.closest('[data-close-panel]')) { aboutPanel.hidden = true; aboutBtn.focus(); } });
-effectsBtn.addEventListener('click', () => setEffectsOff(!document.body.classList.contains('effects-off')));
+effectsBtn.addEventListener('click', () => { const off = !document.body.classList.contains('effects-off'); setEffectsOff(off); track('effects_toggle', off ? 'off' : 'on'); });
 shareBtn.addEventListener('click', async () => {
   const data = { title: document.title, text: 'ONEDOPEA — проекты и Telegram-инструменты', url: location.href };
   try {
-    if (navigator.share) await navigator.share(data);
-    else if (navigator.clipboard) { await navigator.clipboard.writeText(location.href); showToast('ССЫЛКА СКОПИРОВАНА', 1600); }
+    if (navigator.share) { await navigator.share(data); track('share', 'native'); }
+    else if (navigator.clipboard) { await navigator.clipboard.writeText(location.href); track('share', 'clipboard'); showToast('ССЫЛКА СКОПИРОВАНА', 1600); }
     else showToast('СКОПИРУЙ: ' + location.href, 2500);
   } catch (e) { if (e && e.name !== 'AbortError') showToast('SHARE ERROR'); }
 });
@@ -1639,6 +1662,8 @@ function setupTitle(i) {
   slidePanel.classList.remove('crt-on', 'crt-off', 'suck', 'fast');
   oracleWrap.classList.remove('hidden', 'suck');
   oracleEl.href = item.url;
+  oracleEl.dataset.projectId = item.id || item.word;
+  announce((item.word || '').replace('\n', ' ') + (item.description ? '. ' + item.description : ''));
   oracleEl.title = item.word.replace('\n', ' ') + ' → ' + item.url;
   oracleEl.setAttribute('aria-label', item.word.replace('\n', ' ') + ' Telegram link');
   oracleEl.classList.remove('done', 'inactive');

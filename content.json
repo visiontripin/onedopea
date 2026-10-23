@@ -1,0 +1,62 @@
+{
+  "$schema": "./content.schema.json",
+  "version": 1,
+  "owner": {
+    "name": "ONEDOPEA",
+    "telegram": "https://t.me/onedopea",
+    "github": "https://github.com/visiontripin"
+  },
+  "projects": [
+    {
+      "id": "botcontrol",
+      "type": "slide",
+      "title": "BotControl App",
+      "displayTitle": "BotControl\nApp",
+      "description": "Telegram-боты прямо с телефона.",
+      "url": "https://github.com/visiontripin/oracle",
+      "secondaryUrl": "https://t.me/AppBotcontrol_bot",
+      "status": "active",
+      "tags": ["Telegram", "mobile", "automation"]
+    },
+    {
+      "id": "oracle",
+      "type": "title",
+      "title": "Oracle",
+      "displayTitle": "ORACLE",
+      "description": "Telegram-проект ONEDOPEA.",
+      "url": "https://t.me/OneDope_bot",
+      "status": "active",
+      "tags": ["Telegram", "bot"]
+    },
+    {
+      "id": "daromvpl",
+      "type": "title",
+      "title": "DaromVPL",
+      "displayTitle": "DAROMVPL",
+      "description": "Проект и Telegram-канал DaromVPL.",
+      "url": "https://t.me/daromvpl",
+      "status": "active",
+      "tags": ["Telegram", "community"]
+    },
+    {
+      "id": "change-demo",
+      "type": "title",
+      "title": "Product Board",
+      "displayTitle": "PRODUCT BOARD",
+      "description": "Интерактивная демонстрация изменений сайта.",
+      "url": "plan.html",
+      "status": "demo",
+      "tags": ["roadmap", "product"]
+    },
+    {
+      "id": "account",
+      "type": "title",
+      "title": "Account",
+      "displayTitle": "ACCOUNT",
+      "description": "Прототип личного кабинета и редактора контента.",
+      "url": "account.html",
+      "status": "prototype",
+      "tags": ["admin", "prototype"]
+    }
+  ]
+}

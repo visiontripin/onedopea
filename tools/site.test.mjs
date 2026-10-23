@@ -10,7 +10,7 @@ console.log('== plan demo ==');const p=load('plan.html');
 test('без runtime-ошибок',()=>assert.deepEqual(p.errors,[]));
 test('20 изменений отрисованы',()=>assert.equal(p.d.querySelectorAll('.change').length,20));
 test('явное сравнение БЫЛО/СТАЛО',()=>{assert.equal(p.d.querySelectorAll('.before').length,20);assert.equal(p.d.querySelectorAll('.after').length,20)});
-test('статусы сходятся с KPI',()=>{assert.equal(p.d.querySelector('#doneN').textContent,'9');assert.equal(p.d.querySelector('#newN').textContent,'6');assert.equal(p.d.querySelector('#nextN').textContent,'5')});
+test('статусы сходятся с KPI',()=>{assert.equal(p.d.querySelector('#doneN').textContent,'13');assert.equal(p.d.querySelector('#newN').textContent,'6');assert.equal(p.d.querySelector('#nextN').textContent,'1')});
 test('фильтр «Новое»',()=>{p.d.querySelector('[data-filter=new]').click();assert.equal(p.d.querySelectorAll('.change').length,6)});
 test('чек сохраняется',()=>{p.d.querySelector('[data-filter=all]').click();const c=p.d.querySelector('.check');c.checked=true;c.dispatchEvent(new p.w.Event('change',{bubbles:true}));assert.equal(JSON.parse(p.w.localStorage.getItem('onedopea.change-demo.v1'))['0'],true)});
 test('есть ссылки на сайт и кабинет',()=>{assert.ok(p.d.querySelector('a[href="index.html"]'));assert.ok(p.d.querySelector('a[href="account.html"]'))});
@@ -24,6 +24,9 @@ test('About открывается и закрывается',()=>{m.d.querySele
 test('эффекты отключаются и сохраняются',()=>{m.d.querySelector('#effects-btn').click();assert.ok(m.d.body.classList.contains('effects-off'));assert.equal(m.w.localStorage.getItem('onedopea.effects.off'),'1')});
 test('доступность: H1, skip-link, live region',()=>{assert.ok(m.d.querySelector('h1'));assert.ok(m.d.querySelector('.skip-link'));assert.ok(m.d.querySelector('[aria-live]'))});
 test('PWA файлы существуют',()=>['manifest.webmanifest','sw.js','icons/icon-192.png'].forEach(f=>assert.ok(fs.existsSync(path.join(root,f)),f)));
+test('content.json содержит 5 валидных проектов',()=>{const c=JSON.parse(fs.readFileSync(path.join(root,'content.json'),'utf8'));assert.equal(c.projects.length,5);c.projects.forEach(x=>{assert.ok(x.id&&x.description&&x.url);assert.ok(['slide','title'].includes(x.type))})});
+test('локальная аналитика считает page view без cookie',()=>{const x=JSON.parse(m.w.localStorage.getItem('onedopea.analytics.v1'));assert.ok(x.events.page_view>=1);assert.equal(m.d.cookie,'')});
+test('Lighthouse CI включён',()=>{assert.ok(fs.existsSync(path.join(root,'.github/workflows/lighthouse.yml')));assert.ok(fs.existsSync(path.join(root,'lighthouserc.json')))});
 test('чужой Cloudflare snippet удалён',()=>assert.ok(!fs.readFileSync(path.join(root,'index.html'),'utf8').includes('challenge-platform')));
 console.log('== account ==');const a=load('account.html');
 test('без runtime-ошибок',()=>assert.deepEqual(a.errors,[]));
