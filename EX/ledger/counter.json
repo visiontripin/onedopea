@@ -1,0 +1,14 @@
+{
+  "updated_at": "2026-10-30",
+  "phase": 0,
+  "levels": {
+    "L0": { "count": 0, "target": null },
+    "L1": { "count": 0, "target": 1000000 },
+    "L2": { "count": 0, "target": 100000 },
+    "L3": { "count": 0, "target": 10000 },
+    "L4": { "count": 0, "target": 150 }
+  },
+  "prediction_accuracy": null,
+  "recall_30d": null,
+  "note": "Счётчики начинаются с нуля. Ноль — тоже данные."
+}

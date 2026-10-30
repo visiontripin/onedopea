@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://onedopea.example/EX/ledger/schema.json",
+  "title": "EX // Encounter record",
+  "description": "Одна запись публичного реестра встреч. Не содержит прямых идентификаторов (имя, контакты, адрес, документ). Хранится построчно в NDJSON, версионируется git-ом, публикуется как открытый датасет.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "encounter_id",
+    "seq",
+    "date",
+    "level",
+    "format",
+    "city",
+    "country",
+    "verification",
+    "consent",
+    "prediction",
+    "measures",
+    "published"
+  ],
+  "properties": {
+    "encounter_id": {
+      "type": "string",
+      "pattern": "^EX-[0-9]{6}$",
+      "description": "Публичный номер встречи, сквозная нумерация с 000001"
+    },
+    "seq": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Порядковый номер в очереди; отражает время подачи заявки"
+    },
+    "date": { "type": "string", "format": "date" },
+    "duration_min": { "type": "integer", "minimum": 1 },
+    "level": {
+      "enum": ["L0", "L1", "L2", "L3", "L4"],
+      "description": "L0 эфир-наблюдение; L1 60 сек; L2 звонок/круг >=10 мин; L3 очная встреча >=45 мин; L4 повторный контакт"
+    },
+    "format": {
+      "enum": ["broadcast_60s", "call_1to1", "circle_6", "offline_day", "marathon", "recontact"]
+    },
+    "city": { "type": "string" },
+    "country": { "type": "string", "pattern": "^[A-Z]{2}$" },
+    "language": { "type": "string", "pattern": "^[a-z]{2}(-[A-Z]{2})?$" },
+    "age_band": {
+      "enum": ["18-24", "25-34", "35-44", "45-54", "55-64", "65+"],
+      "description": "Только полоса, никогда точная дата рождения"
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "passed"],
+      "properties": {
+        "method": { "enum": ["video_selfie", "video_selfie+doc", "in_person_doc"] },
+        "passed": { "type": "boolean" },
+        "liveness_score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "duplicate_check": { "enum": ["clear", "suspected", "confirmed_duplicate"] }
+      }
+    },
+    "consent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["c1_participation", "c2_image", "c3_data", "signed_before_recording"],
+      "properties": {
+        "c1_participation": { "type": "boolean" },
+        "c2_image": { "type": "boolean" },
+        "c3_data": { "type": "boolean" },
+        "c4_special_category": { "type": "boolean", "default": false },
+        "pseudonym": { "type": "boolean", "default": false },
+        "signed_before_recording": { "type": "boolean", "const": true },
+        "withdrawn_at": { "type": ["string", "null"], "format": "date-time" }
+      }
+    },
+    "prediction": {
+      "type": "object",
+      "description": "Тест модели чужого сознания: субъект предсказывает ответ ДО встречи",
+      "additionalProperties": false,
+      "required": ["question_id", "predicted", "actual", "hit"],
+      "properties": {
+        "question_id": { "type": "string", "description": "например DD-001 (10k сейчас / 100 в мес)" },
+        "predicted": { "type": "string" },
+        "actual": { "type": "string" },
+        "hit": { "type": "boolean" },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "measures": {
+      "type": "object",
+      "description": "Срез субъекта на момент встречи",
+      "additionalProperties": false,
+      "required": ["subject_seq_level", "mood", "fatigue", "contacts_today"],
+      "properties": {
+        "subject_seq_level": { "type": "integer", "description": "Счётчик по уровню на конец встречи" },
+        "mood": { "type": "integer", "minimum": 1, "maximum": 7 },
+        "fatigue": { "type": "integer", "minimum": 1, "maximum": 7 },
+        "sleep_h": { "type": "number", "minimum": 0, "maximum": 14 },
+        "contacts_today": { "type": "integer", "minimum": 0 },
+        "best_remembered_face": { "type": "string", "description": "Без имён: одна фраза-якорь" }
+      }
+    },
+    "recall_30d": {
+      "type": "object",
+      "description": "Заполняется через 30 дней; null если ещё не наступило",
+      "additionalProperties": false,
+      "required": ["tested"],
+      "properties": {
+        "tested": { "type": "boolean" },
+        "face_recognized": { "type": ["boolean", "null"] },
+        "name_recalled": { "type": ["boolean", "null"] },
+        "fact_recalled": { "type": ["boolean", "null"] },
+        "category_only": { "type": ["boolean", "null"] }
+      }
+    },
+    "published": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["episode", "raw_archive"],
+      "properties": {
+        "episode": { "type": ["string", "null"], "description": "ID эпизода или null" },
+        "raw_archive": { "type": "boolean", "description": "Запись сохранена в архив" },
+        "checksum_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "cost_eur": { "type": "number", "minimum": 0, "description": "Прямые расходы на встречу" },
+    "incidents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "resolved"],
+        "properties": {
+          "type": { "enum": ["participant_distress", "safety", "consent_conflict", "technical", "staffing"] },
+          "resolved": { "type": "boolean" },
+          "note": { "type": "string" }
+        }
+      },
+      "default": []
+    }
+  }
+}

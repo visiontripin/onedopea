@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EX // ДОСЬЕ</title>
+<meta name="description" content="EX — эксперимент: что происходит с человеком, который лично знакомится с 100, 1 000, 10 000, 100 000, 1 000 000 людей. Протокол, роли, этика, экономика.">
+<style>
+:root{
+  --green:#7dfba4;
+  --green-dim:rgba(125,251,164,.62);
+  --green-faint:rgba(125,251,164,.16);
+  --red:#ff3b3b;
+  --bg:#000;
+  --panel:#040a06;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Courier New",monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--green);font-family:var(--mono);
+  font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:120;pointer-events:none;
+  background:repeating-linear-gradient(to bottom,transparent 0 2px,rgba(0,0,0,.28) 2px 4px);
+}
+body::after{
+  content:"";position:fixed;inset:0;z-index:119;pointer-events:none;
+  background:radial-gradient(circle at 50% 45%,transparent 42%,rgba(0,0,0,.72) 100%);
+}
+::selection{background:var(--green);color:#000}
+
+/* ─── HUD ─── */
+.hud{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;justify-content:space-between;gap:12px;
+  padding:8px clamp(12px,3vw,28px);
+  font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+  background:linear-gradient(to bottom,rgba(0,0,0,.94),rgba(0,0,0,.55));
+  border-bottom:1px solid var(--green-faint);backdrop-filter:blur(3px);
+  color:var(--green-dim);
+}
+.hud b{color:var(--green);font-weight:700}
+.hud .rec{display:inline-flex;align-items:center;gap:6px}
+.hud .rec i{width:7px;height:7px;background:var(--red);border-radius:50%;
+  display:inline-block;animation:blink 1.6s steps(2,end) infinite}
+@keyframes blink{0%,60%{opacity:1}61%,100%{opacity:.15}}
+.hud-mid{display:none}
+@media(min-width:760px){.hud-mid{display:inline}}
+
+/* ─── SECTIONS ─── */
+main{padding:0 clamp(14px,4vw,40px) 0;max-width:1180px;margin:0 auto;position:relative;z-index:2}
+section{padding:clamp(48px,9vh,96px) 0;border-bottom:1px solid var(--green-faint)}
+section:last-of-type{border-bottom:none}
+.sec-num{
+  font-size:10.5px;letter-spacing:.3em;color:var(--green-dim);
+  text-transform:uppercase;margin-bottom:14px;display:flex;gap:10px;align-items:center
+}
+.sec-num::after{content:"";height:1px;flex:1;background:var(--green-faint)}
+h1,h2,h3{line-height:1.15;letter-spacing:-.01em}
+h2{font-size:clamp(20px,4vw,30px);font-weight:700;text-transform:uppercase;letter-spacing:.02em;margin-bottom:18px}
+h3{font-size:14px;text-transform:uppercase;letter-spacing:.14em;color:var(--green);margin:26px 0 10px}
+p{color:var(--green-dim);max-width:74ch}
+p+p{margin-top:12px}
+b,strong{color:var(--green);font-weight:700}
+em{color:var(--green);font-style:normal;text-decoration:underline;text-underline-offset:3px}
+
+/* ─── HERO ─── */
+.hero{min-height:96vh;display:flex;flex-direction:column;justify-content:center;
+  border-bottom:1px solid var(--green-faint);position:relative}
+.hero-tag{font-size:10.5px;letter-spacing:.34em;text-transform:uppercase;color:var(--green-dim);margin-bottom:22px}
+.logo{
+  font-size:clamp(88px,26vw,260px);font-weight:700;line-height:.82;
+  letter-spacing:-.06em;position:relative;display:inline-block;
+  text-shadow:0 0 26px rgba(125,251,164,.34),0 0 90px rgba(125,251,164,.12);
+  animation:flicker 7s infinite steps(1,end);
+}
+.logo::before,.logo::after{
+  content:"EX";position:absolute;inset:0;pointer-events:none;
+}
+.logo::before{color:#ff2d6f;mix-blend-mode:screen;animation:gl1 5.5s infinite}
+.logo::after{color:#2dd8ff;mix-blend-mode:screen;animation:gl2 6.7s infinite}
+@keyframes gl1{
+  0%,92%,100%{transform:translate(0,0);opacity:0}
+  93%{transform:translate(-3px,1px);opacity:.55}
+  95%{transform:translate(2px,-2px);opacity:.4}
+  97%{transform:translate(-1px,0);opacity:.3}
+}
+@keyframes gl2{
+  0%,88%,100%{transform:translate(0,0);opacity:0}
+  89%{transform:translate(3px,-1px);opacity:.5}
+  91%{transform:translate(-2px,2px);opacity:.35}
+  94%{transform:translate(1px,1px);opacity:.25}
+}
+@keyframes flicker{0%,96%,100%{opacity:1}97%{opacity:.86}98%{opacity:1}99%{opacity:.92}}
+.hero-sub{
+  margin-top:26px;font-size:clamp(15px,2.4vw,21px);color:var(--green);
+  max-width:40ch;line-height:1.45
+}
+.hero-sub span{color:var(--green-dim)}
+.cursor{display:inline-block;width:.55em;height:1.05em;background:var(--green);
+  vertical-align:-.15em;animation:blink 1.1s steps(2,end) infinite;margin-left:4px}
+.boot{margin-top:36px;font-size:11.5px;line-height:2;color:var(--green-dim);letter-spacing:.06em}
+.boot div{opacity:0;animation:bootIn .35s forwards}
+.boot div:nth-child(1){animation-delay:.15s}
+.boot div:nth-child(2){animation-delay:.55s}
+.boot div:nth-child(3){animation-delay:.95s}
+.boot div:nth-child(4){animation-delay:1.35s}
+.boot div:nth-child(5){animation-delay:1.75s}
+.boot .ok{color:var(--green)}
+@keyframes bootIn{to{opacity:1}}
+.hero-cta{margin-top:38px;display:flex;flex-wrap:wrap;gap:12px}
+.btn{
+  display:inline-block;padding:12px 20px;border:1px solid var(--green);
+  color:var(--green);text-decoration:none;font-size:11.5px;letter-spacing:.18em;
+  text-transform:uppercase;transition:.18s;background:transparent
+}
+.btn:hover{background:var(--green);color:#000;box-shadow:0 0 24px rgba(125,251,164,.35)}
+.btn.ghost{border-color:var(--green-faint);color:var(--green-dim)}
+.btn.ghost:hover{border-color:var(--green);background:transparent;color:var(--green);box-shadow:none}
+
+/* ─── УТВЕРЖДЕНИЕ ─── */
+.claim{
+  border-left:2px solid var(--green);padding:6px 0 6px 20px;margin:22px 0;
+  font-size:clamp(16px,2.6vw,21px);color:var(--green);line-height:1.5;max-width:60ch
+}
+.strike{color:var(--green-dim);text-decoration:line-through;text-decoration-thickness:2px;
+  text-decoration-color:var(--red)}
+.def{
+  margin:24px 0;border:1px solid var(--green-faint);padding:16px 18px;background:var(--panel)
+}
+.def dt{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--green-dim)}
+.def dd{font-size:15px;color:var(--green);margin-top:6px}
+
+/* ─── СЕТКИ ─── */
+.grid{display:grid;gap:14px;margin-top:22px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.card{
+  border:1px solid var(--green-faint);background:var(--panel);padding:16px 16px 18px;
+  position:relative;transition:.2s
+}
+.card:hover{border-color:rgba(125,251,164,.45);transform:translateY(-2px)}
+.card .k{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--green-dim);margin-bottom:8px}
+.card .v{font-size:22px;color:var(--green);font-weight:700;letter-spacing:-.02em}
+.card .d{font-size:12px;color:var(--green-dim);margin-top:8px;line-height:1.55}
+.card.warn{border-color:rgba(255,59,59,.45)}
+.card.warn .v{color:var(--red)}
+
+/* уровни */
+.level{display:grid;grid-template-columns:44px 1fr;gap:14px;padding:14px 0;border-top:1px dashed var(--green-faint)}
+.level:last-child{border-bottom:1px dashed var(--green-faint)}
+.level .lv{font-weight:700;color:var(--green);font-size:15px}
+.level .t{font-size:13.5px;color:var(--green)}
+.level .n{font-size:11.5px;color:var(--green-dim);margin-top:4px}
+
+/* таблицы */
+.tw{overflow-x:auto;margin-top:16px;border:1px solid var(--green-faint)}
+table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:520px}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--green-faint);white-space:nowrap}
+th{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--green-dim);background:rgba(125,251,164,.05)}
+td{color:var(--green-dim)}
+td:first-child{color:var(--green)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(125,251,164,.04)}
+.num{color:var(--green);font-weight:700}
+.table-note{font-size:11.5px;color:var(--green-dim);opacity:.75;margin-top:8px;max-width:80ch}
+
+/* таймлайн */
+.phases{position:relative;margin-top:24px;padding-left:26px}
+.phases::before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:1px;background:var(--green-faint)}
+.phase{position:relative;padding:0 0 26px}
+.phase::before{content:"";position:absolute;left:-24px;top:8px;width:9px;height:9px;
+  background:#000;border:1px solid var(--green);transform:rotate(45deg)}
+.phase.cur::before{background:var(--green);box-shadow:0 0 14px rgba(125,251,164,.8)}
+.phase h4{font-size:13.5px;color:var(--green);text-transform:uppercase;letter-spacing:.1em}
+.phase .meta{font-size:10.5px;letter-spacing:.16em;color:var(--green-dim);text-transform:uppercase;margin:4px 0 6px}
+.phase p{font-size:13px}
+
+/* роли */
+.roles{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));margin-top:20px}
+.role{border-left:1px solid var(--green-faint);padding:4px 0 4px 14px}
+.role .rn{font-size:13px;color:var(--green);font-weight:700}
+.role .rd{font-size:12px;color:var(--green-dim);margin-top:3px}
+
+/* цитата/манифест */
+.manifest{
+  border:1px solid var(--green);padding:clamp(18px,4vw,30px);background:
+    linear-gradient(180deg,rgba(125,251,164,.05),transparent);
+  margin-top:20px
+}
+.manifest p{color:var(--green);font-size:clamp(14px,2.2vw,17px);line-height:1.6;max-width:none}
+.manifest .sig{font-size:10.5px;letter-spacing:.2em;color:var(--green-dim);text-transform:uppercase;margin-top:16px}
+
+/* cta final */
+.final{text-align:left;padding-bottom:80px}
+.final .big{font-size:clamp(26px,6vw,52px);color:var(--green);font-weight:700;
+  text-transform:uppercase;letter-spacing:-.02em;line-height:1.05;margin-bottom:18px}
+.steps{counter-reset:s;margin-top:20px;display:grid;gap:12px}
+.step{counter-increment:s;display:grid;grid-template-columns:34px 1fr;gap:12px;
+  border-top:1px solid var(--green-faint);padding-top:12px;font-size:13px}
+.step::before{content:"0" counter(s);color:var(--green);font-weight:700}
+.step b{display:block;margin-bottom:2px}
+
+footer{padding:28px 0 46px;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--green-dim);display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between}
+footer a{color:var(--green-dim)}
+footer a:hover{color:var(--green)}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  .rv{opacity:1;transform:none;transition:none}
+  .logo,.logo::before,.logo::after,.hud .rec i,.cursor{animation:none}
+}
+</style>
+</head>
+<body>
+
+<div class="hud">
+  <span><b>EX</b> // ДОСЬЕ</span>
+  <span class="hud-mid">ПРОТОКОЛ <b>v1</b> · ФАЗА <b>0</b> · N=1</span>
+  <span class="rec"><i></i> TC <b id="tc">00:00:00:00</b></span>
+</div>
+
+<main>
+
+  <!-- ══════════ HERO ══════════ -->
+  <section class="hero">
+    <div class="hero-tag">эксперимент · протокол открыт · 2026</div>
+    <div class="logo">EX</div>
+    <div class="hero-sub">
+      Один человек. Миллион незнакомцев.<br>
+      <span>Что с ним станет на 100, 1 000, 10 000, 1 000 000.</span>
+    </div>
+    <div class="boot">
+      <div>[ OK ] инициализация досье ................. EX</div>
+      <div>[ OK ] гипотеза: число личных связей = структура сознания</div>
+      <div>[ -- ] контрольный субъект ................. не найден</div>
+      <div>[ -- ] батарея замеров ..................... черновик</div>
+      <div>[ !! ] встреч зафиксировано ................ <span id="cnt">000000</span><span class="cursor"></span></div>
+    </div>
+    <div class="hero-cta">
+      <a class="btn" href="#plan">План действий</a>
+      <a class="btn ghost" href="#math">Расчёты</a>
+      <a class="btn ghost" href="#roles">Роли</a>
+    </div>
+  </section>
+
+  <!-- ══════════ 01 ТЕЗИС ══════════ -->
+  <section class="rv">
+    <div class="sec-num">01 / тезис</div>
+    <h2>«Привет, друзья»</h2>
+    <p>Каждый ролик начинается с этого слова. Оно адресовано людям, которых автор
+      не знает и никогда не увидит. Это не приветствие. Это подмена.</p>
+
+    <div class="claim">
+      «Друг» — тот, кого ты знаешь лично: его качества, навыки, реакции, за кого можешь
+      поручиться. Всё остальное — <span class="strike">друзья</span> аудитория.
+      <br>Аудитория — это <b>EX</b>.
+    </div>
+
+    <dl class="def">
+      <dt>EX (лат.)</dt>
+      <dd>приставка «бывший»: тот, кем ты был для предыдущих, когда ещё не стал функцией охвата.</dd>
+    </dl>
+
+    <p>Социальный мозг человека упирается в число личных связей: 5, 15, 50, 150, 500, 1 500.
+      Дальше начинается не «больше друзей», а другая материя: анонимная масса, толпа,
+      государство, эфир.</p>
+
+    <p><b>EX проходит эти слои насквозь.</b> Не чтобы «стать умнее» — этот вопрос
+      на одном человеке не проверяется. А чтобы измерить, где именно ломается:
+      внимание, память на лица, модель чужого сознания, речь, эмпатия, идентичность.</p>
+
+    <div class="grid g3">
+      <div class="card"><div class="k">гипотеза H1</div><div class="v">−0,6</div>
+        <div class="d">показатель кривой забывания имён после прохождения слоя 1 500</div></div>
+      <div class="card"><div class="k">гипотеза H2</div><div class="v">150 → 10 000</div>
+        <div class="d">благополучие растёт до слоя 150, на 500–1 500 плато, после 10 000 — спад</div></div>
+      <div class="card"><div class="k">гипотеза H3</div><div class="v">потолок</div>
+        <div class="d">точность предсказания чужого выбора растёт до ~500 контактов, дальше — нет</div></div>
+    </div>
+  </section>
+
+  <!-- ══════════ 02 УРОВНИ ══════════ -->
+  <section class="rv">
+    <div class="sec-num">02 / операционализация</div>
+    <h2>Пять уровней «узнать»</h2>
+    <p>Слово «узнать» слишком широкое, чтобы быть правдой. Оно раскладывается на пять
+      уровней, и каждый считается отдельно. Главная таблица проекта — не «сколько всего»,
+      а четыре счётчика.</p>
+
+    <div class="levels" style="margin-top:18px">
+      <div class="level"><div class="lv">L0</div>
+        <div><div class="t">Видел в эфире / в кадре</div>
+          <div class="n">односторонне · &lt; 1 мин · считается охватом, не контактом</div></div></div>
+      <div class="level"><div class="lv">L1</div>
+        <div><div class="t">60 секунд в эфире: имя, голос, три факта</div>
+          <div class="n">двусторонне через чат · фиксируется карточкой</div></div></div>
+      <div class="level"><div class="lv">L2</div>
+        <div><div class="t">Видеозвонок 1:1 или круг из 6</div>
+          <div class="n">≥ 10 мин · с верификацией личности</div></div></div>
+      <div class="level"><div class="lv">L3</div>
+        <div><div class="t">Очная встреча ≥ 45 минут</div>
+          <div class="n">нейтральная локация · 2 камеры · подписанное согласие</div></div></div>
+      <div class="level"><div class="lv">L4</div>
+        <div><div class="t">Повторный контакт: знаю жизнь, а не факты</div>
+          <div class="n">потолок 150 — выше не планируется принципиально</div></div></div>
+    </div>
+
+    <div class="grid g3" style="margin-top:26px">
+      <div class="card"><div class="k">L3 очные</div><div class="v">0 / 10 000</div><div class="d">предел одного человека за 3,6 года</div></div>
+      <div class="card"><div class="k">L2 звонки</div><div class="v">0 / 100 000</div><div class="d">круги, приёмы, эшелоны</div></div>
+      <div class="card"><div class="k">L1 эфир</div><div class="v">0 / 1 000 000</div><div class="d">только здесь живёт миллион</div></div>
+    </div>
+  </section>
+
+  <!-- ══════════ 03 ЧИСЛА ══════════ -->
+  <section class="rv" id="math">
+    <div class="sec-num">03 / арифметика</div>
+    <h2>Почему миллион невозможен — и всё же возможен</h2>
+    <p>45 минут на одну очную встречу. Умножим на миллион — получим 85 лет без сна.
+      Либо меняется определение «узнать», либо цель недостижима. EX меняет определение
+      и говорит об этом в первом же выпуске.</p>
+
+    <div class="tw">
+      <table>
+        <thead><tr><th>N</th><th>уровень</th><th>часов контакта</th><th>если 24/7</th><th>если 40 ч/нед</th></tr></thead>
+        <tbody>
+          <tr><td>100</td><td>L3</td><td>75</td><td>0,1 мес</td><td>0,4 мес</td></tr>
+          <tr><td>1 000</td><td>L3</td><td>750</td><td>1,0 мес</td><td>4,3 мес</td></tr>
+          <tr><td>10 000</td><td>L3</td><td>7 500</td><td>10,3 мес</td><td class="num">3,6 года</td></tr>
+          <tr><td>100 000</td><td>L3</td><td>75 000</td><td>8,6 лет</td><td>35,9 лет</td></tr>
+          <tr><td>1 000 000</td><td>L3</td><td>750 000</td><td class="num">85,6 года</td><td>359 лет</td></tr>
+          <tr><td>1 000 000</td><td>L1</td><td>16 667</td><td>1,9 года</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-note">Полные таблицы: <b>MATH.md</b>. Генератор: <code>python3 EX/tools/ex_math.py</code>.</div>
+
+    <h3>Воронка</h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th>шаг</th><th>конверсия</th><th>накопленный выход</th></tr></thead>
+        <tbody>
+          <tr><td>подписался</td><td>100 %</td><td>1,000</td></tr>
+          <tr><td>верифицировал личность</td><td>60 %</td><td>0,600</td></tr>
+          <tr><td>дошёл до записи в слот</td><td>35 %</td><td>0,210</td></tr>
+          <tr><td>пришёл / вышел на связь</td><td>75 %</td><td>0,158</td></tr>
+          <tr><td>согласие на публикацию</td><td>85 %</td><td class="num">0,134</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="table-note">Для 10 000 зафиксированных встреч нужно ~75 000 живых подписчиков.
+      Для миллиона — 7,5 млн. Шкала покупается не временем, а форматом.</p>
+
+    <div class="grid g2" style="margin-top:26px">
+      <div class="card"><div class="k">потолок внимания</div><div class="v">~50</div>
+        <div class="d">содержательных контактов в сутки, дальше падает качество</div></div>
+      <div class="card"><div class="k">потолок памяти</div><div class="v">1 500–10 000</div>
+        <div class="d">дальше — не лица, а категории. Память выносится в реестр</div></div>
+      <div class="card warn"><div class="k">потолок отношений</div><div class="v">150</div>
+        <div class="d">правило проекта: никто не становится другом автоматически</div></div>
+      <div class="card"><div class="k">стоимость 1-й тысячи</div><div class="v">€ 3 000</div>
+        <div class="d">10 000-й — € 450 000. Дальше цена контакта падает в 300 раз</div></div>
+    </div>
+  </section>
+
+  <!-- ══════════ 04 ПЛАН ══════════ -->
+  <section class="rv" id="plan">
+    <div class="sec-num">04 / план</div>
+    <h2>Фазы: протокол → пилот → сезон → масштаб</h2>
+    <p>Прыжок в «миллион» на первом месяце убивает проект на трёхсотом участнике.
+      Каждый переход закрывается решением go/no-go по метрикам, а не по настроению.</p>
+
+    <div class="phases">
+      <div class="phase cur">
+        <h4>0 · Протокол</h4>
+        <div class="meta">недели 1–8 · 0 контактов</div>
+        <p>Pre-registration, батарея замеров, согласия, DPIA, fiscal host, реестр встреч,
+           бренд, найм методолога и DPO. Выход фазы: 40–60 страниц документов и ноль
+          минут эфира.</p>
+      </div>
+      <div class="phase">
+        <h4>1 · Пилот: 100</h4>
+        <div class="meta">недели 9–16 · 100 контактов L3</div>
+        <p>Один город, фиксированный кадр, 12 вопросов, тест «угадай выбор».
+          6 эпизодов. Гейт: ≤ €60 за встречу, доходимость ≥ 60 %, психика без флагов.</p>
+      </div>
+      <div class="phase">
+        <h4>2 · Сезон 1: 1 000</h4>
+        <div class="meta">месяцы 4–9 · прохождение слоя 500</div>
+        <p>600 звонков + 400 очных, 4–6 эшелонов, контрольный субъект, первый препринт,
+          внешний аудит расходов.</p>
+      </div>
+      <div class="phase">
+        <h4>3 · Сезон 2: 10 000</h4>
+        <div class="meta">месяцы 9–21 · самый дорогой участок</div>
+        <p>2 500 очных тремя группами в 8 городах, 7 500 звонков и приёмов,
+          один марафон 30×40, первая научная публикация, открытый датасет.</p>
+      </div>
+      <div class="phase">
+        <h4>4 · Сезон 3: 100 000</h4>
+        <div class="meta">годы 2–3 · инфраструктура вместо героя</div>
+        <p>Приёмы в эфире, региональные представители по протоколу, открытый «EX-100»
+          для любого желающего, 5 000–8 000 очных лично.</p>
+      </div>
+      <div class="phase">
+        <h4>5 · Финал: 1 000 000</h4>
+        <div class="meta">годы 3–5 · честная формулировка</div>
+        <p>Миллион зафиксированных контактов L0/L1 + архив L2/L3. Год публичного счёта.
+          Фильм, книга, датасет, возвращение к пяти.</p>
+      </div>
+      <div class="phase">
+        <h4>6 · После</h4>
+        <div class="meta">год 5+ · обратный эксперимент</div>
+        <p>12 месяцев тишины, пять человек, замеры каждые три месяца. Что происходит,
+          когда контакты прекращаются.</p>
+      </div>
+    </div>
+
+    <h3>Первые 14 дней</h3>
+    <div class="grid g2">
+      <div class="card"><div class="k">день 1–2</div><div class="d">Выбрать субъекта. Написать pre-registration на 3 страницы.</div></div>
+      <div class="card"><div class="k">день 3</div><div class="d">5 интервью с методологами. Без PI это не эксперимент.</div></div>
+      <div class="card"><div class="k">день 4–5</div><div class="d">12 вопросов каждому участнику. Baseline-замер и 3-мин монолог на видео.</div></div>
+      <div class="card"><div class="k">день 8–9</div><div class="d">Юрист по GDPR и праву на изображение. Черновик согласия L3.</div></div>
+      <div class="card"><div class="k">день 10–11</div><div class="d">Лендинг и форма заявки. 20 интервью «зачем вам это».</div></div>
+      <div class="card"><div class="k">день 13–14</div><div class="d">Тестовая встреча по полному протоколу. Тизер 90 секунд.</div></div>
+    </div>
+  </section>
+
+  <!-- ══════════ 05 РОЛИ ══════════ -->
+  <section class="rv" id="roles">
+    <div class="sec-num">05 / роли</div>
+    <h2>Шесть мест, которые решают всё</h2>
+    <p>Главный принцип: <b>субъект эксперимента не может быть его продюсером.</b>
+      Человек, который проходит протокол, не решает, что снимать, куда идут деньги
+      и как считать результат.</p>
+
+    <div class="roles">
+      <div class="role"><div class="rn">1 · Методолог / PI</div>
+        <div class="rd">PhD, соц. психология или network science. Протокол, pre-registration, публикация. Право вето на изменение метода.</div></div>
+      <div class="role"><div class="rn">2 · Consent &amp; Welfare Lead</div>
+        <div class="rd">Клинический психолог + этика. Держит stop-rules. Останавливает съёмку единолично.</div></div>
+      <div class="role"><div class="rn">3 · Showrunner</div>
+        <div class="rd">Календарь, бюджет, редакция, найм. Единственный, кто отвечает за то, что проект не умрёт на 40-й встрече.</div></div>
+      <div class="role"><div class="rn">4 · Platform + Trust &amp; Safety</div>
+        <div class="rd">Верификация, очередь, реестр, анти-сибил, модерация. Это и есть машина проекта.</div></div>
+      <div class="role"><div class="rn">5 · DPO / юрист</div>
+        <div class="rd">GDPR Art. 9, согласия, право на изображение, донаты, DPIA.</div></div>
+      <div class="role"><div class="rn">6 · Казначей</div>
+        <div class="rd">Fiscal host, двойная запись, публичный реестр расходов, аудит. Без этого рушится легенда про донаты.</div></div>
+    </div>
+
+    <h3>Проверка на входе</h3>
+    <p>«Назовите проект, где вы отказались от результата, потому что он был получен
+      нечестно. Что вы сделали вместо него?» — три таких вопроса важнее резюме.
+      Красные флаги: хочет прославиться вместе с проектом; предлагает «немного приукрасить»;
+      не спрашивает про согласие участников; друг субъекта на позиции с правом вето.</p>
+  </section>
+
+  <!-- ══════════ 06 ЭТИКА И ДЕНЬГИ ══════════ -->
+  <section class="rv">
+    <div class="sec-num">06 / каркас</div>
+    <h2>Этика, деньги, красные линии</h2>
+
+    <div class="grid g2">
+      <div class="card"><div class="k">согласие</div><div class="v">4 документа</div>
+        <div class="d">участие · изображение · данные · спецкатегории. Отзыв — одна кнопка, бессрочно.</div></div>
+      <div class="card"><div class="k">stop-rule</div><div class="v">PHQ-9 ≥ 15</div>
+        <div class="d">и любой суицидальный пункт — немедленная остановка клиницистом, без обсуждения.</div></div>
+      <div class="card warn"><div class="k">запрет</div><div class="v">дружба</div>
+        <div class="d">обещать участнику дружбу, личный контакт, эксклюзивный доступ. Нарушение = отвращение.</div></div>
+      <div class="card"><div class="k">деньги</div><div class="v">€ 7 млн</div>
+        <div class="d">реалистичная смета до миллиона за 5 лет. Не «неограниченно» — конкретно.</div></div>
+    </div>
+
+    <h3>Куда идут средства</h3>
+    <div class="tw">
+      <table>
+        <thead><tr><th>статья</th><th>доля</th><th>что это</th></tr></thead>
+        <tbody>
+          <tr><td>Люди</td><td>45 %</td><td>команда, съёмочные дни, клиническая супервизия</td></tr>
+          <tr><td>Очные встречи</td><td>25 %</td><td>локации, дорога, оператор, страховка</td></tr>
+          <tr><td>Платформа и архив</td><td>12 %</td><td>верификация, очередь, хранение 20 лет</td></tr>
+          <tr><td>Постпродакшен</td><td>10 %</td><td>монтаж 700 часов материала за сезон</td></tr>
+          <tr><td>Юридическое и этика</td><td>5 %</td><td>DPO, согласия, аудит, этический совет</td></tr>
+          <tr><td>Резерв</td><td>3 %</td><td>4 месяца операционных расходов, неприкосновенно</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="table-note">Донат не даёт власти над протоколом. Ни один донор не выбирает
+      участника, эпизод, метрику или доступ к данным. Излишек — в фонд следующей фазы
+      или в заранее названные организации, с документами.</p>
+
+    <h3>Что нельзя</h3>
+    <p>Называть подписчиков друзьями · покупать охват · менять протокол без публичной
+      записи · показывать участника без согласия · встречи с несовершеннолетними ·
+      платить за отзывы · считать просмотр контактом.</p>
+  </section>
+
+  <!-- ══════════ 07 ФИНАЛ ══════════ -->
+  <section class="rv final">
+    <div class="sec-num">07 / следующий шаг</div>
+    <div class="big">Ноль — тоже данные</div>
+    <p>Счётчики в реестре стоят на нуле, и это честно. Проект начинается не с первой
+      встречи, а с первого документа: pre-registration, baseline-замер и методолог,
+      который имеет право сказать «нет».</p>
+
+    <div class="steps">
+      <div class="step"><div><b>Pre-registration v0.1</b>Гипотезы, метрики, дозы. Три страницы. Сегодня.</div></div>
+      <div class="step"><div><b>Baseline на себе</b>Батарея + трёхминутный монолог на видео. Нулевую точку нельзя восстановить потом.</div></div>
+      <div class="step"><div><b>Пять писем методологам</b>Пока нет PI — это не эксперимент, а идея.</div></div>
+    </div>
+
+    <div class="manifest">
+      <p>«Привет, друзья» — первая ложь любого канала. EX начинается с того,
+        что эта ложь названа вслух. Дальше — только счёт: кто пришёл, что сказал,
+        что я запомнил через тридцать дней, сколько во мне осталось от человека,
+        который помнил пять имён.</p>
+      <div class="sig">EX · протокол v1 · фаза 0 · встреч 000000</div>
+    </div>
+  </section>
+
+  <footer>
+    <span>EX / ONEDOPEA · 2026</span>
+    <span>N=1 · pre-registered · open data</span>
+    <a href="../index.html">← ONEDOPEA</a>
+  </footer>
+
+</main>
+
+<script>
+(function(){
+  "use strict";
+
+  /* таймкод */
+  var t0 = Date.now(), tc = document.getElementById('tc');
+  function pad(n){ return String(n).padStart(2,'0'); }
+  function tick(){
+    var e = Math.floor((Date.now()-t0)/1000);
+    var h = Math.floor(e/3600), m = Math.floor(e%3600/60), s = e%60;
+    var f = Math.floor((Date.now()-t0)%1000/40); // 25 fps
+    tc.textContent = pad(h)+':'+pad(m)+':'+pad(s)+':'+pad(f);
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  /* счётчик встреч — читает реестр, если он доступен рядом */
+  fetch('ledger/counter.json', {cache:'no-store'})
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(d){
+      if(!d || !d.levels) return;
+      var n = (d.levels.L3.count||0) + (d.levels.L2.count||0) + (d.levels.L1.count||0);
+      document.getElementById('cnt').textContent = String(n).padStart(6,'0');
+    })
+    .catch(function(){});
+
+  /* ревил */
+  var els = document.querySelectorAll('.rv');
+  if(!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    els.forEach(function(e){ e.classList.add('in'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
+    });
+  }, {rootMargin:'0px 0px -12% 0px', threshold:.06});
+  els.forEach(function(e){ io.observe(e); });
+})();
+</script>
+</body>
+</html>
