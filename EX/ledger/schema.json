@@ -37,11 +37,22 @@
       "description": "L0 эфир-наблюдение; L1 60 сек; L2 звонок/круг >=10 мин; L3 очная встреча >=45 мин; L4 повторный контакт"
     },
     "format": {
-      "enum": ["broadcast_60s", "call_1to1", "circle_6", "offline_day", "marathon", "recontact"]
+      "enum": ["broadcast_60s", "call_1to1", "circle_6", "circle_group", "offline_day", "marathon", "recontact"],
+      "description": "circle_group — вечерний круг 10-25 человек (старт за 0 €): 2 мин в круге + 2-3 мин личного диалога"
     },
     "city": { "type": "string" },
     "country": { "type": "string", "pattern": "^[A-Z]{2}$" },
     "language": { "type": "string", "pattern": "^[a-z]{2}(-[A-Z]{2})?$" },
+    "dialogue_min": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Минут личного диалога с этим человеком. В круге обычно 2-3; на L3 — 45+"
+    },
+    "recruited_by": {
+      "enum": ["referral", "public_form", "cold_invite", "partner", "unknown"],
+      "default": "unknown",
+      "description": "Канал привлечения. Нужен, чтобы отделить 'знакомых знакомых' от случайной выборки"
+    },
     "age_band": {
       "enum": ["18-24", "25-34", "35-44", "45-54", "55-64", "65+"],
       "description": "Только полоса, никогда точная дата рождения"

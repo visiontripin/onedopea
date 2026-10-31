@@ -2,13 +2,32 @@
   "updated_at": "2026-10-30",
   "phase": 0,
   "levels": {
-    "L0": { "count": 0, "target": null },
-    "L1": { "count": 0, "target": 1000000 },
-    "L2": { "count": 0, "target": 100000 },
-    "L3": { "count": 0, "target": 10000 },
-    "L4": { "count": 0, "target": 150 }
+    "L0": {
+      "count": 0,
+      "target": null
+    },
+    "L1": {
+      "count": 0,
+      "target": 1000000
+    },
+    "L2": {
+      "count": 0,
+      "target": 100000
+    },
+    "L3": {
+      "count": 0,
+      "target": 1000,
+      "note": "первый сезон: круг 10-25, старт за 0 €",
+      "long_term_target": 10000
+    },
+    "L4": {
+      "count": 0,
+      "target": 150
+    }
   },
   "prediction_accuracy": null,
   "recall_30d": null,
-  "note": "Счётчики начинаются с нуля. Ноль — тоже данные."
+  "note": "Счётчики начинаются с нуля. Ноль — тоже данные. Старт без бюджета: круг на 10–25 человек, 3 вечера в неделю = 60 контактов в неделю.",
+  "budget_eur": 0,
+  "format": "circle_group (10-25 чел., 2 ч)"
 }
