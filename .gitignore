@@ -1,0 +1,28 @@
+# системный мусор
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# редакторы
+.idea/
+.vscode/
+*.swp
+
+# собранный сайт (публикуется из CI, в git не хранится)
+_site/
+
+# медиа: сырые записи встреч хранятся вне репозитория
+EX/media/
+*.mp4
+*.mov
+*.m4v
+*.wav
+*.mp3
+!EX/docs/**/*.mp3

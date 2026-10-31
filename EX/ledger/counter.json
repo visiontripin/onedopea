@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-30",
+  "updated_at": "2026-10-31",
   "phase": 0,
   "levels": {
     "L0": {
@@ -16,9 +16,10 @@
     },
     "L3": {
       "count": 0,
-      "target": 1000,
-      "note": "первый сезон: круг 10-25, старт за 0 €",
-      "long_term_target": 10000
+      "target": 1500,
+      "note": "потолок без бюджета: круг 10-25, 3 вечера в неделю",
+      "long_term_target": 10000,
+      "season_target": 1000
     },
     "L4": {
       "count": 0,
@@ -27,7 +28,13 @@
   },
   "prediction_accuracy": null,
   "recall_30d": null,
-  "note": "Счётчики начинаются с нуля. Ноль — тоже данные. Старт без бюджета: круг на 10–25 человек, 3 вечера в неделю = 60 контактов в неделю.",
+  "note": "Счётчики начинаются с нуля. Ноль — тоже данные. Старт без бюджета: вечер-круг на 10–25 человек, 3 вечера в неделю = 60 контактов в неделю.",
   "budget_eur": 0,
-  "format": "circle_group (10-25 чел., 2 ч)"
+  "format": "circle_group (10-25 чел., 2 ч)",
+  "docs": {
+    "level": "docs/PROTOCOL.html",
+    "plan": "docs/PLAN-SIMPLE.html",
+    "launch": "docs/LAUNCH.html",
+    "ledger_schema": "schema.json"
+  }
 }

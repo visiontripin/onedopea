@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROLES — EX</title>
+<meta name="description" content="EX — эксперимент о том, что делает с человеком количество людей, которых он знает лично.">
+<style>
+:root{
+  --ink:#121317;--ink-2:#45474d;--ink-3:#7c7f86;
+  --line:#e8e8ec;--line-2:#f0f0f3;--wash:#f7f7f9;
+  --sans:"Google Sans Flex","Google Sans",Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:88px}
+body{background:#fff;color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.65;
+  letter-spacing:-.006em;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--ink);color:#fff}
+.top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.86);
+  backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1080px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:14px}
+.brand{font-weight:600;font-size:16px;letter-spacing:-.03em;display:flex;gap:8px;align-items:center}
+.brand i{width:7px;height:7px;border-radius:50%;background:var(--ink);display:inline-block}
+.crumb{font-size:13px;color:var(--ink-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.top .sp{flex:1}
+.pill{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;font-weight:500;
+  padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--wash);
+  transition:background .16s,border-color .16s;white-space:nowrap}
+.pill:hover{background:#f1f1f4;border-color:#dcdce2}
+.pill.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pill.dark:hover{background:#2a2c33}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+.layout{display:grid;grid-template-columns:1fr;gap:40px;padding:44px 0 96px}
+@media(min-width:960px){.layout{grid-template-columns:minmax(0,1fr) 240px;gap:56px;align-items:start}}
+article{max-width:76ch}
+article h1{font-size:clamp(29px,4.6vw,42px);font-weight:500;letter-spacing:-.035em;line-height:1.1;margin-bottom:22px}
+article h2{font-size:clamp(21px,2.8vw,27px);font-weight:500;letter-spacing:-.025em;margin:44px 0 14px;line-height:1.2}
+article h3{font-size:19px;font-weight:500;letter-spacing:-.015em;margin:32px 0 10px}
+article h4{font-size:16px;font-weight:600;margin:24px 0 8px}
+article p{color:var(--ink-2);margin:0 0 14px}
+article strong{color:var(--ink);font-weight:500}
+article em{font-style:normal;border-bottom:1px solid var(--ink-3)}
+article a{color:var(--ink);border-bottom:1px solid #c9cad1;transition:border-color .16s}
+article a:hover{border-bottom-color:var(--ink)}
+article ul,article ol{margin:0 0 16px;padding-left:22px;color:var(--ink-2)}
+article li{margin:0 0 7px}
+article li::marker{color:var(--ink-3)}
+article hr{border:0;border-top:1px solid var(--line-2);margin:32px 0}
+article blockquote{border-left:2px solid var(--ink);padding:2px 0 2px 18px;margin:20px 0;
+  color:var(--ink);font-size:17px}
+article blockquote p{margin:0 0 8px;color:var(--ink)}
+article blockquote p:last-child{margin:0}
+article code{font-family:var(--mono);font-size:.9em;background:var(--wash);
+  border:1px solid var(--line);border-radius:6px;padding:1px 5px}
+article pre{background:#0d0e11;color:#e9eaee;border-radius:14px;padding:16px 18px;
+  overflow-x:auto;margin:18px 0;font-size:13px;line-height:1.6}
+article pre code{background:none;border:0;padding:0;color:inherit;font-size:inherit}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:16px;margin:18px 0}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:460px}
+th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line-2);vertical-align:top}
+th{font-size:12.5px;font-weight:500;color:var(--ink-3);background:var(--wash);white-space:nowrap}
+td{color:var(--ink-2)}
+td:first-child{color:var(--ink)}
+tr:last-child td{border-bottom:0}
+aside.toc{position:sticky;top:84px;font-size:13.5px}
+aside.toc .t{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+aside.toc a{display:block;color:var(--ink-2);padding:5px 0;border-left:1px solid var(--line);
+  padding-left:12px;line-height:1.35}
+aside.toc a:hover{color:var(--ink);border-left-color:var(--ink)}
+aside.toc a.lvl3{padding-left:24px;font-size:12.5px;color:var(--ink-3)}
+.doc-meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:26px;
+  font-size:13px;color:var(--ink-3)}
+.doc-meta .tag{background:var(--wash);border:1px solid var(--line);border-radius:999px;padding:4px 11px}
+footer{border-top:1px solid var(--line);padding:26px 0 48px;font-size:13.5px;color:var(--ink-3)}
+.foot-in{max-width:1080px;margin:0 auto;padding:0 24px;display:flex;flex-wrap:wrap;
+  gap:12px 24px;justify-content:space-between}
+.foot-in nav{display:flex;flex-wrap:wrap;gap:6px 16px}
+.foot-in a{color:var(--ink-2);border-bottom:1px solid transparent}
+.foot-in a:hover{border-bottom-color:var(--ink-3)}
+.cards{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-top:26px}
+.card{border:1px solid var(--line);border-radius:20px;padding:20px;transition:border-color .18s,transform .18s}
+.card:hover{border-color:#d5d5dc;transform:translateY(-1px)}
+.card h3{margin:0 0 6px;font-size:17px;font-weight:500;letter-spacing:-.01em}
+.card p{margin:0;font-size:14px;color:var(--ink-2);line-height:1.5}
+.card .k{font-size:12px;color:var(--ink-3);margin-bottom:8px;letter-spacing:.04em;text-transform:uppercase}
+@media print{
+  .top,aside.toc,footer{display:none}
+  body{font-size:11.5pt}
+  article{max-width:none}
+  a{border:0}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <a class="brand" href="../index.html"><i></i>EX</a>
+  <span class="crumb">EX / docs</span>
+  <span class="sp"></span>
+  <a class="pill dark" href="../index.html">Лендинг</a><a class="pill" href="../docs/index.html">Документы</a><a class="pill" href="../deck.html">Презентация</a><a class="pill" href="../join.html">Заявка</a>
+</div></header>
+<div class="wrap"><div class="layout">
+  <article>
+    <div class="doc-meta"><span class="tag">EX/docs/ROLES.md</span><a href="ROLES.md" download>скачать .md</a></div>
+    <h1 id="top">EX // ROLES</h1>
+<p>Кто должен это исполнять. Не «команда мечты», а минимальный набор компетенций, без которых проект превращается либо в фейк, либо в культ, либо в судебный иск.</p>
+<hr>
+<h2 id="0-один-принцип-из-которого-следует-всё-остальное">0. Один принцип, из которого следует всё остальное</h2>
+<blockquote><p><strong>Субъект эксперимента не может быть его продюсером.</strong></p></blockquote>
+<p>Человек, который проходит протокол, не решает: что снимать, что публиковать, кого допускать, куда идут деньги, как считать результат. Иначе данные — это не данные, а сценарий, и вся конструкция стоит ноль.</p>
+<p>Отсюда три отдельные фигуры с правом вето: <strong>методолог</strong>, <strong>этический совет</strong>, <strong>независимый аналитик</strong>. Их нельзя уволить по настроению — только по процедуре.</p>
+<hr>
+<h2 id="1-шесть-мест-которые-решают-всё">1. Шесть мест, которые решают всё</h2>
+<p>Если бюджет и время позволяют нанять только шестерых — нанимать этих:</p>
+<div class="tw"><table><thead><tr><th>#</th><th>Роль</th><th>Почему именно она</th></tr></thead><tbody>
+<tr><td>1</td><td><strong>Методолог / PI</strong> (PhD, соц. психология или network science)</td><td>превращает идею в протокол; без него нет ни pre-registration, ни публикации, ни доверия</td></tr>
+<tr><td>2</td><td><strong>Consent & Welfare Lead</strong> (клинический психолог + этика)</td><td>защищает участников и субъекта; держит stop-rules; право остановить съёмку</td></tr>
+<tr><td>3</td><td><strong>Showrunner / исполнительный продюсер</strong></td><td>единственный, кто держит календарь, бюджет и редакцию; без него проект умирает на 40-й встрече</td></tr>
+<tr><td>4</td><td><strong>Platform Engineer + Trust & Safety</strong></td><td>верификация, очередь, реестр, анти-сибил, модерация; это и есть «машина» проекта</td></tr>
+<tr><td>5</td><td><strong>DPO / юрист по данным и изображению</strong></td><td>GDPR, Art. 9, согласия, право на удаление, реклама и донаты</td></tr>
+<tr><td>6</td><td><strong>Казначей / финансовый контролёр</strong></td><td>публичный реестр расходов, fiscal host, аудит; без прозрачности рушится вся легенда про донаты</td></tr>
+</tbody></table></div>
+<p>Остальное — наращивается по фазам и частично берётся на подряд.</p>
+<hr>
+<h2 id="2-полный-состав">2. Полный состав</h2>
+<h3 id="уровень-0-власть-и-контроль">Уровень 0 — власть и контроль</h3>
+<div class="tw"><table><thead><tr><th>Роль</th><th>Мандат</th><th>Права</th><th>Что сдаёт</th></tr></thead><tbody>
+<tr><td><strong>Principal / Subject («EX-0»)</strong></td><td>сам проходит протокол</td><td>может остановить проект; <strong>не может</strong> менять протокол, бюджет и монтаж</td><td>собственный дневник, честность в замерах</td></tr>
+<tr><td><strong>Showrunner</strong></td><td>календарь, бюджет, редакция, найм</td><td>финальное слово по продакшену</td><td>сезонный план, смета, эфирная сетка</td></tr>
+<tr><td><strong>Этический совет (3 места)</strong></td><td>методолог + клиницист + юрист, внешние, с фиксированной оплатой</td><td><strong>вето</strong> на любой эпизод и любую встречу</td><td>протокол заседаний, публичные решения</td></tr>
+<tr><td><strong>Независимый аналитик</strong></td><td>слепая обработка данных, red-team результатов</td><td>публикует свои выводы даже при несогласии</td><td>отчёт по данным, отдельный от авторского</td></tr>
+</tbody></table></div>
+<h3 id="уровень-1-наука">Уровень 1 — наука</h3>
+<div class="tw"><table><thead><tr><th>Роль</th><th>Задача</th><th>Форма</th></tr></thead><tbody>
+<tr><td><strong>Методолог / PI</strong></td><td>дизайн, pre-registration, операционализация L0–L4</td><td>0,4 FTE</td></tr>
+<tr><td><strong>Психометрик</strong></td><td>батарея, валидность, порядок предъявления, защита от эффекта практики</td><td>подряд</td></tr>
+<tr><td><strong>RA ×2 (research assistants)</strong></td><td>администрирование замеров, кодирование встреч, контроль качества</td><td>1,0 FTE</td></tr>
+<tr><td><strong>Клинический супервизор</strong></td><td>еженедельная супервизия субъекта, мониторинг выгорания/деперсонализации</td><td>2 ч/нед</td></tr>
+<tr><td><strong>Data engineer</strong></td><td>реестр, ETL, датасет для публикации, версионирование</td><td>0,3 FTE</td></tr>
+<tr><td><strong>Внешний рецензент</strong></td><td>читает препринт до публикации, ищет дыры</td><td>подряд, 1 раз/сезон</td></tr>
+</tbody></table></div>
+<h3 id="уровень-2-продакшен">Уровень 2 — продакшен</h3>
+<div class="tw"><table><thead><tr><th>Роль</th><th>Задача</th><th>Замечание</th></tr></thead><tbody>
+<tr><td><strong>Режиссёр-документалист</strong></td><td>драматургия сезона, а не «влоги»</td><td>не должен быть другом субъекта</td></tr>
+<tr><td><strong>Оператор-постановщик (DP)</strong></td><td>фиксированная схема: 2 камеры на встречу (общий + крупный)</td><td>одна и та же схема весь сезон — иначе монтаж не сходится</td></tr>
+<tr><td><strong>Звукорежиссёр</strong></td><td>петлички, чистый голос: голос — биомаркер проекта</td><td>запись 48 кГц WAV на каждую встречу</td></tr>
+<tr><td><strong>Редактор + колорист + моушн</strong></td><td>нейропанк-вид: CRT, зелёный, глитч, таймкод</td><td>см. <a href="CONTENT.html"><code>CONTENT.md</code></a></td></tr>
+<tr><td><strong>Композитор / sound design</strong></td><td>звуковая подпись EX</td><td>лицензия на весь материал</td></tr>
+<tr><td><strong>Consent & Welfare Coordinator (на съёмках)</strong></td><td>подписанное согласие до включения камеры, проверка состояния участника</td><td>стоп-право без обсуждений</td></tr>
+<tr><td><strong>Полевой продюсер / фиксер</strong></td><td>локация, безопасность, логистика в каждом городе</td><td>местный, проверенный</td></tr>
+<tr><td><strong>Архивист</strong></td><td>сохранность 10 000+ записей на 20 лет</td><td>3-2-1, контрольные суммы</td></tr>
+</tbody></table></div>
+<h3 id="уровень-3-платформа-и-общество">Уровень 3 — платформа и общество</h3>
+<div class="tw"><table><thead><tr><th>Роль</th><th>Задача</th><th>Ключевой продукт</th></tr></thead><tbody>
+<tr><td><strong>Platform engineer</strong></td><td>заявки, верификация, слоты, напоминания, реестр</td><td>«очередь на миллион»</td></tr>
+<tr><td><strong>Trust & Safety / анти-сибил</strong></td><td>боты, мультиаккаунты, фейковые «участники»</td><td>верификация + аудит выборки</td></tr>
+<tr><td><strong>Модерация (2–6 чел. по фазам)</strong></td><td>чат, комментарии, угрозы, сталкинг</td><td>triage в течение 15 мин в эфире</td></tr>
+<tr><td><strong>DPO / юрист</strong></td><td>GDPR, DPIA, Art. 9, image rights, донаты</td><td>пакет документов, реестр обработки</td></tr>
+<tr><td><strong>Казначей + внешний аудитор</strong></td><td>fiscal host, двойная запись, публикация</td><td>отчёт раз в месяц</td></tr>
+<tr><td><strong>Community / консьерж</strong></td><td>переписка с тысячами людей, языки</td><td>SLA ответа < 72 ч</td></tr>
+<tr><td><strong>Security-консультант</strong></td><td>модель угроз: доксинг, сталкинг, «обиженный участник»</td><td>протокол безопасности</td></tr>
+<tr><td><strong>PR / partnerships</strong></td><td>пресса, площадки, научные партнёры</td><td>медиа-план без покупки подписчиков</td></tr>
+</tbody></table></div>
+<hr>
+<h2 id="3-планка-компетентности-3-вопроса-на-входе">3. Планка компетентности: 3 вопроса на входе</h2>
+<p>Задавать всем, независимо от роли. Ответы важнее резюме.</p>
+<ol>
+<li><strong>«Назовите проект, где вы отказались от результата, потому что он был получен нечестно. Что вы сделали вместо него?»</strong> — ищет людей с внутренним протоколом.</li>
+<li><strong>«Что вы сделаете, если субъект попросит вырезать эпизод, который ему стыден, но который критичен для данных?»</strong> — проверяет понимание разделения ролей.</li>
+<li><strong>«Опишите, как за 10 минут проверить, что человек на видеосвязи — тот, за кого себя выдаёт, и что он не бот и не ребёнок.»</strong> — проверяет инженерное мышление.</li>
+</ol>
+<p><strong>Красные флаги:</strong></p>
+<ul>
+<li>хочет «прославиться вместе с проектом» (это конфликт интересов, не мотивация);</li>
+<li>предлагает «немного приукрасить» данные или монтаж;</li>
+<li>не задаёт ни одного вопроса про согласие участников;</li>
+<li>рвётся в эфир в первые 30 минут знакомства;</li>
+<li>друг/родственник субъекта на позиции с правом вето.</li>
+</ul>
+<p><strong>Роли, которых быть не должно:</strong> «продюсер-друг», «методолог-энтузиаст без публикаций», «SMM за долю», «юрист по принципу "разберёмся"».</p>
+<hr>
+<h2 id="4-порядок-найма">4. Порядок найма</h2>
+<div class="tw"><table><thead><tr><th>Фаза</th><th>Нанимаем</th><th>Форма</th><th>Ориентир, EUR/мес</th></tr></thead><tbody>
+<tr><td>0 (нед. 1–6)</td><td>методолог, юрист/DPO, showrunner, консультант по этике</td><td>подряд</td><td>6–9 тыс.</td></tr>
+<tr><td>1 (нед. 6–16)</td><td>DP, звук, монтаж, полевой продюсер, 1 RA</td><td>подряд/частично</td><td>12–18 тыс.</td></tr>
+<tr><td>2 (мес. 4–9)</td><td>platform engineer, T&S, консьерж, 2-й RA, клиницист на постоянной</td><td>FTE ×3</td><td>25–35 тыс.</td></tr>
+<tr><td>3 (мес. 9–18)</td><td>вторая съёмочная группа, модерация, локализация EN</td><td>FTE ×2</td><td>40–55 тыс.</td></tr>
+<tr><td>4–5 (18+)</td><td>региональные представители (5–8), архив, PR</td><td>сеть подрядчиков</td><td>60–90 тыс.</td></tr>
+</tbody></table></div>
+<p>Правило: <strong>никогда не нанимать двух человек на одну роль без разделения зон</strong> — двойная ответственность в этом проекте означает нулевую.</p>
+<hr>
+<h2 id="5-матрица-решений-кто-говорит-да">5. Матрица решений (кто говорит «да»)</h2>
+<div class="tw"><table><thead><tr><th>Решение</th><th>Кто решает</th><th>Кто может ветировать</th></tr></thead><tbody>
+<tr><td>Допустить участника к встрече</td><td>T&S + консьерж</td><td>Consent & Welfare</td></tr>
+<tr><td>Публиковать эпизод</td><td>showrunner</td><td>Этический совет, участник</td></tr>
+<tr><td>Изменить протокол / батарею</td><td>методолог</td><td>— (но фиксируется в pre-reg как отклонение)</td></tr>
+<tr><td>Остановить протокол</td><td>субъект, клиницист, Consent & Welfare</td><td>—</td></tr>
+<tr><td>Трата > 5 000 €</td><td>showrunner</td><td>казначей</td></tr>
+<tr><td>Опубликовать сырые данные</td><td>методолог + DPO</td><td>любой участник (в части своих данных)</td></tr>
+<tr><td>Взять деньги от конкретного донора</td><td>казначей + showrunner</td><td>Этический совет (репутационный риск)</td></tr>
+</tbody></table></div>
+<hr>
+<h2 id="6-что-делает-каждая-роль-в-первую-неделю">6. Что делает каждая роль в первую неделю</h2>
+<ul>
+<li><strong>методолог</strong>: черновик pre-registration на 3 страницы (гипотезы, метрики, план анализа);</li>
+<li><strong>юрист</strong>: карта данных + список согласий + DPIA-черновик;</li>
+<li><strong>showrunner</strong>: смета фазы 0, календарь на 6 недель, список 20 интервью с участниками;</li>
+<li><strong>этика</strong>: регламент заседаний + stop-rules (см. <a href="ETHICS.html"><code>ETHICS.md</code></a>);</li>
+<li><strong>инженер</strong>: схема реестра и очереди (см. <a href="../ledger/schema.json"><code>ledger/schema.json</code></a>);</li>
+<li><strong>редакция</strong>: пилотный тизер 90 сек и правила эфира (см. <a href="CONTENT.html"><code>CONTENT.md</code></a>).</li>
+</ul>
+  </article>
+  <aside class="toc"><div class="t">На этой странице</div><a class="" href="#0-один-принцип-из-которого-следует-всё-остальное">0. Один принцип, из которого следует всё остальное</a><a class="" href="#1-шесть-мест-которые-решают-всё">1. Шесть мест, которые решают всё</a><a class="" href="#2-полный-состав">2. Полный состав</a><a class="lvl3" href="#уровень-0-власть-и-контроль">Уровень 0 — власть и контроль</a><a class="lvl3" href="#уровень-1-наука">Уровень 1 — наука</a><a class="lvl3" href="#уровень-2-продакшен">Уровень 2 — продакшен</a><a class="lvl3" href="#уровень-3-платформа-и-общество">Уровень 3 — платформа и общество</a><a class="" href="#3-планка-компетентности-3-вопроса-на-входе">3. Планка компетентности: 3 вопроса на входе</a><a class="" href="#4-порядок-найма">4. Порядок найма</a><a class="" href="#5-матрица-решений-кто-говорит-да">5. Матрица решений (кто говорит «да»)</a><a class="" href="#6-что-делает-каждая-роль-в-первую-неделю">6. Что делает каждая роль в первую неделю</a></aside>
+</div></div>
+<footer><div class="foot-in">
+  <span>EX · ONEDOPEA · 2026 · протокол v1</span>
+  <nav>
+    <a href="../index.html">Лендинг</a>
+    <a href="../docs/index.html">Документы</a>
+    <a href="../docs/PITCH.html">Питч</a>
+    <a href="../join.html">Записаться</a>
+  </nav>
+</div></footer>
+</body>
+</html>

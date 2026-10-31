@@ -259,6 +259,7 @@ canvas{display:block;width:100%;height:100%}
   text-shadow:2px 0 #ff00ff,-2px 0 #00ffff,0 0 10px #0f0,0 0 20px #0f0,0 0 40px #0f0;
   animation:glitch-anim .15s infinite}
 #oracle-cta{position:relative;opacity:0;transform:translateY(10px);pointer-events:none;
+  display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;
   transition:opacity .5s ease,transform .5s ease}
 #oracle-cta.show{opacity:1;transform:none;pointer-events:auto}
 
@@ -538,6 +539,8 @@ body.paused #slide-panel{filter:saturate(.72)}
   <div id="oracle-cta">
     <a class="mlink" id="oracle-tg" href="https://t.me/onedopea" target="_blank" rel="noopener noreferrer"
        aria-label="ONEDOPEA — открыть Telegram">Telegram</a>
+    <a class="mlink mlink--alt" id="oracle-ex" href="EX/index.html"
+       aria-label="EX — эксперимент: один человек, миллион незнакомцев">EX</a>
   </div>
 </div>
 
@@ -1404,7 +1407,14 @@ function updateTitle(now){
       oracleCta.classList.add('show');
       oracleTg.classList.add('glitch-in');
       setTimeout(()=>oracleTg.classList.remove('glitch-in'),520);
-      announce('ONEDOPEA — Telegram');
+      const oracleEx=document.getElementById('oracle-ex');
+      if(oracleEx){
+        setTimeout(()=>{
+          oracleEx.classList.add('glitch-in');
+          setTimeout(()=>oracleEx.classList.remove('glitch-in'),520);
+        },260);
+      }
+      announce('ONEDOPEA — Telegram · EX');
     }
     return;
   }
