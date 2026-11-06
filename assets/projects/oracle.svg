@@ -1,0 +1,34 @@
+<svg class="cyber-logo-oracle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 260" width="100%" height="100%" fill="none">
+  <defs>
+    <filter id="neon-glow-oracle" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="0" stdDeviation="2.5" flood-color="#8297d2" flood-opacity="0.85"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="7" flood-color="#22c55e" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+  
+  <g class="glow-group" stroke="#8297d2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="120" cy="110" r="82" stroke-width="3"/>
+    <circle class="ring-cw" cx="120" cy="110" r="76" stroke-width="1.2" stroke-dasharray="18 8 4 8" opacity="0.8"/>
+    <circle class="ring-ccw" cx="120" cy="110" r="88" stroke-width="1.2" stroke-dasharray="40 25 10 15" opacity="0.55"/>
+    <rect x="84" y="54" width="72" height="7" rx="3.5" stroke-width="2.5" fill="#eff2f9"/>
+    <rect x="84" y="159" width="72" height="7" rx="3.5" stroke-width="2.5" fill="#eff2f9"/>
+    <line x1="92" y1="61" x2="92" y2="159" stroke-width="2.5"/>
+    <line x1="148" y1="61" x2="148" y2="159" stroke-width="2.5"/>
+    <line x1="89" y1="107" x2="95" y2="107" stroke-width="2.5"/>
+    <line x1="89" y1="113" x2="95" y2="113" stroke-width="2.5"/>
+    <line x1="145" y1="107" x2="151" y2="107" stroke-width="2.5"/>
+    <line x1="145" y1="113" x2="151" y2="113" stroke-width="2.5"/>
+    <path d="M 98 61 C 98 92, 116 102, 116 110 C 116 118, 98 128, 98 159 L 142 159 C 142 128, 124 118, 124 110 C 124 102, 142 92, 142 61 Z" stroke-width="2.5" fill="#eff2f9"/>
+    <path d="M 103 82 Q 120 88, 137 82" stroke-width="2" opacity="0.85"/>
+    <line class="sand-stream" x1="120" y1="110" x2="120" y2="142" stroke-width="2" stroke-dasharray="2 4"/>
+    <path class="sand-mound" d="M 100 159 Q 120 134, 140 159" stroke-width="2" fill="#8297d2" fill-opacity="0.2"/>
+    <g class="terminal-flicker">
+      <text x="120" y="222" text-anchor="middle" fill="#8297d2" stroke="none" font-family="'Courier New', Courier, monospace" font-size="24" font-weight="bold" letter-spacing="6">ORACLE</text>
+      <circle cx="120" cy="238" r="2.5" stroke-width="1.5" fill="#eff2f9"/>
+      <circle cx="108" cy="238" r="1" fill="#8297d2" stroke="none"/>
+      <circle cx="100" cy="237" r="1" fill="#8297d2" stroke="none" opacity="0.6"/>
+      <circle cx="132" cy="238" r="1" fill="#8297d2" stroke="none"/>
+      <circle cx="140" cy="237" r="1" fill="#8297d2" stroke="none" opacity="0.6"/>
+    </g>
+  </g>
+</svg>

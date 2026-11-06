@@ -1,4 +1,4 @@
-import { cp, readdir, writeFile } from 'node:fs/promises';
+import { cp, readdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -7,7 +7,9 @@ const output = path.join(root, 'out');
 const entries = await readdir(output, { withFileTypes: true });
 
 for (const entry of entries) {
-  await cp(path.join(output, entry.name), path.join(root, entry.name), { recursive: true, force: true });
+  const target = path.join(root, entry.name);
+  await rm(target, { recursive: true, force: true });
+  await cp(path.join(output, entry.name), target, { recursive: true, force: true });
 }
 
 // GitHub Pages runs Jekyll for branch-based sites by default. This marker makes

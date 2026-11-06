@@ -8,21 +8,25 @@ export default function VideoPost({ post }) {
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(true);
 
+  const [visible, setVisible] = useState(false);
+
   useEffect(() => {
-    const video = videoRef.current;
     const frame = frameRef.current;
-    if (!video || !frame || !post.mediaUrl) return;
+    const video = videoRef.current;
+    if (!frame) return;
     const observer = new IntersectionObserver(([entry]) => {
+      setVisible(entry.isIntersecting);
+      if (!video) return;
       if (entry.intersectionRatio >= .62) {
         video.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
       } else { video.pause(); setPlaying(false); }
-    }, { threshold: [0, .62, 1] });
+    }, { threshold: [0, .12, .62, 1] });
     observer.observe(frame);
-    return () => { observer.disconnect(); video.pause(); };
+    return () => { observer.disconnect(); video?.pause(); };
   }, [post.mediaUrl]);
 
   return (
-    <div className="video-post" ref={frameRef}>
+    <div className="video-post" ref={frameRef} data-visible={visible ? 'true' : 'false'}>
       {post.mediaUrl ? <video ref={videoRef} src={post.mediaUrl} poster={post.poster || undefined} muted={muted} loop playsInline preload="metadata" /> : (
         <div className="video-placeholder" role="img" aria-label="Место для промо-видео BotControl">
           <div className="video-window"><div className="video-window-top"><i/><i/><i/><span>botcontrol.app</span></div><div className="video-flow"><b>BOTCONTROL</b><div className="video-node">Новый сценарий</div><div className="video-connector"/><div className="video-node lilac">Добавить кнопку</div><div className="video-connector"/><div className="video-node pale">Опубликовать бота</div></div></div>
