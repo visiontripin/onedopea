@@ -7,12 +7,13 @@ import PostWrapper from './PostWrapper';
 import AudioPost from './AudioPost';
 import VideoPost from './VideoPost';
 import SvgPost from './SvgPost';
+import ProjectArtwork from './ProjectArtwork';
 
 function PostMedia({ post }) {
   if (post.type === 'audio') return <AudioPost post={post} />;
   if (post.type === 'video') return <VideoPost post={post} />;
   if (post.type === 'svg') return <SvgPost markup={post.svgMarkup || post.svg_markup} />;
-  return <div className="project-media"><span className="project-media-orb">{post.author === 'ONEDOPEA' ? 'O.' : '✦'}</span><span className="project-media-caption">{post.tags?.[0]}</span></div>;
+  return <ProjectArtwork post={post} />;
 }
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
@@ -36,7 +37,7 @@ export default function Feed({ onMatrix, onChooseStyle, posts = demoPosts }) {
         {posts.slice(0, count).map((post) => <PostWrapper post={post} key={post.id}><PostMedia post={post}/></PostWrapper>)}
         <div className="feed-end" ref={sentinel}>{count < posts.length ? <span className="loading-orb"/> : <span>Вы дошли до текущего края вселенной · скоро будут новые посты</span>}</div>
       </section>
-      <footer className="feed-footer"><span>ONEDOPEA · АНТИГРАВИТАЦИЯ</span><a href="https://soundcloud.com/onedopea" target="_blank" rel="noreferrer">SoundCloud ↗</a><a href={`${basePath}/admin/`}>Админ-панель</a></footer>
+      <footer className="feed-footer"><span>ONEDOPEA · DOPE</span><a href="https://soundcloud.com/onedopea" target="_blank" rel="noreferrer">SoundCloud ↗</a><a href={`${basePath}/admin/`}>Админ-панель</a></footer>
     </main>
   );
 }

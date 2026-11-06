@@ -31,13 +31,13 @@ export default function StyleGate({ posts: initialPosts }) {
       <div className="gate-ambient" aria-hidden="true"><i/><i/><i/></div>
       <a className="gate-brand" href="#top" aria-label="Домой"><span>O.</span></a>
       <h1 id="top">Выбери своё<br/><em>пространство.</em></h1>
-      <p className="gate-lead">Хули ты тут делаешь?!</p><p className="gate-sublead">Два визуальных режима одного портфолио</p>
+      <p className="gate-sublead">Два визуальных режима одного портфолио</p>
       <div className="gate-options">
         <button className="gate-card matrix-choice" onClick={() => setMode('matrix')}>
-          <span className="gate-icon">⌘</span><span className="gate-mode">ВЕРСИЯ 1</span><strong>Матрица</strong><span className="gate-description">Неоновый дождь, аналоговый шум и оригинальная атмосфера.</span><span className="gate-launch">Запуск <i>↗</i></span>
+          <span className="gate-icon">⌘</span><span className="gate-mode">ВЕРСИЯ 1</span><strong>One</strong><span className="gate-description">Неоновый дождь, аналоговый шум и оригинальная атмосфера.</span><span className="gate-launch">Запуск <i>↗</i></span>
         </button>
         <button className="gate-card anti-choice" onClick={() => setMode('antigravity')}>
-          <span className="gate-orbit"/><span className="gate-icon">✦</span><span className="gate-mode">ВЕРСИЯ 2</span><strong>Антигравитация</strong><span className="gate-description">Светлая лента проектов, мягкие градиенты и свободное движение.</span><span className="gate-launch">Запуск <i>↗</i></span>
+          <span className="gate-orbit"/><span className="gate-icon">✦</span><span className="gate-mode">ВЕРСИЯ 2</span><strong>Dope</strong><span className="gate-description">Светлая лента проектов, мягкие градиенты и свободное движение.</span><span className="gate-launch">Запуск <i>↗</i></span>
         </button>
       </div>
       <p className="gate-foot">Два настроения · один мир</p>

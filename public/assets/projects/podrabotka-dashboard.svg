@@ -1,0 +1,24 @@
+<svg viewBox="0 0 640 190" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+<g fill="none" stroke="#8297d2" stroke-width="1.4" stroke-linecap="round">
+<rect x="16" y="16" width="308" height="158" rx="13" opacity=".4"/>
+<path d="M16 60h308M16 104h308M16 148h308M90 16v158M170 16v158M250 16v158" opacity=".13"/>
+<path d="M20 130c46-14 74 12 116-4s60-34 104-26 96 26 96 26" opacity=".28"/>
+<g class="pin"><path d="M96 52c0 9-11 20-11 20S74 61 74 52a11 11 0 0 1 22 0z" fill="#dbe3f4"/><circle cx="85" cy="52" r="3.6" fill="#ffffff" stroke="none"/></g>
+<g class="pin2"><path d="M186 88c0 9-11 20-11 20s-11-11-11-20a11 11 0 0 1 22 0z" fill="#dbe3f4"/><circle cx="175" cy="88" r="3.6" fill="#ffffff" stroke="none"/></g>
+<g class="pin3"><path d="M252 46c0 9-11 20-11 20s-11-11-11-20a11 11 0 0 1 22 0z" fill="#dbe3f4"/><circle cx="241" cy="46" r="3.6" fill="#ffffff" stroke="none"/></g>
+<g class="pin4"><path d="M132 132c0 9-11 20-11 20s-11-11-11-20a11 11 0 0 1 22 0z" fill="#dbe3f4"/><circle cx="121" cy="132" r="3.6" fill="#ffffff" stroke="none"/></g>
+<rect x="344" y="16" width="280" height="158" rx="13" opacity=".3"/>
+<rect x="360" y="30" width="58" height="16" rx="8" opacity=".6"/>
+<rect x="426" y="30" width="46" height="16" rx="8" opacity=".35"/>
+<rect x="480" y="30" width="66" height="16" rx="8" opacity=".22"/>
+<rect x="360" y="58" width="248" height="32" rx="9" opacity=".38"/>
+<rect x="372" y="68" width="96" height="6" rx="3" fill="#8297d2" stroke="none" opacity=".5"/>
+<rect x="372" y="80" width="140" height="4" rx="2" fill="#8297d2" stroke="none" opacity=".22"/>
+<rect x="566" y="66" width="34" height="16" rx="8" fill="#8297d2" stroke="none" opacity=".4"/>
+<rect x="360" y="98" width="248" height="32" rx="9" opacity=".28"/>
+<rect x="372" y="108" width="112" height="6" rx="3" fill="#8297d2" stroke="none" opacity=".38"/>
+<rect x="372" y="120" width="126" height="4" rx="2" fill="#8297d2" stroke="none" opacity=".18"/>
+<rect x="566" y="106" width="34" height="16" rx="8" fill="#8297d2" stroke="none" opacity=".3"/>
+<rect x="360" y="138" width="248" height="26" rx="9" opacity=".18"/>
+<rect x="372" y="147" width="88" height="6" rx="3" fill="#8297d2" stroke="none" opacity=".26"/>
+</g></svg>

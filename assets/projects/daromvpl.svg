@@ -1,0 +1,27 @@
+<svg class="cyber-logo-boat" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%" fill="none">
+  <defs>
+    <filter id="neon-glow-boat" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="0" stdDeviation="2.5" flood-color="#8297d2" flood-opacity="0.85"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#22c55e" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+  
+  <g class="glow-group" stroke="#8297d2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <g class="boat-body">
+      <g transform="translate(132, 62) rotate(16)">
+        <rect x="0" y="0" width="34" height="30" rx="2" fill="#eff2f9"/>
+        <line x1="17" y1="0" x2="17" y2="30"/>
+        <line x1="0" y1="15" x2="34" y2="15"/>
+        <path d="M17 0 C10 -12, 2 -6, 17 0"/>
+        <path d="M17 0 C24 -12, 32 -6, 17 0"/>
+      </g>
+      <polygon points="82,118 118,58 148,118" fill="#eff2f9"/>
+      <line x1="118" y1="58" x2="118" y2="128"/>
+      <polygon points="34,102 118,128 206,102 172,154 68,154" fill="#eff2f9"/>
+      <polyline points="34,102 82,118 118,128 148,118 206,102"/>
+      <line x1="118" y1="128" x2="96" y2="154"/>
+    </g>
+    <path class="wave-1" d="M 22 170 Q 70 142, 120 166 T 218 156" stroke-width="3.5"/>
+    <path class="wave-2" d="M 42 184 Q 90 160, 140 182 T 204 176" stroke-width="2.5" opacity="0.85"/>
+  </g>
+</svg>

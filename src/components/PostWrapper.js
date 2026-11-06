@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 function Icon({ name }) {
   const paths = {
@@ -21,6 +21,16 @@ export default function PostWrapper({ post, children }) {
   const [comment, setComment] = useState('');
   const [commentsAdded, setCommentsAdded] = useState([]);
   const [sent, setSent] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const articleRef = useRef(null);
+
+  useEffect(() => {
+    const article = articleRef.current;
+    if (!article) return;
+    const observer = new IntersectionObserver(([entry]) => setIsVisible(entry.isIntersecting), { rootMargin: '120px 0px', threshold: 0.08 });
+    observer.observe(article);
+    return () => observer.disconnect();
+  }, []);
 
   async function share() {
     const url = `${location.origin}${location.pathname}#${post.id}`;
@@ -29,7 +39,7 @@ export default function PostWrapper({ post, children }) {
   }
 
   return (
-    <article className="post-card" id={post.id}>
+    <article className="post-card" id={post.id} ref={articleRef} data-visible={isVisible ? 'true' : 'false'}>
       <header className="post-head">
         <a className="mini-avatar" href="#top" aria-label="Профиль ONEDOPEA">O</a>
         <div className="post-author"><strong>{post.author}</strong><span>{post.date}</span></div>
