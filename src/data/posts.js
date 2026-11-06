@@ -71,4 +71,20 @@ export const demoPosts = [
     tags: ['moscow', 'jobs'], likes: 105, comments: 9, reposts: 6, saves: 21,
     links: [{ label: 'Репозиторий', url: 'https://github.com/visiontripin/eco/tree/arena/7b0a04c4-eco' }, { label: 'Telegram-бот', url: 'https://t.me/Podrabotko_bot' }],
   },
+  {
+    id: 'perekur', type: 'project', author: 'ONEDOPEA', date: 'Проект • Перекур',
+    projectName: 'ПЕРЕКУР', theme: 'perekur',
+    artworks: [
+      { src: '/assets/projects/perekur-mark.svg', alt: 'Векторный знак Перекур — чашка с паром на тёплом оранжевом фоне', kind: 'logo' },
+      { src: '/assets/projects/perekur-app.svg', alt: 'Векторный макет приложения Перекур с расписанием и недельным ритмом', kind: 'dashboard' },
+      { src: '/assets/projects/perekur-reminder.svg', alt: 'Векторная карточка-напоминание о коротком перерыве', kind: 'dashboard' },
+    ],
+    caption: 'Перекур — приложение-напоминание о перерывах в работе для Windows и браузера. Настраивайте интервалы, напоминания каждый час или ежедневный сигнал, выбирайте рабочие дни и время. Готовые режимы помогают устроить помодоро, разминку для глаз или короткую паузу; веб-версию можно установить как PWA, а настройки остаются на устройстве.',
+    tags: ['перерывы', 'windows', 'pwa', 'productivity'],
+    likes: 0, comments: 0, reposts: 0, saves: 0,
+    links: [
+      { label: 'Проект на GitHub', url: 'https://github.com/visiontripin/soft/tree/arena/26447c4c-soft/perekur' },
+      { label: 'Веб-версия и PWA', url: 'https://github.com/visiontripin/soft/tree/arena/26447c4c-soft/perekur/web' },
+    ],
+  },
 ];

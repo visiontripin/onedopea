@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="30" y1="20" x2="855" y2="550" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF8F0"/><stop offset="1" stop-color="#F6E3D1"/></linearGradient>
+    <linearGradient id="orange" x1="285" y1="146" x2="615" y2="420" gradientUnits="userSpaceOnUse"><stop stop-color="#FF9D4F"/><stop offset="1" stop-color="#E34F21"/></linearGradient>
+    <filter id="shadow" x="236" y="93" width="428" height="396" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feDropShadow dx="0" dy="22" stdDeviation="22" flood-color="#9D5D38" flood-opacity=".19"/></filter>
+    <radialGradient id="halo" cx="0" cy="0" r="1" gradientTransform="matrix(0 238 -238 0 450 275)" gradientUnits="userSpaceOnUse"><stop stop-color="#F7A365" stop-opacity=".3"/><stop offset="1" stop-color="#F7A365" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="900" height="560" rx="32" fill="url(#bg)"/><circle cx="450" cy="280" r="238" fill="url(#halo)"/>
+  <circle cx="146" cy="124" r="28" fill="#FFE6D1"/><path d="M137 124h18m-9-9v18" stroke="#D7794C" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="758" cy="427" r="40" fill="#F8D5BB" opacity=".55"/><circle cx="728" cy="111" r="4" fill="#E87A41"/><circle cx="196" cy="443" r="5" fill="#E87A41" opacity=".65"/>
+  <g filter="url(#shadow)"><rect x="278" y="111" width="344" height="338" rx="32" fill="#FFFCF8"/></g>
+  <rect x="306" y="139" width="52" height="52" rx="17" fill="url(#orange)"/>
+  <path d="M321 158h21v6c0 7-4 11-10 11h-2c-6 0-9-4-9-11v-6Zm20 2h3c4 0 6 2 6 6s-3 7-7 7h-3m-13-21c-3-4 3-5 2-10m10 10c-2-3 3-5 2-9" stroke="#FFF8EB" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="375" y="160" fill="#413127" font-family="Arial,sans-serif" font-size="19" font-weight="700">Перекур</text><text x="375" y="180" fill="#A38B77" font-family="Arial,sans-serif" font-size="10">ПОРА НЕМНОГО ОТДОХНУТЬ</text>
+  <rect x="306" y="211" width="288" height="1" fill="#F0E4D8"/>
+  <circle cx="450" cy="286" r="61" stroke="#F7E7D9" stroke-width="10"/><path d="M450 225a61 61 0 0 1 60 50" stroke="url(#orange)" stroke-width="10" stroke-linecap="round"/>
+  <path d="M450 254v34l24 13" stroke="#5D4738" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="450" cy="288" r="5" fill="#E96B32"/>
+  <text x="450" y="374" text-anchor="middle" fill="#49372B" font-family="Arial,sans-serif" font-size="25" font-weight="700">Пять минут для себя</text>
+  <text x="450" y="398" text-anchor="middle" fill="#9E8876" font-family="Arial,sans-serif" font-size="12">вдохни · отвлекись · возвращайся</text>
+  <rect x="335" y="415" width="230" height="3" rx="1.5" fill="#F3E8DE"/><rect x="335" y="415" width="138" height="3" rx="1.5" fill="url(#orange)"/>
+  <path d="M214 293h-56m584 0h-56" stroke="#E8CFBC" stroke-width="2" stroke-linecap="round" stroke-dasharray="3 8"/>
+  <circle cx="157" cy="293" r="5" fill="#E8753C"/><circle cx="743" cy="293" r="5" fill="#E8753C"/>
+</svg>

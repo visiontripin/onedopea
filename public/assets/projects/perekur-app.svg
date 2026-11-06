@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" fill="none">
+  <defs>
+    <linearGradient id="canvas" x1="0" y1="0" x2="900" y2="560" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF8EF"/><stop offset="1" stop-color="#F7E5D4"/></linearGradient>
+    <linearGradient id="accent" x1="270" y1="135" x2="740" y2="447" gradientUnits="userSpaceOnUse"><stop stop-color="#FF9A45"/><stop offset="1" stop-color="#E75020"/></linearGradient>
+    <linearGradient id="warm" x1="640" y1="30" x2="865" y2="190" gradientUnits="userSpaceOnUse"><stop stop-color="#F7B267" stop-opacity=".25"/><stop offset="1" stop-color="#E75D2D" stop-opacity=".08"/></linearGradient>
+    <filter id="shadow" x="76" y="49" width="748" height="475" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse"><feDropShadow dx="0" dy="18" stdDeviation="20" flood-color="#9E5732" flood-opacity=".16"/></filter>
+  </defs>
+  <rect width="900" height="560" rx="32" fill="url(#canvas)"/><circle cx="805" cy="69" r="144" fill="url(#warm)"/><circle cx="100" cy="505" r="112" fill="#FFE5CE" opacity=".48"/>
+  <g filter="url(#shadow)"><rect x="90" y="70" width="720" height="420" rx="24" fill="#FFFDF9"/></g>
+  <path d="M114 70h672a24 24 0 0 1 24 24v54H90V94a24 24 0 0 1 24-24Z" fill="#FFF9F1"/>
+  <circle cx="119" cy="110" r="5" fill="#F27B44"/><circle cx="138" cy="110" r="5" fill="#F7BE73"/><circle cx="157" cy="110" r="5" fill="#E8D0B9"/>
+  <rect x="185" y="99" width="147" height="22" rx="11" fill="#F5ECE2"/><text x="202" y="114" fill="#9A7C67" font-family="Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.8">PEREKUR.APP</text>
+  <rect x="90" y="148" width="720" height="1" fill="#F0E7DD"/>
+  <rect x="120" y="184" width="48" height="48" rx="16" fill="url(#accent)"/>
+  <path d="M135 202h18v5c0 6-3 10-8 10h-3c-4 0-7-4-7-10v-5Zm17 2h2c3 0 5 2 5 5s-2 5-5 5h-2m-12-15c-2-3 3-4 2-8m8 8c-2-2 2-4 1-7" stroke="#FFF7E8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="184" y="204" fill="#3E3029" font-family="Arial,sans-serif" font-size="23" font-weight="700">Перекур</text><text x="184" y="224" fill="#A08C7C" font-family="Arial,sans-serif" font-size="12">Напоминание о перерывах</text>
+  <rect x="625" y="192" width="150" height="34" rx="17" fill="#FFF1E4"/><circle cx="644" cy="209" r="5" fill="#E87536"/><text x="657" y="213" fill="#A6532C" font-family="Arial,sans-serif" font-size="11" font-weight="700">НАПОМИНАНИЯ ВКЛ.</text>
+  <text x="120" y="276" fill="#8A7565" font-family="Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.4">ГОТОВЫЙ РЕЖИМ</text>
+  <rect x="120" y="291" width="315" height="70" rx="16" fill="#FFF9F3" stroke="#F2E4D6"/>
+  <circle cx="153" cy="326" r="17" fill="#FFE9D5"/><path d="M153 316v11l7 4" stroke="#E66A32" stroke-width="2.4" stroke-linecap="round"/><text x="182" y="321" fill="#4E3E32" font-family="Arial,sans-serif" font-size="13" font-weight="700">Каждый час в :55</text><text x="182" y="340" fill="#A18B79" font-family="Arial,sans-serif" font-size="11">08:00 — 17:00 · Пн–Пт</text>
+  <rect x="120" y="378" width="315" height="74" rx="16" fill="#FFF9F3" stroke="#F2E4D6"/>
+  <text x="140" y="401" fill="#8A7565" font-family="Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1">СЛЕДУЮЩИЙ ПЕРЕРЫВ</text><text x="140" y="433" fill="#3F3128" font-family="Arial,sans-serif" font-size="24" font-weight="700">через 12 минут</text>
+  <rect x="473" y="286" width="302" height="164" rx="18" fill="#FFF9F3" stroke="#F2E4D6"/>
+  <text x="497" y="312" fill="#8A7565" font-family="Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.2">НЕДЕЛЬНЫЙ РИТМ</text>
+  <path d="M505 402h237" stroke="#EADDCF" stroke-width="2" stroke-linecap="round"/>
+  <path d="M517 367v35m45-56v56m45-36v36m45-61v61m45-43v43m45-57v57" stroke="url(#accent)" stroke-width="12" stroke-linecap="round" opacity=".86"/>
+  <circle cx="517" cy="419" r="3" fill="#C4AA94"/><circle cx="562" cy="419" r="3" fill="#C4AA94"/><circle cx="607" cy="419" r="3" fill="#C4AA94"/><circle cx="652" cy="419" r="3" fill="#C4AA94"/><circle cx="697" cy="419" r="3" fill="#C4AA94"/><circle cx="742" cy="419" r="3" fill="#C4AA94"/>
+  <path d="M465 203h100" stroke="#E9D9C9" stroke-width="1"/><text x="465" y="226" fill="#A28B79" font-family="Arial,sans-serif" font-size="10">РАСПИСАНИЕ · ШАБЛОНЫ · ЗВУК</text>
+</svg>
