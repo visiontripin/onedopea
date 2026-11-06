@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - 'arena/a10d5719-onedopea'
+      - 'arena/ae98e61f-onedopea'
   pull_request:
     branches:
       - main

@@ -4,7 +4,7 @@ Next.js App Router portfolio with two selectable looks: the legacy Matrix experi
 
 **https://visiontripin.github.io/onedopea/**
 
-GitHub Pages is currently configured to serve the `main` branch root. Run `npm run build:pages` to create the static Next.js export and sync it into that document root; commit the generated root files to update the published site. The Actions workflow validates this build on pushes and pull requests.
+GitHub Pages is currently configured to serve the `main` branch root. Run `npm run build:pages` to create the static Next.js export and sync it into that document root; the script also writes `.nojekyll`, which is required so GitHub Pages serves Next.js' `_next` assets. Commit the generated root files to update the published site. The Actions workflow validates this build on pushes and pull requests.
 
 ## Local development
 
