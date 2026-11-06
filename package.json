@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev --hostname 0.0.0.0",
     "build": "next build",
+    "build:pages": "NEXT_PUBLIC_BASE_PATH=/onedopea next build && node scripts/sync-pages-export.mjs",
     "start": "next start --hostname 0.0.0.0"
   },
   "dependencies": {
