@@ -28,7 +28,7 @@ export default function ProjectArtwork({ post }) {
   const active = artworks[index];
 
   return (
-    <div className={`project-artwork ${visible ? 'is-visible' : ''}`} ref={rootRef} aria-label={`${post.projectName}: ${active.alt}`}>
+    <div className={`project-artwork ${post.theme ? `project-artwork-${post.theme}` : ''} ${visible ? 'is-visible' : ''}`} ref={rootRef} aria-label={`${post.projectName}: ${active.alt}`}>
       <div className="project-art-stage">
         {artworks.map((art, itemIndex) => (
           <div className={`project-art-slide ${itemIndex === index ? 'active' : ''}`} key={art.src} aria-hidden={itemIndex !== index}>
