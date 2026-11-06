@@ -18,54 +18,100 @@ function loadSoundCloudApi() {
   return window.__onedopeaSoundCloudApi;
 }
 
-function Waveform({ audioRef, src, progress: externalProgress, onSeek }) {
+function Waveform({ audioRef, src, waveformUrl, progress = 0, onSeek }) {
   const canvasRef = useRef(null);
-  const [localProgress, setLocalProgress] = useState(0);
-  const progress = externalProgress ?? localProgress;
+  const progressRef = useRef(progress);
+  const [imageFailed, setImageFailed] = useState(false);
+  progressRef.current = progress;
+
+  useEffect(() => setImageFailed(false), [waveformUrl]);
 
   useEffect(() => {
+    if (waveformUrl && !imageFailed) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const audio = audioRef.current;
+    let audioContext;
+    let analyser;
+    let frequencyData;
+    let frame = 0;
+    try {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (src && audio && AudioContextClass) {
+        audioContext = new AudioContextClass();
+        const source = audioContext.createMediaElementSource(audio);
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 512;
+        analyser.smoothingTimeConstant = .82;
+        frequencyData = new Uint8Array(analyser.frequencyBinCount);
+        source.connect(analyser);
+        analyser.connect(audioContext.destination);
+      }
+    } catch { analyser = null; }
+
+    const context = canvas.getContext('2d');
     const draw = () => {
       const width = canvas.clientWidth || 600;
-      const height = canvas.clientHeight || 110;
+      const height = canvas.clientHeight || 62;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = width * dpr; canvas.height = height * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, width, height);
-      const count = Math.floor(width / 4.2); const gap = 2; const bar = Math.max(1.4, (width - count * gap) / count);
-      for (let i = 0; i < count; i++) {
-        const wave = .18 + Math.abs(Math.sin(i * .19) * Math.cos(i * .043)) * .72;
-        const h = Math.max(4, wave * height * .82); const x = i * (bar + gap); const y = (height - h) / 2;
-        ctx.fillStyle = i / count <= progress ? '#788fe2' : '#d9dfef';
-        ctx.beginPath(); ctx.roundRect(x, y, bar, h, bar); ctx.fill();
+      const pixelWidth = Math.round(width * dpr);
+      const pixelHeight = Math.round(height * dpr);
+      if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
+        canvas.width = pixelWidth; canvas.height = pixelHeight;
       }
+      context.setTransform(dpr, 0, 0, dpr, 0, 0);
+      context.clearRect(0, 0, width, height);
+      if (analyser) analyser.getByteFrequencyData(frequencyData);
+      const count = Math.max(1, Math.floor(width / 4.2));
+      const gap = 2;
+      const barWidth = Math.max(1.4, (width - count * gap) / count);
+      for (let i = 0; i < count; i++) {
+        const sample = analyser ? frequencyData[Math.floor(i / count * frequencyData.length)] / 255 : .25 + Math.abs(Math.sin(i * .19) * Math.cos(i * .043)) * .52;
+        const barHeight = Math.max(4, (.14 + sample * .82) * height);
+        const x = i * (barWidth + gap);
+        const y = (height - barHeight) / 2;
+        context.fillStyle = i / count <= progressRef.current ? '#788fe2' : '#d9dfef';
+        context.beginPath(); context.roundRect(x, y, barWidth, barHeight, barWidth); context.fill();
+      }
+      if ((analyser && audio && !audio.paused) || (onSeek && !waveformUrl)) frame = requestAnimationFrame(draw);
     };
-    draw(); const observer = new ResizeObserver(draw); observer.observe(canvas);
-    return () => observer.disconnect();
-  }, [progress]);
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    const update = () => setLocalProgress(audio.duration ? audio.currentTime / audio.duration : 0);
-    audio.addEventListener('timeupdate', update);
-    return () => audio.removeEventListener('timeupdate', update);
-  }, [audioRef]);
+    const redraw = () => { cancelAnimationFrame(frame); draw(); };
+    const resume = () => { audioContext?.resume(); redraw(); };
+    const stop = () => { cancelAnimationFrame(frame); draw(); };
+    const observer = new ResizeObserver(redraw);
+    observer.observe(canvas);
+    audio?.addEventListener('play', resume);
+    audio?.addEventListener('pause', stop);
+    draw();
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+      audio?.removeEventListener('play', resume);
+      audio?.removeEventListener('pause', stop);
+      audioContext?.close();
+    };
+  }, [audioRef, src, waveformUrl, imageFailed]);
 
   function seek(event) {
-    const rect = canvasRef.current.getBoundingClientRect();
+    const rect = event.currentTarget.getBoundingClientRect();
     const ratio = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
     if (onSeek) { onSeek(ratio); return; }
     const audio = audioRef.current;
     if (audio?.duration) audio.currentTime = ratio * audio.duration;
   }
-  return <canvas className={src || onSeek ? 'waveform interactive' : 'waveform'} ref={canvasRef} onClick={seek} aria-label={onSeek || src ? 'Форма волны, нажмите для перемотки' : 'Декоративная звуковая волна'} />;
+
+  if (waveformUrl && !imageFailed) return (
+    <div className="waveform-sc" role="slider" aria-label="SoundCloud waveform; click to seek" aria-valuenow={Math.round(progress * 100)} aria-valuemin="0" aria-valuemax="100" tabIndex={0} onClick={seek} onKeyDown={(event) => { if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') onSeek?.(Math.max(0, Math.min(1, progress + (event.key === 'ArrowRight' ? .03 : -.03)))); }}>
+      <img src={waveformUrl} alt="" onError={() => setImageFailed(true)} />
+      <span className="waveform-sc-played" style={{ width: `${progress * 100}%` }} />
+      <i style={{ left: `${progress * 100}%` }} />
+    </div>
+  );
+  return <canvas className={src || onSeek ? 'waveform interactive' : 'waveform'} ref={canvasRef} onClick={seek} aria-label={src || onSeek ? 'Аудиоспектр, нажмите для перемотки' : 'Декоративная звуковая волна'} />;
 }
 
 export default function AudioPost({ post }) {
   const audioRef = useRef(null);
-  const cardRef = useRef(null);
   const iframeRef = useRef(null);
   const widgetRef = useRef(null);
   const widgetControllerRef = useRef(null);
@@ -73,6 +119,8 @@ export default function AudioPost({ post }) {
   const [widgetReady, setWidgetReady] = useState(false);
   const [widgetError, setWidgetError] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [localProgress, setLocalProgress] = useState(0);
+  const [waveformUrl, setWaveformUrl] = useState('');
   const usesSoundCloud = Boolean(post.soundcloudUrl);
 
   useEffect(() => {
@@ -84,8 +132,17 @@ export default function AudioPost({ post }) {
       widget = Widget(iframeRef.current);
       widgetRef.current = widget;
       widgetControllerRef.current = { pause: () => widget.pause() };
-      widget.bind(Widget.Events.READY, () => { if (active) setWidgetReady(true); });
+      const loadTrackWaveform = () => widget.getCurrentSound((sound) => {
+        const waveform = sound?.waveform_url || sound?.waveformUrl;
+        if (active && waveform) setWaveformUrl(waveform);
+      });
+      widget.bind(Widget.Events.READY, () => {
+        if (!active) return;
+        setWidgetReady(true);
+        loadTrackWaveform();
+      });
       widget.bind(Widget.Events.PLAY, () => {
+        loadTrackWaveform();
         claimAudio(widgetControllerRef.current);
         if (active) setPlaying(true);
       });
@@ -112,24 +169,6 @@ export default function AudioPost({ post }) {
     };
   }, [usesSoundCloud, post.soundcloudUrl]);
 
-  useEffect(() => {
-    const card = cardRef.current;
-    if (!card) return;
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.intersectionRatio >= .12) return;
-      const audio = audioRef.current;
-      if (audio && !audio.paused) {
-        const start = audio.volume; const t0 = performance.now();
-        const fade = (now) => { const p = Math.min(1, (now - t0) / 350); audio.volume = start * (1 - p); if (p < 1) requestAnimationFrame(fade); else { audio.pause(); audio.volume = start; releaseAudio(audio); setPlaying(false); } };
-        requestAnimationFrame(fade);
-      }
-      const widget = widgetRef.current;
-      if (widget && playing) widget.pause();
-    }, { threshold: .12 });
-    observer.observe(card);
-    return () => observer.disconnect();
-  }, [playing]);
-
   function togglePlayback() {
     if (usesSoundCloud) {
       const widget = widgetRef.current;
@@ -142,7 +181,7 @@ export default function AudioPost({ post }) {
     if (!audio) return;
     if (audio.paused) {
       claimAudio(audio);
-      audio.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+      audio.play().then(() => setPlaying(true)).catch(() => { releaseAudio(audio); setPlaying(false); });
     } else { audio.pause(); releaseAudio(audio); setPlaying(false); }
   }
 
@@ -156,8 +195,8 @@ export default function AudioPost({ post }) {
     : undefined;
 
   return (
-    <div className="audio-post" ref={cardRef} data-visible={playing || widgetReady ? 'true' : undefined}>
-      {post.mediaUrl && <audio ref={audioRef} src={post.mediaUrl} preload="metadata" loop onEnded={() => { setPlaying(false); releaseAudio(audioRef.current); }} onPause={() => setPlaying(false)} />}
+    <div className="audio-post">
+      {post.mediaUrl && <audio ref={audioRef} src={post.mediaUrl} crossOrigin="anonymous" preload="metadata" loop onTimeUpdate={(event) => { const audio = event.currentTarget; if (audio.duration) setLocalProgress(audio.currentTime / audio.duration); }} onEnded={() => { setPlaying(false); releaseAudio(audioRef.current); }} onPause={() => { setPlaying(false); releaseAudio(audioRef.current); }} />}
       {usesSoundCloud && <iframe ref={iframeRef} className="soundcloud-widget-frame" title={`SoundCloud player: ${post.trackTitle || 'track'}`} allow="autoplay" loading="eager" src={iframeSrc} />}
       <div className="audio-cover"><div className="cover-orb" /><span className="cover-mark">O.</span><span className="cover-label">ONEDOPEA • AUDIO</span></div>
       <div className="audio-controls">
@@ -165,7 +204,7 @@ export default function AudioPost({ post }) {
         <div className="audio-details"><strong>{post.trackTitle || 'Звуковой дневник'}</strong><span>{post.audioBy || 'ONEDOPEA'} · {usesSoundCloud ? 'SoundCloud' : 'MP3'}</span></div>
         <span className="audio-duration">{widgetError ? 'ОШИБКА ПЛЕЕРА' : playing ? 'PLAYING' : usesSoundCloud && !widgetReady ? 'ЗАГРУЗКА…' : 'AUDIO POST'}</span>
       </div>
-      <Waveform audioRef={audioRef} src={post.mediaUrl} progress={usesSoundCloud ? progress : undefined} onSeek={usesSoundCloud ? seekSoundCloud : undefined} />
+      <Waveform audioRef={audioRef} src={post.mediaUrl} waveformUrl={waveformUrl} progress={usesSoundCloud ? progress : localProgress} onSeek={usesSoundCloud ? seekSoundCloud : undefined} />
       {usesSoundCloud && <div className="sc-link-row"><span>{widgetError ? 'Можно открыть трек на SoundCloud' : 'Встроенное воспроизведение'}</span><a href={post.soundcloudUrl} target="_blank" rel="noreferrer">Открыть трек ↗</a></div>}
     </div>
   );
