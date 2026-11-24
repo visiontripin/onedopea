@@ -213,6 +213,22 @@
         .page-stage.is-visible .stage-item:nth-child(3) { transition-delay: 0.28s; }
         .page-stage.is-visible .stage-item:nth-child(4) { transition-delay: 0.38s; }
 
+        /* Режим измерения раскладки: страница остаётся невидимой, но с неё снимаются
+           трансформации, чтобы фрагменты получили финальные координаты блоков */
+        .page-stage.is-measuring {
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            transform: none !important;
+            filter: none !important;
+            transition: none !important;
+        }
+        .page-stage.is-measuring .stage-item {
+            opacity: 0 !important;
+            transform: none !important;
+            transition: none !important;
+        }
+
         /* ==========================================================================
            СЕКЦИЯ 3. СТРАНИЦА ONE (КРАСНАЯ ПИЛЮЛЯ -> MATRIX CRT)
            ========================================================================== */
@@ -577,31 +593,31 @@
     <!-- ==================== 2. СТРАНИЦА ONE (ПОЯВЛЯЕТСЯ ПОСЛЕ КРАСНОЙ ПИЛЮЛИ) ==================== -->
     <section id="page-one" class="page-stage" aria-hidden="true">
         <div class="one-topbar stage-item">
-            <button type="button" class="one-nav-btn" data-action="back-to-pills">↶ Капсулы</button>
-            <button type="button" class="one-nav-btn" data-action="switch-to-blue">✦ Dope</button>
+            <button type="button" class="one-nav-btn" data-action="back-to-pills" data-frag="chip">↶ Капсулы</button>
+            <button type="button" class="one-nav-btn" data-action="switch-to-blue" data-frag="chip">✦ Dope</button>
         </div>
 
-        <article class="one-crt-card stage-item">
-            <div class="one-kicker">
+        <article class="one-crt-card stage-item" data-frag="panel">
+            <div class="one-kicker" data-frag="lines">
                 <span>ONEDOPEA // ONE</span>
                 <span id="one-ch-index">КАНАЛ 01 / 07</span>
             </div>
-            <h2 class="one-title" id="one-ch-title">BOTCONTROL</h2>
-            <p class="one-lead" id="one-ch-lead">
+            <h2 class="one-title" id="one-ch-title" data-frag="lines">BOTCONTROL</h2>
+            <p class="one-lead" id="one-ch-lead" data-frag="lines">
                 Автономная среда сборки и круглосуточного запуска Telegram-ботов со смартфона или ПК без аренды VPS: шифрование ключей Android Keystore, визуальные сценарии, локальные модели LiteRT-LM и совместимость с Python.
             </p>
             <div class="one-channels" id="one-ch-list">
-                <button type="button" class="one-ch-btn active" data-ch="0">01 BotControl</button>
-                <button type="button" class="one-ch-btn" data-ch="1">02 ТИТАН</button>
-                <button type="button" class="one-ch-btn" data-ch="2">03 Vision Audio</button>
-                <button type="button" class="one-ch-btn" data-ch="3">04 Подработка.МСК</button>
-                <button type="button" class="one-ch-btn" data-ch="4">05 Лесное·Афиша</button>
-                <button type="button" class="one-ch-btn" data-ch="5">06 Перекур+</button>
-                <button type="button" class="one-ch-btn" data-ch="6">07 EX</button>
+                <button type="button" class="one-ch-btn active" data-ch="0" data-frag="chip">01 BotControl</button>
+                <button type="button" class="one-ch-btn" data-ch="1" data-frag="chip">02 ТИТАН</button>
+                <button type="button" class="one-ch-btn" data-ch="2" data-frag="chip">03 Vision Audio</button>
+                <button type="button" class="one-ch-btn" data-ch="3" data-frag="chip">04 Подработка.МСК</button>
+                <button type="button" class="one-ch-btn" data-ch="4" data-frag="chip">05 Лесное·Афиша</button>
+                <button type="button" class="one-ch-btn" data-ch="5" data-frag="chip">06 Перекур+</button>
+                <button type="button" class="one-ch-btn" data-ch="6" data-frag="chip">07 EX</button>
             </div>
             <div class="one-actions">
-                <a class="one-link" id="one-ch-url" href="https://visiontripin.github.io/Bot-Control/" target="_blank" rel="noreferrer">Открыть проект ↗</a>
-                <a class="one-link ghost" href="https://t.me/onedopea" target="_blank" rel="noreferrer">Telegram ↗</a>
+                <a class="one-link" id="one-ch-url" data-frag="chip" href="https://visiontripin.github.io/Bot-Control/" target="_blank" rel="noreferrer">Открыть проект ↗</a>
+                <a class="one-link ghost" data-frag="chip" href="https://t.me/onedopea" target="_blank" rel="noreferrer">Telegram ↗</a>
             </div>
         </article>
     </section>
@@ -610,70 +626,70 @@
     <section id="page-dope" class="page-stage" aria-hidden="true">
         <header class="bio-header stage-item">
             <div class="bio-topline">
-                <a class="brand" href="#page-dope">
+                <a class="brand" href="#page-dope" data-frag="chip">
                     <span class="brand-orb">O.</span>
                     <span>ONEDOPEA</span>
                 </a>
                 <div class="bio-actions">
-                    <button type="button" class="quiet-button" data-action="back-to-pills">Капсулы</button>
-                    <button type="button" class="matrix-link" data-action="switch-to-red">↶ One</button>
+                    <button type="button" class="quiet-button" data-action="back-to-pills" data-frag="chip">Капсулы</button>
+                    <button type="button" class="matrix-link" data-action="switch-to-red" data-frag="chip">↶ One</button>
                 </div>
             </div>
             <div class="bio-main">
-                <div class="profile-orb"><span>O.</span></div>
+                <div class="profile-orb" data-frag="dot"><span>O.</span></div>
                 <div>
                     <div class="bio-title-line">
-                        <h1>onedopea</h1>
-                        <span class="verified">✦</span>
+                        <h1 data-frag="lines">onedopea</h1>
+                        <span class="verified" data-frag="dot">✦</span>
                     </div>
-                    <div class="profile-stats">
+                    <div class="profile-stats" data-frag="lines">
                         <span><b>10</b> публикаций</span>
                         <span><b>7</b> проектов</span>
                         <span><b>∞</b> идей</span>
                     </div>
-                    <p class="bio-description">
+                    <p class="bio-description" data-frag="lines">
                         <strong>Цифровые продукты, сервисы и эксперименты</strong><br />
                         BotControl · ТИТАН · Vision Audio · Подработка.МСК · Лесное·Афиша · Перекур+ · EX
                     </p>
                 </div>
             </div>
-            <div class="bio-divider"><span>ЛЕНТА ПРОЕКТОВ</span><i></i></div>
+            <div class="bio-divider" data-frag="lines"><span>ЛЕНТА ПРОЕКТОВ</span><i></i></div>
         </header>
 
         <div class="feed-column">
-            <article class="post-card stage-item">
-                <div class="post-card-head">
+            <article class="post-card stage-item" data-frag="panel">
+                <div class="post-card-head" data-frag="lines">
                     <strong>ONE DOPE · Аудиорелизы</strong>
                     <span>SoundCloud · 2 трека</span>
                 </div>
-                <div class="demo-cover">
-                    <img src="https://i1.sndcdn.com/artworks-zY6ZlGoRfGMKTXpz-S3EGpA-t500x500.jpg" alt="Enough Z" />
+                <div class="demo-cover" data-frag="panel">
+                    <img src="https://i1.sndcdn.com/artworks-zY6ZlGoRfGMKTXpz-S3EGpA-t500x500.jpg" alt="Enough Z" data-frag="panel" />
                     <div>
-                        <h3>01 · Enough Z &nbsp;/&nbsp; 02 · Amen</h3>
-                        <p>Два авторских релиза ONE DOPE под общей обложкой Enough Z.</p>
+                        <h3 data-frag="lines">01 · Enough Z &nbsp;/&nbsp; 02 · Amen</h3>
+                        <p data-frag="lines">Два авторских релиза ONE DOPE под общей обложкой Enough Z.</p>
                     </div>
                 </div>
-                <p class="post-card-copy">
+                <p class="post-card-copy" data-frag="lines">
                     Пример первой карточки ленты Dope для настройки тайминга, плавности проявления и скролла страницы после раскрытия синей капсулы.
                 </p>
             </article>
 
-            <article class="post-card stage-item">
-                <div class="post-card-head">
+            <article class="post-card stage-item" data-frag="panel">
+                <div class="post-card-head" data-frag="lines">
                     <strong>BOTCONTROL · Платформа</strong>
                     <span>Android + Desktop</span>
                 </div>
-                <p class="post-card-copy">
+                <p class="post-card-copy" data-frag="lines">
                     Автономная среда для сборки и круглосуточного запуска Telegram-ботов со смартфона или ПК без аренды VPS, с локальными моделями LiteRT-LM и поддержкой Python.
                 </p>
             </article>
 
-            <article class="post-card stage-item">
-                <div class="post-card-head">
+            <article class="post-card stage-item" data-frag="panel">
+                <div class="post-card-head" data-frag="lines">
                     <strong>EX · Документальный эксперимент</strong>
                     <span>Круг 10–25 человек · 100 → 500 → 1 000</span>
                 </div>
-                <p class="post-card-copy">
+                <p class="post-card-copy" data-frag="lines">
                     Вечерние круги незнакомых участников со стартом за 0 €, две минуты внимания каждому, проверка памяти через 24 часа и 30 дней и открытый реестр встреч.
                 </p>
             </article>
@@ -704,13 +720,34 @@
                НАСТРОЙКИ СЕГМЕНТА ПЕРЕХОДА (УДОБНО МЕНЯТЬ ПРИ ДОРАБОТКЕ)
                ========================================================================== */
             const SEGMENT_CONFIG = {
-                // Задержка (мс) после срабатывания темы высыпания гранул до проявления страницы One / Dope
+                // Фолбэк-задержка (мс) до проявления страницы One / Dope,
+                // если проявление не вызвала механика сборки фрагментов
                 pageAppearDelayMs: 900,
                 // Оставлять ли 3D-капсулы видимыми в углах экрана поверх открывшейся страницы (true / false)
                 keepCornerPillsVisible: true,
                 // Прятать ли надпись «Выбирай!» после открытия капсулы
                 hideCaptionWhenOpen: true
             };
+
+            /* ==========================================================================
+               ПРОФИЛЬ КАЧЕСТВА (РОЛЬ «ИНЖЕНЕР ПРОИЗВОДИТЕЛЬНОСТИ»)
+               Мобильные устройства: меньше фрагментов, проще физика, ниже pixelRatio.
+               ========================================================================== */
+            const QUALITY = {
+                mobile: (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) ||
+                    Math.min(window.innerWidth, window.innerHeight) < 720,
+                reducedMotion: Boolean(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+            };
+            // Количество фрагментов-«кусочков страницы» в каждой капсуле
+            const FRAG_BOX_COUNT = QUALITY.mobile ? 84 : 136;
+            const FRAG_DOT_COUNT = QUALITY.mobile ? 10 : 18;
+            // Глубина плоскости, в которой фрагменты складываются в страницу
+            const FRAG_Z_PLANE = 0.9;
+            // Ослабление хаотичного дрейфа и вращения при prefers-reduced-motion
+            const MOTION_SCALE = QUALITY.reducedMotion ? 0.35 : 1;
+            // Адаптивный предел плотности пикселей (понижается при просадке FPS)
+            const MAX_PIXEL_RATIO = Math.min(window.devicePixelRatio || 1, QUALITY.mobile ? 1.75 : 2);
+            let pixelRatioCap = MAX_PIXEL_RATIO;
 
             // Данные демо-каналов для карточки страницы One
             const ONE_CHANNELS = [
@@ -763,7 +800,7 @@
             function updateMatrixRain(dt) {
                 if (activeWorldTheme !== 'red') return;
                 matrixAccum += dt;
-                if (matrixAccum < 0.05) return;
+                if (matrixAccum < (QUALITY.mobile ? 0.085 : 0.05)) return;
                 matrixAccum = 0;
 
                 matrixCtx.fillStyle = 'rgba(2, 6, 3, 0.14)';
@@ -814,7 +851,8 @@
                 }
             }
 
-            function applyWorldTheme(themeName) {
+            function applyWorldTheme(themeName, opts) {
+                const deferPageReveal = Boolean(opts && opts.deferPageReveal);
                 activeWorldTheme = themeName;
                 if (pageRevealTimer) {
                     clearTimeout(pageRevealTimer);
@@ -828,9 +866,12 @@
                     if (SEGMENT_CONFIG.hideCaptionWhenOpen) {
                         captionEl.classList.add('is-hidden');
                     }
-                    pageRevealTimer = setTimeout(function () {
-                        showPageStage(themeName);
-                    }, SEGMENT_CONFIG.pageAppearDelayMs);
+                    if (!deferPageReveal) {
+                        // Фолбэк-таймер: используется, когда страницу не проявляет механика фрагментов
+                        pageRevealTimer = setTimeout(function () {
+                            showPageStage(themeName);
+                        }, SEGMENT_CONFIG.pageAppearDelayMs);
+                    }
                 } else {
                     showPageStage('default');
                     captionEl.classList.remove('is-hidden');
@@ -913,7 +954,7 @@
                 document.getElementById('v3-fallback').classList.add('show');
                 return;
             }
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setPixelRatio(pixelRatioCap);
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setClearColor(0x000000, 0);
             renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -1060,7 +1101,6 @@
             function buildGelCapsule(options) {
                 const radius = 0.52;
                 const halfCylLen = 0.66;
-                const grainCount = 340;
 
                 const group = new THREE.Group();
                 group.position.set(options.baseX, options.baseY, options.baseZ);
@@ -1105,45 +1145,55 @@
                 const hitMesh = new THREE.Mesh(hitGeo, hitMat);
                 group.add(hitMesh);
 
-                // Сыпучее содержимое (340 микрогранул в мировых координатах через InstancedMesh)
-                const grainGeo = new THREE.SphereGeometry(1, 10, 8);
-                const grainMat = new THREE.MeshStandardMaterial({
+                // ===== Сыпучее содержимое: фрагменты будущей страницы =====
+                // Вместо абстрактных гранул — мелкие «кусочки интерфейса» (панели,
+                // строки текста, чипы и точки): при раскрытии они высыпаются,
+                // долетают до своих мест в раскладке страницы и складываются в неё.
+                const fragMat = new THREE.MeshStandardMaterial({
                     color: 0xffffff,
                     emissive: options.innerEmissive,
                     emissiveIntensity: 0.35,
-                    roughness: 0.32,
-                    metalness: 0.08
+                    roughness: 0.3,
+                    metalness: 0.06
                 });
 
-                const grainInstanced = new THREE.InstancedMesh(grainGeo, grainMat, grainCount);
-                grainInstanced.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-                grainInstanced.frustumCulled = false;
-                grainInstanced.renderOrder = 1;
-                scene.add(grainInstanced);
+                const fragBoxGeo = new THREE.BoxGeometry(1, 1, 1);
+                const fragDotGeo = new THREE.SphereGeometry(1, QUALITY.mobile ? 8 : 10, QUALITY.mobile ? 6 : 8);
 
-                const grains = [];
-                const baseColor = new THREE.Color();
+                const fragBoxes = new THREE.InstancedMesh(fragBoxGeo, fragMat, FRAG_BOX_COUNT);
+                fragBoxes.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+                fragBoxes.frustumCulled = false;
+                fragBoxes.renderOrder = 1;
+                scene.add(fragBoxes);
+
+                const fragDots = new THREE.InstancedMesh(fragDotGeo, fragMat, FRAG_DOT_COUNT);
+                fragDots.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+                fragDots.frustumCulled = false;
+                fragDots.renderOrder = 1;
+                scene.add(fragDots);
+
+                const boxFrags = [];
+                const dotFrags = [];
                 const dummy = new THREE.Object3D();
 
-                for (let i = 0; i < grainCount; i++) {
-                    const gRadius = 0.036 + Math.random() * 0.032;
-                    // Распределяем гранулы внутри нижней части полости капсулы
+                // Одна «крошка» содержимого капсулы
+                function spawnFrag(kind) {
+                    const isDot = kind === 'dot';
                     const lx = (Math.random() * 2 - 1) * (halfCylLen + 0.24);
-                    const maxR = Math.max(0.06, (radius - 0.09) - gRadius);
+                    const maxR = Math.max(0.06, radius - 0.11);
                     const ang = Math.random() * Math.PI * 2;
                     const dist = Math.sqrt(Math.random()) * maxR;
-                    const ly = Math.sin(ang) * dist - 0.08;
+                    const ly = Math.sin(ang) * dist - 0.06;
                     const lz = Math.cos(ang) * dist;
 
-                    baseColor.setHex(options.innerColor);
+                    const origColor = new THREE.Color(options.innerColor);
                     const hsl = {};
-                    baseColor.getHSL(hsl);
-                    baseColor.setHSL(
+                    origColor.getHSL(hsl);
+                    origColor.setHSL(
                         hsl.h + (Math.random() - 0.5) * 0.025,
                         Math.min(1, hsl.s * (0.94 + Math.random() * 0.12)),
                         THREE.MathUtils.clamp(hsl.l * (0.86 + Math.random() * 0.24), 0.18, 0.78)
                     );
-                    grainInstanced.setColorAt(i, baseColor);
 
                     const themeColor = new THREE.Color(options.themeGrainColor);
                     const thsl = {};
@@ -1154,33 +1204,72 @@
                         THREE.MathUtils.clamp(thsl.l * (0.86 + Math.random() * 0.26), 0.25, 0.88)
                     );
 
-                    const grain = {
-                        radius: gRadius,
+                    const baseScale = isDot
+                        ? new THREE.Vector3(0.05, 0.05, 0.05)
+                        : new THREE.Vector3(0.08 + Math.random() * 0.1, 0.035 + Math.random() * 0.045, 0.032);
+
+                    return {
+                        kind: kind,
+                        radius: isDot ? 0.05 : 0.06,
                         pos: new THREE.Vector3(lx, ly, lz),
-                        vel: new THREE.Vector3(0, 0, 0),
+                        vel: new THREE.Vector3(),
                         worldPos: new THREE.Vector3(options.baseX + lx, options.baseY + ly, options.baseZ + lz),
-                        worldVel: new THREE.Vector3(0, 0, 0),
+                        worldVel: new THREE.Vector3(),
+                        rot: new THREE.Vector3(Math.random() * 6.28, Math.random() * 6.28, Math.random() * 6.28),
+                        rotVel: new THREE.Vector3(),
+                        rotFrom: new THREE.Vector3(),
+                        flatRot: new THREE.Vector3(),
                         halfSide: lx < 0 ? -1 : 1,
                         spilled: false,
                         pourDelay: 0,
                         collectDelay: 0,
+                        assembleDelay: 0,
+                        assembleDur: 0.9,
+                        assembleP: 0,
+                        assembleFrom: new THREE.Vector3(),
+                        arcAmp: 0.2,
+                        arrived: false,
+                        hidden: false,
+                        fadeP: 0,
+                        fadeDelay: 0,
+                        fadeFromScale: new THREE.Vector3(0.1, 0.05, 0.03),
                         swirlPhase: Math.random() * Math.PI * 2,
-                        origColor: baseColor.clone(),
-                        themeColor: themeColor,
-                        colorMix: 0
+                        slotIdx: 0,
+                        origColor: origColor,
+                        targetColor: themeColor,
+                        colorMix: 0,
+                        baseScale: baseScale,
+                        curScale: baseScale.clone(),
+                        targetPos: new THREE.Vector3(),
+                        targetScale: baseScale.clone()
                     };
-                    grains.push(grain);
+                }
 
-                    dummy.position.copy(grain.worldPos);
-                    dummy.scale.setScalar(gRadius);
+                for (let i = 0; i < FRAG_BOX_COUNT; i++) {
+                    const f = spawnFrag('chip');
+                    boxFrags.push(f);
+                    dummy.position.copy(f.worldPos);
+                    dummy.rotation.set(f.rot.x, f.rot.y, f.rot.z);
+                    dummy.scale.set(f.baseScale.x, f.baseScale.y, f.baseScale.z);
                     dummy.updateMatrix();
-                    grainInstanced.setMatrixAt(i, dummy.matrix);
+                    fragBoxes.setMatrixAt(i, dummy.matrix);
+                    fragBoxes.setColorAt(i, f.origColor);
+                }
+                for (let i = 0; i < FRAG_DOT_COUNT; i++) {
+                    const f = spawnFrag('dot');
+                    dotFrags.push(f);
+                    dummy.position.copy(f.worldPos);
+                    dummy.rotation.set(0, 0, 0);
+                    dummy.scale.set(f.baseScale.x, f.baseScale.y, f.baseScale.z);
+                    dummy.updateMatrix();
+                    fragDots.setMatrixAt(i, dummy.matrix);
+                    fragDots.setColorAt(i, f.origColor);
                 }
 
-                grainInstanced.instanceMatrix.needsUpdate = true;
-                if (grainInstanced.instanceColor) {
-                    grainInstanced.instanceColor.needsUpdate = true;
-                }
+                fragBoxes.instanceMatrix.needsUpdate = true;
+                fragDots.instanceMatrix.needsUpdate = true;
+                if (fragBoxes.instanceColor) fragBoxes.instanceColor.needsUpdate = true;
+                if (fragDots.instanceColor) fragDots.instanceColor.needsUpdate = true;
 
                 // Мягкая каустическая тень на «полу» под капсулой
                 const shadowTex = createCausticShadowTexture(
@@ -1206,9 +1295,11 @@
                     leftHalf,
                     rightHalf,
                     hitMesh,
-                    grainInstanced,
-                    grainMat,
-                    grains,
+                    fragBoxes,
+                    fragDots,
+                    boxFrags,
+                    dotFrags,
+                    fragMat,
                     shadowMesh,
                     radius,
                     halfCylLen,
@@ -1219,6 +1310,8 @@
                     themeGrainEmissive: options.themeGrainEmissive,
                     state: 'closed', // 'closed' | 'open' | 'dock_closing' | 'docked' | 'undocking' | 'collecting' | 'closing'
                     openProgress: 0,
+                    pageRevealed: false,
+                    revealTimer: 0,
                     openTimer: 0,
                     dockTimer: 0,
                     undockTimer: 0,
@@ -1392,6 +1485,283 @@
             }
             updateResponsiveBasePositions();
 
+            /* ==========================================================================
+               СБОРКА СТРАНИЦЫ ИЗ ФРАГМЕНТОВ (РОЛЬ «UI-ИНЖЕНЕР ИНТЕГРАЦИИ»)
+               Снимаем реальную раскладку страницы One / Dope (getBoundingClientRect +
+               computed-стили) и раздаём фрагментам координаты, размеры и цвета —
+               поэтому высыпающееся содержимое складывается в копию страницы.
+               ========================================================================== */
+
+            function forEachFrag(pillObj, fn) {
+                for (let i = 0; i < pillObj.boxFrags.length; i++) fn(pillObj.boxFrags[i]);
+                for (let i = 0; i < pillObj.dotFrags.length; i++) fn(pillObj.dotFrags[i]);
+            }
+
+            function writeFragInstance(mesh, i, f, pillScale) {
+                _grainDummy.position.copy(f.worldPos);
+                _grainDummy.rotation.set(f.rot.x, f.rot.y, f.rot.z);
+                _grainDummy.scale.set(
+                    Math.max(0.0001, f.curScale.x * pillScale),
+                    Math.max(0.0001, f.curScale.y * pillScale),
+                    Math.max(0.0001, f.curScale.z * pillScale)
+                );
+                _grainDummy.updateMatrix();
+                mesh.setMatrixAt(i, _grainDummy.matrix);
+            }
+
+            function writeFragColor(mesh, i, f) {
+                _tempColor.copy(f.origColor).lerp(f.targetColor, f.colorMix);
+                mesh.setColorAt(i, _tempColor);
+            }
+
+            function cssColorToRgb(str) {
+                const m = /rgba?\(([^)]+)\)/.exec(str || '');
+                if (!m) return null;
+                const parts = m[1].split(',').map(function (s) { return parseFloat(s); });
+                if (parts.length < 3 || parts.slice(0, 3).some(function (v) { return !isFinite(v); })) return null;
+                return {
+                    r: parts[0] / 255,
+                    g: parts[1] / 255,
+                    b: parts[2] / 255,
+                    a: parts.length > 3 && isFinite(parts[3]) ? parts[3] : 1
+                };
+            }
+
+            function makePxSlot(kind, left, top, w, h, color, z) {
+                return {
+                    kind: kind,
+                    pxLeft: left,
+                    pxTop: top,
+                    wPx: w,
+                    hPx: h,
+                    cx: left + w / 2,
+                    cy: top + h / 2,
+                    z: z,
+                    color: new THREE.Color(
+                        THREE.MathUtils.clamp(color.r, 0, 1),
+                        THREE.MathUtils.clamp(color.g, 0, 1),
+                        THREE.MathUtils.clamp(color.b, 0, 1)
+                    ),
+                    index: 0,
+                    pos: new THREE.Vector3(),
+                    scale: new THREE.Vector3()
+                };
+            }
+
+            // Перевод экранных пикселей в мировые координаты на плоскости сборки страницы
+            function projectSlotToWorld(slot) {
+                const dist = Math.max(0.5, camera.position.z - slot.z);
+                const visH = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov) * 0.5) * dist;
+                const visW = visH * camera.aspect;
+                slot.pos.set(
+                    (slot.cx / window.innerWidth - 0.5) * visW,
+                    (0.5 - slot.cy / window.innerHeight) * visH,
+                    slot.z
+                );
+                const w = (slot.wPx / window.innerHeight) * visH;
+                const h = (slot.hPx / window.innerHeight) * visH;
+                if (slot.kind === 'dot') {
+                    const d = Math.max(0.02, Math.min(w, h)) * 0.5;
+                    slot.scale.set(d, d, d * 0.34);
+                } else {
+                    slot.scale.set(
+                        Math.max(0.02, w),
+                        Math.max(0.013, h),
+                        slot.kind === 'panel' ? 0.05 : 0.034
+                    );
+                }
+            }
+
+            // Съём реальной раскладки страницы: каждый элемент с data-frag становится слотом
+            function computePageSlots(which) {
+                const pageEl = which === 'red' ? pageOneEl : pageDopeEl;
+                const isRed = which === 'red';
+                const slots = [];
+
+                pageEl.classList.add('is-measuring');
+                if (which === 'blue') pageEl.scrollTop = 0;
+
+                const vw = window.innerWidth;
+                const vh = window.innerHeight;
+                const els = pageEl.querySelectorAll('[data-frag]');
+
+                for (let q = 0; q < els.length; q++) {
+                    const el = els[q];
+                    const kind = el.getAttribute('data-frag');
+                    const r = el.getBoundingClientRect();
+                    if (r.width < 5 || r.height < 5) continue;
+                    if (r.bottom < -30 || r.top > vh + 30) continue;
+
+                    const cs = getComputedStyle(el);
+                    const bg = cssColorToRgb(cs.backgroundColor);
+                    const fg = cssColorToRgb(cs.color);
+
+                    const rect = {
+                        left: Math.max(0, Math.min(r.left, vw)),
+                        top: Math.max(0, Math.min(r.top, vh)),
+                        width: Math.min(r.width, vw),
+                        height: Math.min(r.height, vh)
+                    };
+
+                    if (kind === 'panel') {
+                        const col = (bg && bg.a > 0.15)
+                            ? bg
+                            : (isRed ? { r: 0.04, g: 0.14, b: 0.08, a: 1 } : { r: 1, g: 1, b: 1, a: 1 });
+                        // Крупные панели режем на плитки, чтобы карточка собиралась из кусков
+                        const cols = THREE.MathUtils.clamp(Math.round(rect.width / 240), 1, 3);
+                        const rows = THREE.MathUtils.clamp(Math.round(rect.height / 190), 1, 3);
+                        const gap = 3;
+                        for (let ty = 0; ty < rows; ty++) {
+                            for (let tx = 0; tx < cols; tx++) {
+                                const w = rect.width / cols;
+                                const h = rect.height / rows;
+                                slots.push(makePxSlot('panel',
+                                    rect.left + tx * w + gap * 0.5,
+                                    rect.top + ty * h + gap * 0.5,
+                                    w - gap, h - gap, col, FRAG_Z_PLANE - 0.04));
+                            }
+                        }
+                    } else if (kind === 'chip') {
+                        const col = (bg && bg.a > 0.2)
+                            ? bg
+                            : (fg && fg.a > 0.2)
+                                ? fg
+                                : (isRed ? { r: 0.29, g: 0.86, b: 0.5, a: 1 } : { r: 0.55, g: 0.6, b: 0.95, a: 1 });
+                        slots.push(makePxSlot('chip',
+                            rect.left, rect.top + rect.height * 0.08,
+                            rect.width, rect.height * 0.84, col, FRAG_Z_PLANE));
+                    } else if (kind === 'dot') {
+                        const size = Math.min(rect.width, rect.height);
+                        const col = (bg && bg.a > 0.15)
+                            ? bg
+                            : (isRed ? { r: 0.49, g: 0.98, b: 0.64, a: 1 } : { r: 0.49, g: 0.6, b: 0.92, a: 1 });
+                        slots.push(makePxSlot('dot',
+                            rect.left + (rect.width - size) / 2,
+                            rect.top + (rect.height - size) / 2,
+                            size, size, col, FRAG_Z_PLANE + 0.04));
+                    } else {
+                        // Строки текста: делим высоту блока на строчки и кладём «плашки строк»
+                        const col = (fg && fg.a > 0.2)
+                            ? fg
+                            : (isRed ? { r: 0.62, g: 0.95, b: 0.72, a: 1 } : { r: 0.4, g: 0.46, b: 0.6, a: 1 });
+                        const lhCss = parseFloat(cs.lineHeight);
+                        const fsCss = parseFloat(cs.fontSize) || 13;
+                        const lineH = isFinite(lhCss) && lhCss > 2 ? lhCss : fsCss * 1.5;
+                        const n = THREE.MathUtils.clamp(Math.round(rect.height / lineH), 1, 6);
+                        const align = cs.textAlign;
+                        for (let li = 0; li < n; li++) {
+                            const isLast = li === n - 1 && n > 1;
+                            const wFrac = isLast ? 0.45 + Math.random() * 0.35 : 0.82 + Math.random() * 0.16;
+                            const wPx = rect.width * Math.min(1, wFrac);
+                            let lx = rect.left;
+                            if (align === 'center') lx = rect.left + (rect.width - wPx) / 2;
+                            else if (align === 'right' || align === 'end') lx = rect.left + rect.width - wPx;
+                            const rowH = rect.height / n;
+                            const hPx = Math.min(lineH * 0.32, rowH * 0.62);
+                            slots.push(makePxSlot('line',
+                                lx, rect.top + (li + 0.5) * rowH - hPx / 2,
+                                wPx, hPx, col, FRAG_Z_PLANE + 0.02));
+                        }
+                    }
+                }
+
+                pageEl.classList.remove('is-measuring');
+
+                // Сборка сверху вниз: сначала «проявляется» шапка, затем контент
+                slots.sort(function (a, b) { return (a.pxTop - b.pxTop) || (a.pxLeft - b.pxLeft); });
+                for (let i = 0; i < slots.length; i++) {
+                    slots[i].index = i;
+                    projectSlotToWorld(slots[i]);
+                }
+                return slots;
+            }
+
+            // Запасной макет, если разметку страницы измерить не удалось
+            function fallbackPageSlots(which, isDot) {
+                const isRed = which === 'red';
+                const slots = [];
+                const cx = window.innerWidth / 2;
+                if (isDot) {
+                    slots.push(makePxSlot('dot', cx - 40, 110, 80, 80,
+                        isRed ? { r: 0.49, g: 0.98, b: 0.64, a: 1 } : { r: 0.49, g: 0.6, b: 0.92, a: 1 },
+                        FRAG_Z_PLANE + 0.04));
+                } else {
+                    const colW = Math.min(560, window.innerWidth * 0.86);
+                    const x = cx - colW / 2;
+                    let y = window.innerHeight * 0.2;
+                    const surf = isRed ? { r: 0.04, g: 0.14, b: 0.08, a: 1 } : { r: 1, g: 1, b: 1, a: 1 };
+                    const txt = isRed ? { r: 0.62, g: 0.95, b: 0.72, a: 1 } : { r: 0.4, g: 0.46, b: 0.6, a: 1 };
+                    for (let k = 0; k < 3; k++) {
+                        const h = 92 + k * 12;
+                        slots.push(makePxSlot('panel', x, y, colW, h, surf, FRAG_Z_PLANE - 0.04));
+                        slots.push(makePxSlot('line', x + 22, y + 24, colW * 0.58, 9, txt, FRAG_Z_PLANE + 0.02));
+                        slots.push(makePxSlot('line', x + 22, y + 44, colW * 0.4, 9, txt, FRAG_Z_PLANE + 0.02));
+                        y += h + 26;
+                    }
+                }
+                for (let i = 0; i < slots.length; i++) {
+                    slots[i].index = i;
+                    projectSlotToWorld(slots[i]);
+                }
+                return slots;
+            }
+
+            function assignFragSet(set, slots) {
+                for (let i = 0; i < set.length; i++) {
+                    const f = set[i];
+                    const slot = slots[i % slots.length];
+                    const dup = Math.floor(i / slots.length);
+                    f.slotIdx = slot.index;
+                    f.targetColor.copy(slot.color);
+                    if (dup === 0) {
+                        // Первый проход — точные куски страницы в натуральную величину
+                        f.targetPos.copy(slot.pos);
+                        f.targetScale.copy(slot.scale);
+                    } else {
+                        // Повторные проходы — мелкие осколки внутри того же блока
+                        f.targetPos.set(
+                            slot.pos.x + (Math.random() - 0.5) * slot.scale.x * 0.72,
+                            slot.pos.y + (Math.random() - 0.5) * slot.scale.y * 0.72,
+                            slot.pos.z + 0.012 * dup
+                        );
+                        const shard = 0.22 + Math.random() * 0.26;
+                        f.targetScale.set(
+                            Math.max(0.02, slot.scale.x * shard),
+                            Math.max(0.012, slot.scale.y * shard * (0.8 + Math.random() * 0.6)),
+                            slot.scale.z
+                        );
+                    }
+                    f.assembleDelay = f.pourDelay + 0.5 + Math.random() * 0.5 + slot.index * 0.006 + dup * 0.1;
+                    f.assembleDur = 0.68 + Math.random() * 0.42;
+                    f.fadeDelay = slot.index * 0.004 + Math.random() * 0.14;
+                }
+            }
+
+            function assignFragmentsToPage(pillObj) {
+                const slots = computePageSlots(pillObj.id);
+                const boxSlots = [];
+                const dotSlots = [];
+                for (let i = 0; i < slots.length; i++) {
+                    (slots[i].kind === 'dot' ? dotSlots : boxSlots).push(slots[i]);
+                }
+                assignFragSet(pillObj.boxFrags, boxSlots.length ? boxSlots : fallbackPageSlots(pillObj.id, false));
+                assignFragSet(pillObj.dotFrags, dotSlots.length ? dotSlots : fallbackPageSlots(pillObj.id, true));
+            }
+
+            // Проявление настоящей страницы, когда фрагменты заняли свои места
+            function revealPageForPill(pillObj) {
+                if (pillObj.pageRevealed) return;
+                pillObj.pageRevealed = true;
+                pillObj.revealTimer = 0;
+                if (activeWorldTheme === pillObj.id) {
+                    if (pageRevealTimer) {
+                        clearTimeout(pageRevealTimer);
+                        pageRevealTimer = null;
+                    }
+                    showPageStage(pillObj.id);
+                }
+            }
+
             // Удержание гранулы внутри закрытой капсулы
             function constrainGrainInsideCapsule(g, maxRadius, halfCylLen) {
                 const rLimit = Math.max(0.04, maxRadius - g.radius);
@@ -1476,15 +1846,24 @@
                 angles.y = Math.atan2(Math.sin(angles.y), Math.cos(angles.y));
                 angles.z = Math.atan2(Math.sin(angles.z), Math.cos(angles.z));
 
-                for (let i = 0; i < pillObj.grains.length; i++) {
-                    const g = pillObj.grains[i];
-                    g.halfSide = g.pos.x < 0 ? -1 : 1;
-                    g.spilled = false;
+                forEachFrag(pillObj, function (f) {
+                    f.halfSide = f.pos.x < 0 ? -1 : 1;
+                    f.spilled = false;
+                    f.hidden = false;
+                    f.arrived = false;
+                    f.assembleP = 0;
+                    f.fadeP = 0;
+                    f.colorMix = 0;
+                    f.curScale.copy(f.baseScale);
                     // Поэтапное сползание в 4 волны: ближние к срезу высыпаются первыми
-                    const depth = Math.min(1, Math.abs(g.pos.x) / 0.85);
+                    const depth = Math.min(1, Math.abs(f.pos.x) / 0.85);
                     const stage = Math.floor(depth * 3.6);
-                    g.pourDelay = stage * 0.34 + Math.random() * 0.22;
-                }
+                    f.pourDelay = stage * 0.34 + Math.random() * 0.22;
+                });
+                pillObj.pageRevealed = false;
+                pillObj.revealTimer = 0;
+                // Раздаём фрагментам адреса на странице: куда лететь и чем стать
+                assignFragmentsToPage(pillObj);
                 updateResetButtonVisibility();
             }
 
@@ -1532,34 +1911,48 @@
 
                 const offscreenY = getOffscreenBottomY();
                 const sSide = pillObj.suctionSide;
+                const wasRevealed = pillObj.pageRevealed;
 
-                for (let i = 0; i < pillObj.grains.length; i++) {
-                    const g = pillObj.grains[i];
+                forEachFrag(pillObj, function (f) {
                     const depthFrac = Math.random();
                     const lx = sSide * (0.06 + depthFrac * 0.78);
-                    const maxR = Math.max(0.05, 0.35 - g.radius);
+                    const maxR = Math.max(0.05, 0.35 - f.radius);
                     const ang = Math.random() * Math.PI * 2;
                     const dist = Math.sqrt(Math.random()) * maxR;
 
-                    g.halfSide = sSide;
-                    g.pos.set(lx, Math.sin(ang) * dist, Math.cos(ang) * dist);
-                    g.vel.set(0, 0, 0);
+                    f.halfSide = sSide;
+                    f.pos.set(lx, Math.sin(ang) * dist, Math.cos(ang) * dist);
+                    f.vel.set(0, 0, 0);
 
                     // 4 последовательные волны обратного засасывания
                     const wave = 3 - Math.floor(depthFrac * 3.4);
-                    g.collectDelay = wave * 0.32 + Math.random() * 0.2;
+                    f.collectDelay = wave * 0.32 + Math.random() * 0.2;
+                    f.rotVel.set((Math.random() - 0.5) * 4, (Math.random() - 0.5) * 4, (Math.random() - 0.5) * 4);
 
-                    if (g.spilled) {
-                        const spreadX = inPlace ? 0.55 : 1.1;
-                        const spreadZ = inPlace ? 0.4 : 0.7;
-                        if (g.worldPos.y < offscreenY - 0.8 || inPlace) {
-                            g.worldPos.y = offscreenY - 0.2 - wave * 0.6 - Math.random() * 0.8;
-                            g.worldPos.x = pillObj.group.position.x + (Math.random() - 0.5) * spreadX;
-                            g.worldPos.z = pillObj.group.position.z + (Math.random() - 0.5) * spreadZ;
+                    if (f.spilled || f.hidden) {
+                        if (f.hidden && wasRevealed) {
+                            // Фрагмент «отклеивается» от страницы со своего собранного места —
+                            // страница как будто рассыпается обратно в капсулу
+                            f.worldPos.copy(f.targetPos);
+                            f.curScale.copy(f.targetScale).multiplyScalar(0.9);
+                        } else if (f.hidden || f.worldPos.y < offscreenY - 0.8 || inPlace) {
+                            const spreadX = inPlace ? 0.55 : 1.1;
+                            const spreadZ = inPlace ? 0.4 : 0.7;
+                            f.worldPos.y = offscreenY - 0.2 - wave * 0.6 - Math.random() * 0.8;
+                            f.worldPos.x = pillObj.group.position.x + (Math.random() - 0.5) * spreadX;
+                            f.worldPos.z = pillObj.group.position.z + (Math.random() - 0.5) * spreadZ;
+                            f.curScale.copy(f.baseScale);
                         }
-                        g.worldVel.set(0, 0, 0);
+                        f.spilled = true;
+                        f.hidden = false;
+                        f.fadeP = 0;
+                        f.assembleP = 0;
+                        f.arrived = false;
+                        f.worldVel.set(0, 0, 0);
                     }
-                }
+                });
+                pillObj.pageRevealed = false;
+                pillObj.revealTimer = 0;
                 updateResetButtonVisibility();
             }
 
@@ -1587,14 +1980,14 @@
                 const driftX = pixelsToWorldUnits(
                     Math.sin(t * motion.driftX.f1 + motion.driftX.phase) * motion.driftX.ampPx * 0.65 +
                     Math.cos(t * motion.driftX.f2 + motion.driftX.phase * 1.3) * motion.driftX.ampPx * 0.35
-                );
+                ) * MOTION_SCALE;
                 const driftY = pixelsToWorldUnits(
                     Math.cos(t * motion.driftY.f1 + motion.driftY.phase) * motion.driftY.ampPx * 0.65 +
                     Math.sin(t * motion.driftY.f2 + motion.driftY.phase * 0.9) * motion.driftY.ampPx * 0.35
-                );
+                ) * MOTION_SCALE;
                 const driftZ = pixelsToWorldUnits(
                     Math.sin(t * motion.driftZ.f1 + motion.driftZ.phase) * motion.driftZ.ampPx
-                );
+                ) * MOTION_SCALE;
 
                 // Определяем целевую позицию капсулы в зависимости от состояния
                 let targetPosX = pillObj.baseX + driftX;
@@ -1698,6 +2091,12 @@
                         Math.sin(t * motion.rotZ.f3) * motion.rotZ.a3) +
                         pillObj.angularVelImpulse.z;
 
+                    if (MOTION_SCALE !== 1) {
+                        omegaX *= 0.55;
+                        omegaY *= 0.55;
+                        omegaZ *= 0.55;
+                    }
+
                     angles.x += omegaX * dt;
                     angles.y += omegaY * dt;
                     angles.z += omegaZ * dt;
@@ -1705,14 +2104,17 @@
                 } else if (pillObj.state === 'open') {
                     pillObj.openTimer += dt;
                     // Медленное раскрытие и наклон открытыми краями вниз
-                    pillObj.openProgress += (1 - pillObj.openProgress) * (1 - Math.exp(-1.85 * dt));
+                    pillObj.openProgress += (1 - pillObj.openProgress) * (1 - Math.exp(-2.2 * dt));
                     const op = pillObj.openProgress;
 
+                    // Лёгкая дрожь половинок во время высыпания — «физичность» тряски
+                    const wobble = Math.sin(pillObj.openTimer * 5.4) * 0.022 * op * (1 - op * 0.55);
+
                     pillObj.leftHalf.position.set(-0.62 * op, -0.08 * op, 0);
-                    pillObj.leftHalf.rotation.set(0.08 * op, 0.14 * op, -0.98 * op);
+                    pillObj.leftHalf.rotation.set(0.08 * op + wobble, 0.14 * op, -0.98 * op - wobble * 2);
 
                     pillObj.rightHalf.position.set(0.62 * op, -0.08 * op, 0);
-                    pillObj.rightHalf.rotation.set(-0.08 * op, -0.14 * op, 0.98 * op);
+                    pillObj.rightHalf.rotation.set(-0.08 * op - wobble, -0.14 * op, 0.98 * op + wobble * 2);
 
                     const orientBlend = 1 - Math.exp(-3.4 * dt);
                     const targetX = 0.16 + Math.sin(t * 0.9 + motion.rotX.phase) * 0.06;
@@ -1864,258 +2266,356 @@
                 pillObj.group.rotation.set(angles.x, angles.y, angles.z);
                 pillObj.group.updateMatrixWorld(true);
 
-                // ================= ФИЗИКА СЫПУЧИХ ГРАНУЛ =================
-                const grains = pillObj.grains;
-                const count = grains.length;
+                // ================= ФИЗИКА ФРАГМЕНТОВ СТРАНИЦЫ =================
+                const boxFrags = pillObj.boxFrags;
+                const dotFrags = pillObj.dotFrags;
+                const totalFrags = boxFrags.length + dotFrags.length;
                 const innerMaxR = pillObj.radius - 0.085;
                 const innerHalfCyl = pillObj.halfCylLen - 0.03;
                 const offscreenY = getOffscreenBottomY();
-                let colorsDirty = false;
+                let boxesDirty = false;
+                let dotsDirty = false;
 
                 if (pillObj.state === 'closed') {
-                    // Внутри закрытой капсулы: гравитация + инерция с небольшим отставанием + пересыпание
+                    // Внутри закрытой капсулы фрагменты пересыпаются как крупный песок
                     _invQuat.copy(pillObj.group.quaternion).invert();
                     _gravityLocal.set(0, -13.5, 0).applyQuaternion(_invQuat);
                     _accelLocal.copy(_accelWorld).multiplyScalar(-0.75).applyQuaternion(_invQuat);
 
-                    const subSteps = 2;
+                    const subSteps = QUALITY.mobile ? 1 : 2;
                     const subDt = dt / subSteps;
 
                     for (let step = 0; step < subSteps; step++) {
-                        for (let i = 0; i < count; i++) {
-                            const g = grains[i];
-                            g.vel.x += (_gravityLocal.x + _accelLocal.x) * subDt;
-                            g.vel.y += (_gravityLocal.y + _accelLocal.y) * subDt;
-                            g.vel.z += (_gravityLocal.z + _accelLocal.z) * subDt;
+                        for (let s = 0; s < 2; s++) {
+                            const set = s === 0 ? boxFrags : dotFrags;
+                            for (let i = 0; i < set.length; i++) {
+                                const f = set[i];
+                                f.vel.x += (_gravityLocal.x + _accelLocal.x) * subDt;
+                                f.vel.y += (_gravityLocal.y + _accelLocal.y) * subDt;
+                                f.vel.z += (_gravityLocal.z + _accelLocal.z) * subDt;
 
-                            // Сухое трение и вязкое затухание
-                            const damp = Math.exp(-3.4 * subDt);
-                            g.vel.multiplyScalar(damp);
+                                // Сухое трение и вязкое затухание
+                                const damp = Math.exp(-3.4 * subDt);
+                                f.vel.multiplyScalar(damp);
 
-                            g.pos.addScaledVector(g.vel, subDt);
-                            constrainGrainInsideCapsule(g, innerMaxR, innerHalfCyl);
+                                f.pos.addScaledVector(f.vel, subDt);
+                                constrainGrainInsideCapsule(f, innerMaxR, innerHalfCyl);
+                            }
                         }
 
-                        // Простой проход взаимного расталкивания соседей для объёмной горки порошка
-                        for (let i = 0; i < count; i++) {
-                            const a = grains[i];
-                            for (let j = i + 1; j < Math.min(count, i + 14); j++) {
-                                const b = grains[j];
-                                const dx = b.pos.x - a.pos.x;
-                                const dy = b.pos.y - a.pos.y;
-                                const dz = b.pos.z - a.pos.z;
-                                const minDist = (a.radius + b.radius) * 0.96;
-                                const d2 = dx * dx + dy * dy + dz * dz;
-                                if (d2 > 0.00001 && d2 < minDist * minDist) {
-                                    const d = Math.sqrt(d2);
-                                    const push = (minDist - d) * 0.42 / d;
-                                    a.pos.x -= dx * push;
-                                    a.pos.y -= dy * push;
-                                    a.pos.z -= dz * push;
-                                    b.pos.x += dx * push;
-                                    b.pos.y += dy * push;
-                                    b.pos.z += dz * push;
+                        // Лёгкое взаимное расталкивание соседей (только десктоп — экономим CPU на мобильных)
+                        if (!QUALITY.mobile) {
+                            for (let i = 0; i < boxFrags.length; i++) {
+                                const a = boxFrags[i];
+                                for (let j = i + 1; j < Math.min(boxFrags.length, i + 10); j++) {
+                                    const b = boxFrags[j];
+                                    const dx = b.pos.x - a.pos.x;
+                                    const dy = b.pos.y - a.pos.y;
+                                    const dz = b.pos.z - a.pos.z;
+                                    const minDist = (a.radius + b.radius) * 0.96;
+                                    const d2 = dx * dx + dy * dy + dz * dz;
+                                    if (d2 > 0.00001 && d2 < minDist * minDist) {
+                                        const d = Math.sqrt(d2);
+                                        const push = (minDist - d) * 0.42 / d;
+                                        a.pos.x -= dx * push;
+                                        a.pos.y -= dy * push;
+                                        a.pos.z -= dz * push;
+                                        b.pos.x += dx * push;
+                                        b.pos.y += dy * push;
+                                        b.pos.z += dz * push;
+                                    }
                                 }
                             }
                         }
                     }
 
-                    // Плавное возвращение свечения гранул к исходному
+                    // Плавное возвращение свечения фрагментов к исходному
                     _origEmissive.setHex(pillObj.innerEmissive);
-                    pillObj.grainMat.emissive.lerp(_origEmissive, 1 - Math.exp(-5 * dt));
+                    pillObj.fragMat.emissive.lerp(_origEmissive, 1 - Math.exp(-5 * dt));
 
-                    for (let i = 0; i < count; i++) {
-                        const g = grains[i];
-                        g.worldPos.copy(g.pos).applyMatrix4(pillObj.group.matrixWorld);
-                        _grainDummy.position.copy(g.worldPos);
-                        _grainDummy.scale.setScalar(g.radius * pillObj.curScale);
-                        _grainDummy.updateMatrix();
-                        pillObj.grainInstanced.setMatrixAt(i, _grainDummy.matrix);
+                    for (let s = 0; s < 2; s++) {
+                        const set = s === 0 ? boxFrags : dotFrags;
+                        const mesh = s === 0 ? pillObj.fragBoxes : pillObj.fragDots;
+                        for (let i = 0; i < set.length; i++) {
+                            const f = set[i];
+                            f.worldPos.copy(f.pos).applyMatrix4(pillObj.group.matrixWorld);
+                            f.curScale.copy(f.baseScale);
+                            writeFragInstance(mesh, i, f, pillObj.curScale);
 
-                        if (g.colorMix > 0.001) {
-                            g.colorMix = Math.max(0, g.colorMix - dt * 2.5);
-                            _tempColor.copy(g.origColor).lerp(g.themeColor, g.colorMix);
-                            pillObj.grainInstanced.setColorAt(i, _tempColor);
-                            colorsDirty = true;
+                            if (f.colorMix > 0.001) {
+                                f.colorMix = Math.max(0, f.colorMix - dt * 2.5);
+                                writeFragColor(mesh, i, f);
+                                if (s === 0) boxesDirty = true; else dotsDirty = true;
+                            }
                         }
                     }
 
                 } else if (pillObj.state === 'open') {
-                    // Поэтапное высыпание через открытые края половинок и окрашивание в цвет фона
+                    // Фазы жизни фрагмента: сползание к срезу -> высыпание с кувырканием ->
+                    // полёт на своё место в раскладке страницы -> растворение в настоящем контенте
                     let spilledCount = 0;
-                    let offscreenCount = 0;
+                    let assembledCount = 0;
+                    let fadedCount = 0;
 
                     _themeEmissive.setHex(pillObj.themeGrainEmissive);
-                    pillObj.grainMat.emissive.lerp(_themeEmissive, 1 - Math.exp(-2.2 * dt));
+                    pillObj.fragMat.emissive.lerp(_themeEmissive, 1 - Math.exp(-2.2 * dt));
 
-                    for (let i = 0; i < count; i++) {
-                        const g = grains[i];
-                        const halfObj = g.halfSide === -1 ? pillObj.leftHalf : pillObj.rightHalf;
+                    if (pillObj.pageRevealed) pillObj.revealTimer += dt;
 
-                        if (!g.spilled) {
-                            if (pillObj.openTimer >= g.pourDelay && pillObj.openProgress > 0.25) {
-                                // Гранула скользит по внутренней стенке своей половинки к открытому срезу (x -> 0)
-                                const slideSpeed = 1.65 + (pillObj.openTimer - g.pourDelay) * 1.4;
-                                g.pos.x -= Math.sign(g.pos.x || g.halfSide) * slideSpeed * dt;
-                                g.pos.y *= Math.exp(-1.5 * dt);
-                                g.pos.z *= Math.exp(-1.5 * dt);
+                    for (let s = 0; s < 2; s++) {
+                        const set = s === 0 ? boxFrags : dotFrags;
+                        const mesh = s === 0 ? pillObj.fragBoxes : pillObj.fragDots;
 
-                                // Как только достигает открытого ободка — высыпается наружу в мировые координаты
-                                if (Math.abs(g.pos.x) <= 0.05) {
-                                    g.spilled = true;
-                                    g.worldPos.copy(g.pos).applyMatrix4(halfObj.matrixWorld);
-                                    g.worldVel.set(
-                                        (Math.random() - 0.5) * 0.85,
-                                        -0.65 - Math.random() * 0.75,
-                                        (Math.random() - 0.5) * 0.65
-                                    );
+                        for (let i = 0; i < set.length; i++) {
+                            const f = set[i];
+                            const halfObj = f.halfSide === -1 ? pillObj.leftHalf : pillObj.rightHalf;
+
+                            if (!f.spilled) {
+                                if (pillObj.openTimer >= f.pourDelay && pillObj.openProgress > 0.25) {
+                                    // Фрагмент скользит по внутренней стенке своей половинки к открытому срезу (x -> 0)
+                                    const slideSpeed = 1.65 + (pillObj.openTimer - f.pourDelay) * 1.4;
+                                    f.pos.x -= Math.sign(f.pos.x || f.halfSide) * slideSpeed * dt;
+                                    f.pos.y *= Math.exp(-1.5 * dt);
+                                    f.pos.z *= Math.exp(-1.5 * dt);
+
+                                    // Достигнув открытого ободка — высыпается наружу в мировые координаты
+                                    if (Math.abs(f.pos.x) <= 0.05) {
+                                        f.spilled = true;
+                                        f.worldPos.copy(f.pos).applyMatrix4(halfObj.matrixWorld);
+                                        f.worldVel.set(
+                                            (Math.random() - 0.5) * 0.9,
+                                            -0.55 - Math.random() * 0.7,
+                                            (Math.random() - 0.5) * 0.7
+                                        );
+                                        f.rotVel.set(
+                                            (Math.random() - 0.5) * 7,
+                                            (Math.random() - 0.5) * 7,
+                                            (Math.random() - 0.5) * 7
+                                        );
+                                    }
+                                }
+                                if (!f.spilled) {
+                                    f.worldPos.copy(f.pos).applyMatrix4(halfObj.matrixWorld);
                                 }
                             }
-                            if (!g.spilled) {
-                                g.worldPos.copy(g.pos).applyMatrix4(halfObj.matrixWorld);
+
+                            if (f.spilled) {
+                                spilledCount++;
+
+                                if (f.assembleP <= 0 && pillObj.openTimer < f.assembleDelay) {
+                                    // Свободное падение с кувырканием сразу после высыпания
+                                    f.worldVel.y -= 9.8 * dt;
+                                    f.worldVel.multiplyScalar(Math.exp(-0.35 * dt));
+                                    f.worldPos.addScaledVector(f.worldVel, dt);
+                                    f.rot.x += f.rotVel.x * dt;
+                                    f.rot.y += f.rotVel.y * dt;
+                                    f.rot.z += f.rotVel.z * dt;
+                                } else if (f.assembleP < 1) {
+                                    // Полёт к своему месту на странице по дуге
+                                    if (f.assembleP <= 0) {
+                                        f.assembleFrom.copy(f.worldPos);
+                                        f.rotFrom.copy(f.rot);
+                                        f.flatRot.set(
+                                            Math.round(f.rot.x / (Math.PI * 2)) * Math.PI * 2,
+                                            Math.round(f.rot.y / (Math.PI * 2)) * Math.PI * 2,
+                                            Math.round(f.rot.z / (Math.PI * 2)) * Math.PI * 2
+                                        );
+                                        f.arcAmp = THREE.MathUtils.clamp(f.assembleFrom.distanceTo(f.targetPos) * 0.13, 0.05, 0.4);
+                                    }
+                                    f.assembleP = Math.min(1, f.assembleP + dt / f.assembleDur);
+                                    const e = 1 - Math.pow(1 - f.assembleP, 3);
+                                    f.worldPos.lerpVectors(f.assembleFrom, f.targetPos, e);
+                                    f.worldPos.y += Math.sin(e * Math.PI) * f.arcAmp;
+                                    const jitter = (1 - e) * 0.045;
+                                    f.worldPos.x += Math.sin(t * 6.3 + f.swirlPhase) * jitter;
+                                    f.worldPos.z += Math.cos(t * 5.1 + f.swirlPhase * 1.7) * jitter;
+                                    f.rot.x = f.rotFrom.x + (f.flatRot.x - f.rotFrom.x) * e;
+                                    f.rot.y = f.rotFrom.y + (f.flatRot.y - f.rotFrom.y) * e;
+                                    f.rot.z = f.rotFrom.z + (f.flatRot.z - f.rotFrom.z) * e;
+                                    f.curScale.lerpVectors(f.baseScale, f.targetScale, e);
+                                    if (f.assembleP >= 1) {
+                                        f.arrived = true;
+                                        f.rot.copy(f.flatRot);
+                                        f.curScale.copy(f.targetScale);
+                                    }
+                                } else {
+                                    assembledCount++;
+                                }
+
+                                // Окрашивание в цвет целевого блока страницы
+                                if (f.colorMix < 1) {
+                                    f.colorMix = Math.min(1, f.colorMix + dt * 2.1);
+                                    writeFragColor(mesh, i, f);
+                                    if (s === 0) boxesDirty = true; else dotsDirty = true;
+                                }
+
+                                // После проявления настоящей страницы фрагмент тает с лёгким «попом»
+                                if (pillObj.pageRevealed && pillObj.revealTimer > f.fadeDelay) {
+                                    if (f.fadeP <= 0) f.fadeFromScale.copy(f.curScale);
+                                    if (f.fadeP < 1) {
+                                        f.fadeP = Math.min(1, f.fadeP + dt / 0.5);
+                                        const fp = f.fadeP;
+                                        const pop = 1 + Math.sin(Math.min(fp * 1.7, 1) * Math.PI) * 0.14;
+                                        const shrink = Math.max(0.0001, (1 - fp) * pop);
+                                        f.curScale.copy(f.fadeFromScale).multiplyScalar(shrink);
+                                        if (f.fadeP >= 1) f.hidden = true;
+                                    } else {
+                                        f.hidden = true;
+                                    }
+                                }
+                                if (f.hidden) fadedCount++;
                             }
+
+                            writeFragInstance(mesh, i, f, pillObj.curScale);
                         }
-
-                        if (g.spilled) {
-                            spilledCount++;
-                            // Свободное падение под действием гравитации за нижнюю границу экрана
-                            g.worldVel.y -= 9.8 * dt;
-                            g.worldPos.addScaledVector(g.worldVel, dt);
-
-                            // В полёте окрашиваем гранулы в цвет выбранной темы фона
-                            if (g.colorMix < 1) {
-                                g.colorMix = Math.min(1, g.colorMix + dt * 2.4);
-                                _tempColor.copy(g.origColor).lerp(g.themeColor, g.colorMix);
-                                pillObj.grainInstanced.setColorAt(i, _tempColor);
-                                colorsDirty = true;
-                            }
-
-                            if (g.worldPos.y < offscreenY) {
-                                offscreenCount++;
-                            }
-                        }
-
-                        _grainDummy.position.copy(g.worldPos);
-                        _grainDummy.scale.setScalar(g.radius * pillObj.curScale);
-                        _grainDummy.updateMatrix();
-                        pillObj.grainInstanced.setMatrixAt(i, _grainDummy.matrix);
                     }
 
-                    // Когда первые ~20% гранул высыпались — запускаем трансформацию фона и интерфейса
-                    if (!pillObj.themeTriggered && spilledCount > count * 0.18) {
+                    // Фон темы включается почти сразу после начала высыпания,
+                    // но страницу проявит сама сборка фрагментов (revealPageForPill)
+                    if (!pillObj.themeTriggered && spilledCount > totalFrags * 0.1) {
                         pillObj.themeTriggered = true;
-                        applyWorldTheme(pillObj.id);
+                        applyWorldTheme(pillObj.id, { deferPageReveal: true });
                     }
 
-                    // Когда всё содержимое высыпалось за край экрана — закрываем пустую капсулу и отправляем в левый нижний угол
-                    if (offscreenCount >= count * 0.96 || pillObj.openTimer > 3.2) {
+                    // Проявляем настоящую страницу, когда большинство фрагментов заняли свои места
+                    if (!pillObj.pageRevealed) {
+                        const ready = totalFrags > 0 ? (assembledCount + fadedCount) / totalFrags : 1;
+                        if (ready > 0.55 || pillObj.openTimer > 5.0) {
+                            revealPageForPill(pillObj);
+                        }
+                    }
+
+                    // Все фрагменты растворились в странице — пустая капсула закрывается и уплывает в угол
+                    if (fadedCount >= totalFrags * 0.98 || pillObj.openTimer > 8.0) {
                         pillObj.state = 'dock_closing';
                         pillObj.dockTimer = 0;
                     }
 
                 } else if (pillObj.state === 'dock_closing' || pillObj.state === 'docked' || pillObj.state === 'undocking') {
-                    // Содержимое остаётся за нижней границей экрана, пока капсула пустая
-                    for (let i = 0; i < count; i++) {
-                        const g = grains[i];
-                        if (g.worldPos.y > offscreenY - 0.5) {
-                            g.worldVel.y -= 9.8 * dt;
-                            g.worldPos.addScaledVector(g.worldVel, dt);
+                    // Фрагменты уже растворились в странице — прячем их до возврата
+                    for (let s = 0; s < 2; s++) {
+                        const set = s === 0 ? boxFrags : dotFrags;
+                        const mesh = s === 0 ? pillObj.fragBoxes : pillObj.fragDots;
+                        for (let i = 0; i < set.length; i++) {
+                            const f = set[i];
+                            f.curScale.set(0.0001, 0.0001, 0.0001);
+                            writeFragInstance(mesh, i, f, 1);
                         }
-                        _grainDummy.position.copy(g.worldPos);
-                        _grainDummy.scale.setScalar(0.0001);
-                        _grainDummy.updateMatrix();
-                        pillObj.grainInstanced.setMatrixAt(i, _grainDummy.matrix);
                     }
 
                 } else if (pillObj.state === 'collecting') {
-                    // Поэтапное вихревое засасывание гранул в нижнюю половинку капсулы
+                    // Поэтапное вихревое засасывание фрагментов обратно в нижнюю половинку
                     const suctionHalf = pillObj.suctionSide === -1 ? pillObj.leftHalf : pillObj.rightHalf;
                     _rimWorldPos.set(0, 0, 0).applyMatrix4(suctionHalf.matrixWorld);
 
                     _origEmissive.setHex(pillObj.innerEmissive);
-                    pillObj.grainMat.emissive.lerp(_origEmissive, 1 - Math.exp(-2.8 * dt));
+                    pillObj.fragMat.emissive.lerp(_origEmissive, 1 - Math.exp(-2.8 * dt));
 
                     let returnedCount = 0;
 
-                    for (let i = 0; i < count; i++) {
-                        const g = grains[i];
-                        _targetWorldPos.copy(g.pos).applyMatrix4(suctionHalf.matrixWorld);
+                    for (let s = 0; s < 2; s++) {
+                        const set = s === 0 ? boxFrags : dotFrags;
+                        const mesh = s === 0 ? pillObj.fragBoxes : pillObj.fragDots;
 
-                        if (!g.spilled) {
-                            g.worldPos.copy(_targetWorldPos);
-                            returnedCount++;
-                        } else if (pillObj.collectTimer >= g.collectDelay) {
-                            // Притягиваем сначала к открытому ободку, затем внутрь дна половинки
-                            const toRimX = _rimWorldPos.x - g.worldPos.x;
-                            const toRimY = _rimWorldPos.y - g.worldPos.y;
-                            const toRimZ = _rimWorldPos.z - g.worldPos.z;
-                            const distToRim = Math.hypot(toRimX, toRimY, toRimZ);
+                        for (let i = 0; i < set.length; i++) {
+                            const f = set[i];
+                            _targetWorldPos.copy(f.pos).applyMatrix4(suctionHalf.matrixWorld);
 
-                            const rimThresh = 0.32 * Math.max(0.4, pillObj.curScale);
-                            const arriveThresh = 0.09 * Math.max(0.5, pillObj.curScale);
-                            const aimPos = distToRim > rimThresh ? _rimWorldPos : _targetWorldPos;
-                            const dx = aimPos.x - g.worldPos.x;
-                            const dy = aimPos.y - g.worldPos.y;
-                            const dz = aimPos.z - g.worldPos.z;
-                            const dist = Math.hypot(dx, dy, dz);
-
-                            if (dist < arriveThresh && aimPos === _targetWorldPos) {
-                                g.spilled = false;
-                                g.worldPos.copy(_targetWorldPos);
+                            if (!f.spilled) {
+                                f.worldPos.copy(_targetWorldPos);
                                 returnedCount++;
-                            } else {
-                                const pullSpeed = 4.8 + Math.min(5.5, (pillObj.collectTimer - g.collectDelay) * 3.8);
-                                const swirl = Math.min(0.45, dist * 0.25);
-                                const ang = t * 7.5 + g.swirlPhase;
+                            } else if (pillObj.collectTimer >= f.collectDelay) {
+                                // Сначала тянем к открытому ободку, затем внутрь дна половинки
+                                const toRimX = _rimWorldPos.x - f.worldPos.x;
+                                const toRimY = _rimWorldPos.y - f.worldPos.y;
+                                const toRimZ = _rimWorldPos.z - f.worldPos.z;
+                                const distToRim = Math.hypot(toRimX, toRimY, toRimZ);
 
-                                g.worldPos.x += (dx / Math.max(dist, 0.001)) * pullSpeed * dt + Math.cos(ang) * swirl * dt;
-                                g.worldPos.y += (dy / Math.max(dist, 0.001)) * pullSpeed * dt;
-                                g.worldPos.z += (dz / Math.max(dist, 0.001)) * pullSpeed * dt + Math.sin(ang) * swirl * dt;
+                                const rimThresh = 0.32 * Math.max(0.4, pillObj.curScale);
+                                const arriveThresh = 0.09 * Math.max(0.5, pillObj.curScale);
+                                const aimPos = distToRim > rimThresh ? _rimWorldPos : _targetWorldPos;
+                                const dx = aimPos.x - f.worldPos.x;
+                                const dy = aimPos.y - f.worldPos.y;
+                                const dz = aimPos.z - f.worldPos.z;
+                                const dist = Math.hypot(dx, dy, dz);
+
+                                if (dist < arriveThresh && aimPos === _targetWorldPos) {
+                                    f.spilled = false;
+                                    f.worldPos.copy(_targetWorldPos);
+                                    f.curScale.copy(f.baseScale);
+                                    returnedCount++;
+                                } else {
+                                    const pullSpeed = 4.8 + Math.min(5.5, (pillObj.collectTimer - f.collectDelay) * 3.8);
+                                    const swirl = Math.min(0.45, dist * 0.25);
+                                    const ang = t * 7.5 + f.swirlPhase;
+
+                                    f.worldPos.x += (dx / Math.max(dist, 0.001)) * pullSpeed * dt + Math.cos(ang) * swirl * dt;
+                                    f.worldPos.y += (dy / Math.max(dist, 0.001)) * pullSpeed * dt;
+                                    f.worldPos.z += (dz / Math.max(dist, 0.001)) * pullSpeed * dt + Math.sin(ang) * swirl * dt;
+
+                                    // На лету фрагмент сжимается до «крошки», чтобы пройти в ободок
+                                    f.curScale.lerp(f.baseScale, 1 - Math.exp(-5 * dt));
+                                    f.rot.x += f.rotVel.x * dt;
+                                    f.rot.y += f.rotVel.y * dt;
+                                    f.rot.z += f.rotVel.z * dt;
+                                }
+
+                                // Возвращаем исходный контрастный цвет по мере втягивания
+                                if (f.colorMix > 0) {
+                                    f.colorMix = Math.max(0, f.colorMix - dt * 2.2);
+                                    writeFragColor(mesh, i, f);
+                                    if (s === 0) boxesDirty = true; else dotsDirty = true;
+                                }
                             }
 
-                            // Возвращаем гранулам исходный контрастный цвет по мере втягивания
-                            if (g.colorMix > 0) {
-                                g.colorMix = Math.max(0, g.colorMix - dt * 2.2);
-                                _tempColor.copy(g.origColor).lerp(g.themeColor, g.colorMix);
-                                pillObj.grainInstanced.setColorAt(i, _tempColor);
-                                colorsDirty = true;
-                            }
+                            writeFragInstance(mesh, i, f, pillObj.curScale);
                         }
-
-                        _grainDummy.position.copy(g.worldPos);
-                        _grainDummy.scale.setScalar(g.radius * pillObj.curScale);
-                        _grainDummy.updateMatrix();
-                        pillObj.grainInstanced.setMatrixAt(i, _grainDummy.matrix);
                     }
 
-                    // Когда все волны гранул затянуты внутрь — переходим к надеванию и закручиванию второй половинки
-                    if (returnedCount >= count * 0.96 || pillObj.collectTimer > 2.7) {
-                        for (let i = 0; i < count; i++) {
-                            grains[i].spilled = false;
-                            grains[i].colorMix = 0;
-                            pillObj.grainInstanced.setColorAt(i, grains[i].origColor);
+                    // Когда все волны затянуты внутрь — надеваем и закручиваем вторую половинку
+                    if (returnedCount >= totalFrags * 0.96 || pillObj.collectTimer > 3.4) {
+                        for (let s = 0; s < 2; s++) {
+                            const set = s === 0 ? boxFrags : dotFrags;
+                            const mesh = s === 0 ? pillObj.fragBoxes : pillObj.fragDots;
+                            for (let i = 0; i < set.length; i++) {
+                                const f = set[i];
+                                f.spilled = false;
+                                f.hidden = false;
+                                f.fadeP = 0;
+                                f.assembleP = 0;
+                                f.arrived = false;
+                                f.colorMix = 0;
+                                f.curScale.copy(f.baseScale);
+                                mesh.setColorAt(i, f.origColor);
+                            }
                         }
-                        colorsDirty = true;
+                        boxesDirty = true;
+                        dotsDirty = true;
                         pillObj.state = 'closing';
                         pillObj.closingProgress = 0;
                     }
 
                 } else if (pillObj.state === 'closing') {
-                    // Гранулы остаются внутри наполненной половинки, пока вторая закручивается сверху
+                    // Фрагменты едут внутри наполненной половинки, пока вторая закручивается сверху
                     const suctionHalf = pillObj.suctionSide === -1 ? pillObj.leftHalf : pillObj.rightHalf;
-                    for (let i = 0; i < count; i++) {
-                        const g = grains[i];
-                        g.worldPos.copy(g.pos).applyMatrix4(suctionHalf.matrixWorld);
-                        _grainDummy.position.copy(g.worldPos);
-                        _grainDummy.scale.setScalar(g.radius * pillObj.curScale);
-                        _grainDummy.updateMatrix();
-                        pillObj.grainInstanced.setMatrixAt(i, _grainDummy.matrix);
+                    for (let s = 0; s < 2; s++) {
+                        const set = s === 0 ? boxFrags : dotFrags;
+                        const mesh = s === 0 ? pillObj.fragBoxes : pillObj.fragDots;
+                        for (let i = 0; i < set.length; i++) {
+                            const f = set[i];
+                            f.worldPos.copy(f.pos).applyMatrix4(suctionHalf.matrixWorld);
+                            writeFragInstance(mesh, i, f, pillObj.curScale);
+                        }
                     }
                 }
 
-                pillObj.grainInstanced.instanceMatrix.needsUpdate = true;
-                if (colorsDirty && pillObj.grainInstanced.instanceColor) {
-                    pillObj.grainInstanced.instanceColor.needsUpdate = true;
+                pillObj.fragBoxes.instanceMatrix.needsUpdate = true;
+                pillObj.fragDots.instanceMatrix.needsUpdate = true;
+                if (boxesDirty && pillObj.fragBoxes.instanceColor) {
+                    pillObj.fragBoxes.instanceColor.needsUpdate = true;
+                }
+                if (dotsDirty && pillObj.fragDots.instanceColor) {
+                    pillObj.fragDots.instanceColor.needsUpdate = true;
                 }
 
                 // Обновление деликатной тени под капсулой
@@ -2204,17 +2704,42 @@
                 renderer.setSize(window.innerWidth, window.innerHeight);
                 updateResponsiveBasePositions();
                 resizeMatrixCanvas();
+                // Пересчитываем «адреса» фрагментов, если капсула открыта прямо сейчас
+                [redPill, bluePill].forEach(function (p) {
+                    if (p.state === 'open' && p.themeTriggered) assignFragmentsToPage(p);
+                });
             });
 
             // ================= ЦИКЛ АНИМАЦИИ =================
             let lastTime = performance.now();
             let elapsed = 0;
+            let perfAccum = 0;
+            let perfFrames = 0;
 
             function animate(now) {
                 requestAnimationFrame(animate);
                 const dt = Math.min((now - lastTime) / 1000, 0.05);
                 lastTime = now;
                 elapsed += dt;
+
+                // Адаптивное качество: если кадр проседает — понижаем плотность пикселей,
+                // когда запас появился — возвращаем чёткость обратно
+                perfAccum += dt;
+                perfFrames++;
+                if (perfAccum >= 1.5) {
+                    const avg = perfAccum / perfFrames;
+                    if (avg > 0.024 && pixelRatioCap > 1.0) {
+                        pixelRatioCap = Math.max(1.0, pixelRatioCap - 0.25);
+                        renderer.setPixelRatio(pixelRatioCap);
+                        renderer.setSize(window.innerWidth, window.innerHeight);
+                    } else if (avg < 0.013 && pixelRatioCap < MAX_PIXEL_RATIO) {
+                        pixelRatioCap = Math.min(MAX_PIXEL_RATIO, pixelRatioCap + 0.25);
+                        renderer.setPixelRatio(pixelRatioCap);
+                        renderer.setSize(window.innerWidth, window.innerHeight);
+                    }
+                    perfAccum = 0;
+                    perfFrames = 0;
+                }
 
                 updateMatrixRain(dt);
                 stepPillAnimation(redPill, motionProfiles.red, redAngles, dt, elapsed);
