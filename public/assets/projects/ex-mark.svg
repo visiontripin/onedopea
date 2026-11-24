@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" fill="none">
+  <defs>
+    <linearGradient id="exBg" x1="60" y1="30" x2="540" y2="570" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#22293B"/>
+      <stop offset=".55" stop-color="#141926"/>
+      <stop offset="1" stop-color="#0B0E17"/>
+    </linearGradient>
+    <radialGradient id="exGlow" cx="0" cy="0" r="1" gradientTransform="matrix(0 240 -240 0 300 290)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#90A8F6" stop-opacity=".34"/>
+      <stop offset="1" stop-color="#90A8F6" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="exCore" x1="230" y1="220" x2="370" y2="380" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#C8D6FA"/>
+    </linearGradient>
+  </defs>
+  <rect x="22" y="22" width="556" height="556" rx="128" fill="url(#exBg)"/>
+  <rect x="22" y="22" width="556" height="556" rx="128" fill="url(#exGlow)"/>
+  <rect x="22" y="22" width="556" height="556" rx="128" stroke="#A6BAFA" stroke-opacity=".24" stroke-width="3"/>
+
+  <!-- Circle of 12 human encounter nodes -->
+  <circle cx="300" cy="300" r="174" stroke="#8FA8F2" stroke-opacity=".35" stroke-width="2" stroke-dasharray="6 8"/>
+  <g stroke="#8FA8F2" stroke-opacity=".28" stroke-width="1.6">
+    <line x1="300" y1="300" x2="300" y2="126"/>
+    <line x1="300" y1="300" x2="387" y2="149"/>
+    <line x1="300" y1="300" x2="451" y2="213"/>
+    <line x1="300" y1="300" x2="474" y2="300"/>
+    <line x1="300" y1="300" x2="451" y2="387"/>
+    <line x1="300" y1="300" x2="387" y2="451"/>
+    <line x1="300" y1="300" x2="300" y2="474"/>
+    <line x1="300" y1="300" x2="213" y2="451"/>
+    <line x1="300" y1="300" x2="149" y2="387"/>
+    <line x1="300" y1="300" x2="126" y2="300"/>
+    <line x1="300" y1="300" x2="149" y2="213"/>
+    <line x1="300" y1="300" x2="213" y2="149"/>
+  </g>
+  <g fill="#E6EEFF" stroke="#141926" stroke-width="4">
+    <circle cx="300" cy="126" r="13"/>
+    <circle cx="387" cy="149" r="11" fill="#FBBF24"/>
+    <circle cx="451" cy="213" r="12"/>
+    <circle cx="474" cy="300" r="13"/>
+    <circle cx="451" cy="387" r="11"/>
+    <circle cx="387" cy="451" r="12" fill="#93C5FD"/>
+    <circle cx="300" cy="474" r="13"/>
+    <circle cx="213" cy="451" r="11"/>
+    <circle cx="149" cy="387" r="12"/>
+    <circle cx="126" cy="300" r="13" fill="#FBBF24"/>
+    <circle cx="149" cy="213" r="11"/>
+    <circle cx="213" cy="149" r="12" fill="#93C5FD"/>
+  </g>
+
+  <!-- Central Emblem -->
+  <circle cx="300" cy="300" r="76" fill="url(#exCore)"/>
+  <text x="300" y="315" text-anchor="middle" fill="#182238" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="44" font-weight="800" letter-spacing="3">EX</text>
+</svg>

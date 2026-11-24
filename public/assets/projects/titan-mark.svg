@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" fill="none">
+  <defs>
+    <linearGradient id="ttBg" x1="56" y1="36" x2="544" y2="572" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#19212E"/>
+      <stop offset=".58" stop-color="#101620"/>
+      <stop offset="1" stop-color="#090D13"/>
+    </linearGradient>
+    <linearGradient id="ttAmber" x1="120" y1="120" x2="480" y2="450" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFD166"/>
+      <stop offset=".5" stop-color="#FFB300"/>
+      <stop offset="1" stop-color="#E67700"/>
+    </linearGradient>
+    <radialGradient id="ttGlow" cx="0" cy="0" r="1" gradientTransform="matrix(0 250 -250 0 430 140)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFB300" stop-opacity=".32"/>
+      <stop offset="1" stop-color="#FFB300" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect x="22" y="22" width="556" height="556" rx="128" fill="url(#ttBg)"/>
+  <rect x="22" y="22" width="556" height="556" rx="128" fill="url(#ttGlow)"/>
+  <rect x="22" y="22" width="556" height="556" rx="128" stroke="#FFB300" stroke-opacity=".22" stroke-width="3"/>
+
+  <!-- Subtle blueprint grid -->
+  <path d="M110 442h380" stroke="url(#ttAmber)" stroke-width="26" stroke-linecap="round"/>
+  <circle cx="174" cy="466" r="24" fill="#0D121A" stroke="#FFB300" stroke-width="8"/>
+  <circle cx="256" cy="466" r="24" fill="#0D121A" stroke="#FFB300" stroke-width="8"/>
+  <circle cx="404" cy="466" r="24" fill="#0D121A" stroke="#FFB300" stroke-width="8"/>
+
+  <!-- Crane cab & chassis -->
+  <rect x="134" y="366" width="164" height="62" rx="16" fill="#222C3B" stroke="#FFB300" stroke-width="5"/>
+  <path d="M336 376h92l26 32v20H336v-52Z" fill="#222C3B" stroke="#FFB300" stroke-width="5" stroke-linejoin="round"/>
+  <rect x="352" y="388" width="54" height="20" rx="5" fill="#2E7BFF" fill-opacity=".35"/>
+
+  <!-- Telescopic crane boom -->
+  <path d="M188 366L438 142" stroke="url(#ttAmber)" stroke-width="30" stroke-linecap="round"/>
+  <path d="M250 310L452 130" stroke="#FFE08A" stroke-width="8" stroke-linecap="round" opacity=".65"/>
+  <path d="M226 366l54-72" stroke="#64748B" stroke-width="10" stroke-linecap="round"/>
+
+  <!-- Hoist cable & load block -->
+  <path d="M442 146v136" stroke="#3B82F6" stroke-width="9" stroke-linecap="round"/>
+  <rect x="404" y="282" width="76" height="56" rx="12" fill="url(#ttAmber)"/>
+  <path d="M420 298l14 24m16-24l14 24" stroke="#141820" stroke-width="6" stroke-linecap="round"/>
+  <path d="M442 338v18a14 14 0 0 1-24 10" stroke="#FFB300" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- Tonnage badge -->
+  <rect x="112" y="114" width="166" height="48" rx="14" fill="#FFB300" fill-opacity=".14" stroke="#FFB300" stroke-opacity=".45" stroke-width="2"/>
+  <text x="195" y="145" text-anchor="middle" fill="#FFD166" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="22" font-weight="800" letter-spacing="1.5">14–500 Т</text>
+</svg>

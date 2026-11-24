@@ -1,0 +1,34 @@
+name: check
+
+on:
+  push:
+    branches: [main, "arena/**"]
+  pull_request:
+
+jobs:
+  build-and-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Собрать страницы из markdown
+        run: python3 EX/tools/build_site.py
+
+      - name: Проверить ссылки и реестр
+        run: python3 EX/tools/check_links.py
+
+      - name: Проверить, что html не разошёлся с md
+        run: |
+          if [ -n "$(git status --porcelain EX)" ]; then
+            echo "HTML-страницы не соответствуют markdown. Запустите: make build"
+            git status --porcelain EX
+            git diff --stat EX
+            exit 1
+          fi
+
+      - name: Собрать сайт для публикации
+        run: python3 EX/tools/package_site.py

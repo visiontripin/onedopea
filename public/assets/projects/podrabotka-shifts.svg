@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" fill="none">
+  <defs>
+    <linearGradient id="pdCanvas" x1="0" y1="0" x2="900" y2="560" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FDF8FB"/>
+      <stop offset="1" stop-color="#F3E3EE"/>
+    </linearGradient>
+    <linearGradient id="pdPink" x1="120" y1="180" x2="780" y2="420" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E62E82"/>
+      <stop offset="1" stop-color="#B81662"/>
+    </linearGradient>
+    <filter id="pdSh" x="68" y="48" width="764" height="476" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="18" stdDeviation="20" flood-color="#751A48" flood-opacity=".13"/>
+    </filter>
+  </defs>
+  <rect width="900" height="560" rx="32" fill="url(#pdCanvas)"/>
+  <circle cx="804" cy="78" r="138" fill="#FAD0E5" opacity=".48"/>
+  <circle cx="106" cy="496" r="116" fill="#D5F3E5" opacity=".45"/>
+
+  <g filter="url(#pdSh)">
+    <rect x="86" y="68" width="728" height="424" rx="24" fill="#FFFFFF"/>
+  </g>
+  <path d="M110 68h680a24 24 0 0 1 24 24v52H86V92a24 24 0 0 1 24-24Z" fill="#FCF6FA"/>
+  <circle cx="118" cy="106" r="6" fill="#D82376"/>
+  <text x="134" y="111" fill="#1D1824" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="14" font-weight="800">Подработка.МСК</text>
+
+  <!-- Role Switcher in header -->
+  <rect x="466" y="90" width="320" height="32" rx="16" fill="#F5ECF2"/>
+  <rect x="470" y="93" width="104" height="26" rx="13" fill="#D82376"/>
+  <text x="522" y="110" text-anchor="middle" fill="#FFFFFF" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10.5" font-weight="700">Рабочий</text>
+  <text x="630" y="110" text-anchor="middle" fill="#6D5C6B" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10.5" font-weight="700">Работодатель</text>
+  <text x="736" y="110" text-anchor="middle" fill="#6D5C6B" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10.5" font-weight="700">Модератор</text>
+  <rect x="86" y="144" width="728" height="1" fill="#F0E4EC"/>
+
+  <!-- Filter chips -->
+  <rect x="116" y="164" width="108" height="30" rx="15" fill="#FDEAF3" stroke="#F4BBD6"/>
+  <text x="170" y="183" text-anchor="middle" fill="#B81662" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11" font-weight="700">Сегодня · 12</text>
+  <rect x="234" y="164" width="128" height="30" rx="15" fill="#F7F4F8"/>
+  <text x="298" y="183" text-anchor="middle" fill="#5D5160" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11" font-weight="600">Метро и МЦД</text>
+  <rect x="372" y="164" width="136" height="30" rx="15" fill="#F7F4F8"/>
+  <text x="440" y="183" text-anchor="middle" fill="#5D5160" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11" font-weight="600">Выплата сразу</text>
+  <rect x="518" y="164" width="118" height="30" rx="15" fill="#ECFDF5"/>
+  <text x="577" y="183" text-anchor="middle" fill="#15803D" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11" font-weight="700">0% комиссии</text>
+
+  <!-- Shift Card 1 -->
+  <rect x="116" y="212" width="668" height="118" rx="18" fill="#FFFBFD" stroke="#EED6E4"/>
+  <rect x="136" y="230" width="70" height="22" rx="11" fill="#FEE2E2"/>
+  <text x="171" y="245" text-anchor="middle" fill="#B91C1C" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10" font-weight="800">СРОЧНО</text>
+  <rect x="214" y="230" width="122" height="22" rx="11" fill="#ECFDF5"/>
+  <text x="275" y="245" text-anchor="middle" fill="#15803D" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10" font-weight="700">ПРОВЕРЕННЫЙ ★ 4.9</text>
+
+  <text x="136" y="278" fill="#1E1826" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="17" font-weight="800">Комплектовщик заказов · дневная смена 8 ч</text>
+  <circle cx="143" cy="302" r="5" fill="#EF4444"/>
+  <text x="155" y="306" fill="#685C6E" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="12">м. Сокольники · 7 мин пешком · Без опыта · Питание</text>
+
+  <text x="760" y="264" text-anchor="end" fill="#C41968" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" font-weight="800">5 600 ₽</text>
+  <rect x="632" y="280" width="132" height="34" rx="11" fill="url(#pdPink)"/>
+  <text x="698" y="301" text-anchor="middle" fill="#FFFFFF" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11.5" font-weight="700">Откликнуться →</text>
+
+  <!-- Shift Card 2 -->
+  <rect x="116" y="344" width="668" height="116" rx="18" fill="#FAFAFC" stroke="#E8E4EE"/>
+  <text x="136" y="382" fill="#1E1826" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="16.5" font-weight="800">Бариста-помощник на мероприятие · смена 6 ч</text>
+  <circle cx="143" cy="408" r="5" fill="#8B5CF6"/>
+  <text x="155" y="412" fill="#685C6E" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="12">м. Таганская · Бригада 3 из 4 · На карту сразу после смены</text>
+  <text x="760" y="384" text-anchor="end" fill="#1E1826" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="22" font-weight="800">4 800 ₽</text>
+  <rect x="632" y="400" width="132" height="34" rx="11" fill="#F4EBF1"/>
+  <text x="698" y="421" text-anchor="middle" fill="#B81662" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11.5" font-weight="700">1 место осталось</text>
+</svg>

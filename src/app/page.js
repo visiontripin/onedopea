@@ -1,6 +1,5 @@
-import StyleGate from '@/components/StyleGate';
-import { demoPosts } from '@/data/posts';
+import VersionHub from '@/components/VersionHub';
 
 export default function HomePage() {
-  return <StyleGate posts={demoPosts} />;
+  return <VersionHub />;
 }

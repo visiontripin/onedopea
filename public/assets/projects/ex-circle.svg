@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" fill="none">
+  <defs>
+    <linearGradient id="exCv" x1="0" y1="0" x2="900" y2="560" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FAFBFD"/>
+      <stop offset="1" stop-color="#E6ECF7"/>
+    </linearGradient>
+    <filter id="exSh" x="68" y="48" width="764" height="476" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="18" stdDeviation="20" flood-color="#223052" flood-opacity=".12"/>
+    </filter>
+  </defs>
+  <rect width="900" height="560" rx="32" fill="url(#exCv)"/>
+  <circle cx="798" cy="84" r="136" fill="#DCE5FB" opacity=".62"/>
+  <circle cx="106" cy="494" r="118" fill="#FCE7C8" opacity=".46"/>
+
+  <g filter="url(#exSh)">
+    <rect x="86" y="68" width="728" height="424" rx="24" fill="#FFFFFF"/>
+  </g>
+  <path d="M110 68h680a24 24 0 0 1 24 24v50H86V92a24 24 0 0 1 24-24Z" fill="#F6F8FC"/>
+  <circle cx="116" cy="105" r="5" fill="#7D98EB"/>
+  <circle cx="135" cy="105" r="5" fill="#A287E8"/>
+  <circle cx="154" cy="105" r="5" fill="#CBD5E1"/>
+  <rect x="182" y="94" width="288" height="22" rx="11" fill="#EAEFF9"/>
+  <text x="198" y="109" fill="#526488" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.3">EX · ДОКУМЕНТАЛЬНЫЙ ЭКСПЕРИМЕНТ</text>
+  <rect x="614" y="92" width="172" height="26" rx="13" fill="#EEF3FF"/>
+  <text x="700" y="109" text-anchor="middle" fill="#4761A6" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10" font-weight="800">СТАРТ ЗА 0 € · КРУГ</text>
+
+  <!-- Left: Circle diagram -->
+  <rect x="114" y="162" width="320" height="300" rx="20" fill="#F8FAFE" stroke="#E2E9F5"/>
+  <text x="274" y="192" text-anchor="middle" fill="#687A9C" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10" font-weight="800" letter-spacing="1.4">ВЕЧЕРНИЙ КРУГ · 10–25 ЧЕЛОВЕК</text>
+  <circle cx="274" cy="316" r="92" stroke="#9BB0EC" stroke-width="2" stroke-dasharray="5 6"/>
+  <circle cx="274" cy="316" r="28" fill="#23324A"/>
+  <text x="274" y="321" text-anchor="middle" fill="#FFFFFF" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="13" font-weight="800">EX</text>
+  <g fill="#6D88DF" stroke="#FFFFFF" stroke-width="3">
+    <circle cx="274" cy="224" r="9"/><circle cx="339" cy="251" r="9"/><circle cx="366" cy="316" r="9"/>
+    <circle cx="339" cy="381" r="9"/><circle cx="274" cy="408" r="9"/><circle cx="209" cy="381" r="9"/>
+    <circle cx="182" cy="316" r="9"/><circle cx="209" cy="251" r="9"/>
+  </g>
+  <text x="274" y="442" text-anchor="middle" fill="#51627F" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11.5" font-weight="700">2 минуты тишины и личный разговор с каждым</text>
+
+  <!-- Right: Milestones & Protocol -->
+  <text x="458" y="184" fill="#687A9C" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10" font-weight="800" letter-spacing="1.4">СКОЛЬКО ЛЮДЕЙ ЧЕЛОВЕК МОЖЕТ ЗНАТЬ ЛИЧНО?</text>
+  <text x="458" y="216" fill="#23324A" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="21" font-weight="800">100 → 500 → 1 000 встреч</text>
+
+  <rect x="458" y="236" width="328" height="68" rx="15" fill="#F8FAFE" stroke="#E2E9F5"/>
+  <text x="476" y="262" fill="#23324A" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="13" font-weight="800">Научный протокол памяти</text>
+  <text x="476" y="284" fill="#6D7C96" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11.5">Проверка через 24 часа и через 30 дней: имя, деталь, внимание</text>
+
+  <rect x="458" y="316" width="328" height="68" rx="15" fill="#F8FAFE" stroke="#E2E9F5"/>
+  <text x="476" y="342" fill="#23324A" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="13" font-weight="800">Честная этика и открытый реестр</text>
+  <text x="476" y="364" fill="#6D7C96" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11.5">Письменные согласия, stop-rules, открытая схема counter.json</text>
+
+  <rect x="458" y="396" width="328" height="66" rx="15" fill="#23324A"/>
+  <text x="622" y="424" text-anchor="middle" fill="#FFFFFF" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="12.5" font-weight="800">Лендинг EX  ·  Презентация 12 слайдов  ·  Заявка join.html</text>
+  <text x="622" y="444" text-anchor="middle" fill="#B8C7E6" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11">Вся документация, шаблоны вечеров и проверка ссылок в открытом коде</text>
+</svg>

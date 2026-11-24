@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CONTENT — EX</title>
+<meta name="description" content="EX — эксперимент о том, что делает с человеком количество людей, которых он знает лично.">
+<style>
+:root{
+  --ink:#121317;--ink-2:#45474d;--ink-3:#7c7f86;
+  --line:#e8e8ec;--line-2:#f0f0f3;--wash:#f7f7f9;
+  --sans:"Google Sans Flex","Google Sans",Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:88px}
+body{background:#fff;color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.65;
+  letter-spacing:-.006em;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--ink);color:#fff}
+.top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.86);
+  backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1080px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:14px}
+.brand{font-weight:600;font-size:16px;letter-spacing:-.03em;display:flex;gap:8px;align-items:center}
+.brand i{width:7px;height:7px;border-radius:50%;background:var(--ink);display:inline-block}
+.crumb{font-size:13px;color:var(--ink-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.top .sp{flex:1}
+.pill{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;font-weight:500;
+  padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--wash);
+  transition:background .16s,border-color .16s;white-space:nowrap}
+.pill:hover{background:#f1f1f4;border-color:#dcdce2}
+.pill.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pill.dark:hover{background:#2a2c33}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+.layout{display:grid;grid-template-columns:1fr;gap:40px;padding:44px 0 96px}
+@media(min-width:960px){.layout{grid-template-columns:minmax(0,1fr) 240px;gap:56px;align-items:start}}
+article{max-width:76ch}
+article h1{font-size:clamp(29px,4.6vw,42px);font-weight:500;letter-spacing:-.035em;line-height:1.1;margin-bottom:22px}
+article h2{font-size:clamp(21px,2.8vw,27px);font-weight:500;letter-spacing:-.025em;margin:44px 0 14px;line-height:1.2}
+article h3{font-size:19px;font-weight:500;letter-spacing:-.015em;margin:32px 0 10px}
+article h4{font-size:16px;font-weight:600;margin:24px 0 8px}
+article p{color:var(--ink-2);margin:0 0 14px}
+article strong{color:var(--ink);font-weight:500}
+article em{font-style:normal;border-bottom:1px solid var(--ink-3)}
+article a{color:var(--ink);border-bottom:1px solid #c9cad1;transition:border-color .16s}
+article a:hover{border-bottom-color:var(--ink)}
+article ul,article ol{margin:0 0 16px;padding-left:22px;color:var(--ink-2)}
+article li{margin:0 0 7px}
+article li::marker{color:var(--ink-3)}
+article hr{border:0;border-top:1px solid var(--line-2);margin:32px 0}
+article blockquote{border-left:2px solid var(--ink);padding:2px 0 2px 18px;margin:20px 0;
+  color:var(--ink);font-size:17px}
+article blockquote p{margin:0 0 8px;color:var(--ink)}
+article blockquote p:last-child{margin:0}
+article code{font-family:var(--mono);font-size:.9em;background:var(--wash);
+  border:1px solid var(--line);border-radius:6px;padding:1px 5px}
+article pre{background:#0d0e11;color:#e9eaee;border-radius:14px;padding:16px 18px;
+  overflow-x:auto;margin:18px 0;font-size:13px;line-height:1.6}
+article pre code{background:none;border:0;padding:0;color:inherit;font-size:inherit}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:16px;margin:18px 0}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:460px}
+th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line-2);vertical-align:top}
+th{font-size:12.5px;font-weight:500;color:var(--ink-3);background:var(--wash);white-space:nowrap}
+td{color:var(--ink-2)}
+td:first-child{color:var(--ink)}
+tr:last-child td{border-bottom:0}
+aside.toc{position:sticky;top:84px;font-size:13.5px}
+aside.toc .t{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+aside.toc a{display:block;color:var(--ink-2);padding:5px 0;border-left:1px solid var(--line);
+  padding-left:12px;line-height:1.35}
+aside.toc a:hover{color:var(--ink);border-left-color:var(--ink)}
+aside.toc a.lvl3{padding-left:24px;font-size:12.5px;color:var(--ink-3)}
+.doc-meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:26px;
+  font-size:13px;color:var(--ink-3)}
+.doc-meta .tag{background:var(--wash);border:1px solid var(--line);border-radius:999px;padding:4px 11px}
+footer{border-top:1px solid var(--line);padding:26px 0 48px;font-size:13.5px;color:var(--ink-3)}
+.foot-in{max-width:1080px;margin:0 auto;padding:0 24px;display:flex;flex-wrap:wrap;
+  gap:12px 24px;justify-content:space-between}
+.foot-in nav{display:flex;flex-wrap:wrap;gap:6px 16px}
+.foot-in a{color:var(--ink-2);border-bottom:1px solid transparent}
+.foot-in a:hover{border-bottom-color:var(--ink-3)}
+.cards{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-top:26px}
+.card{border:1px solid var(--line);border-radius:20px;padding:20px;transition:border-color .18s,transform .18s}
+.card:hover{border-color:#d5d5dc;transform:translateY(-1px)}
+.card h3{margin:0 0 6px;font-size:17px;font-weight:500;letter-spacing:-.01em}
+.card p{margin:0;font-size:14px;color:var(--ink-2);line-height:1.5}
+.card .k{font-size:12px;color:var(--ink-3);margin-bottom:8px;letter-spacing:.04em;text-transform:uppercase}
+@media print{
+  .top,aside.toc,footer{display:none}
+  body{font-size:11.5pt}
+  article{max-width:none}
+  a{border:0}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <a class="brand" href="../index.html"><i></i>EX</a>
+  <span class="crumb">EX / docs</span>
+  <span class="sp"></span>
+  <a class="pill dark" href="../index.html">Лендинг</a><a class="pill" href="../docs/index.html">Документы</a><a class="pill" href="../deck.html">Презентация</a><a class="pill" href="../join.html">Заявка</a>
+</div></header>
+<div class="wrap"><div class="layout">
+  <article>
+    <div class="doc-meta"><span class="tag">EX/docs/CONTENT.md</span><a href="CONTENT.md" download>скачать .md</a></div>
+    <h1 id="top">EX // CONTENT</h1>
+<p>Бренд, форматы, правила эфира. Визуальный референс — <a href="../index.html"><code>index.html</code></a>.</p>
+<hr>
+<h2 id="1-суть-в-трёх-строках">1. Суть в трёх строках</h2>
+<pre><code>EX — эксперимент, в котором один человек знакомится с миллионом незнакомцев.
+Не «друзей». Незнакомцев.
+И каждый раз это фиксируется на видео.</code></pre>
+<p><strong>Логлайн для прессы:</strong></p>
+<blockquote><p>«Человек решил узнать миллион людей лично. На 150-м что-то пошло не так.»</p></blockquote>
+<p><strong>Теглайн на экране:</strong> <code>01 // ПРИВЕТ, ДРУЗЬЯ</code> — фраза, произносимая <strong>один раз</strong>, в первом выпуске, с последующим разбором, почему это ложь.</p>
+<hr>
+<h2 id="2-название-и-графика">2. Название и графика</h2>
+<div class="tw"><table><thead><tr><th>Элемент</th><th>Решение</th></tr></thead><tbody>
+<tr><td>Логотип</td><td><code>EX</code> монопространственным шрифтом, вторая буква с глитч-смещением; мигающий курсор после</td></tr>
+<tr><td>Палитра</td><td>чёрный <code>#000</code>, фосфорный зелёный <code>#7dfba4</code>, тревожный красный <code>#ff3b3b</code> (только для счётчиков)</td></tr>
+<tr><td>Шрифт</td><td>JetBrains Mono / IBM Plex Mono</td></tr>
+<tr><td>Постоянный элемент</td><td>таймкод <code>TC 00:12:44:07</code> и номер встречи <code>№ 000417</code> в углу кадра <strong>всегда</strong></td></tr>
+<tr><td>Счётчик</td><td>нижняя треть: <code>L3 437/10000 · L2 1 204 · L1 380</code></td></tr>
+<tr><td>Звук</td><td>низкий гул 50 Гц, щелчки реле, шум ленты, один аккорд на переходе</td></tr>
+</tbody></table></div>
+<p>Опорные визуальные цитаты: ЭЛТ-монитор, развёртка, VHS-перемотка, служебная разметка, «декларация» с печатью, досье с фотографией и скрепкой. Не «киберпанк-неон» — <strong>бюрократический нейропанк</strong>: мир, где людей считают, и это нормально.</p>
+<hr>
+<h2 id="3-правило-кадра-одно-для-всего-проекта">3. Правило кадра (одно для всего проекта)</h2>
+<p>Каждая встреча снимается <strong>одинаково</strong>:</p>
+<ol>
+<li>общий план — человек входит и садится (15 сек, без слов);</li>
+<li>крупный — лицо, 3 сек молчания;</li>
+<li>разговор по 12 вопросам (см. § 5);</li>
+<li>ответ на вопрос дня «угадай выбор» — предсказание субъекта показывается <strong>после</strong> ответа участника, не раньше;</li>
+<li>финальный кадр: молчание 5 секунд, камера не выключается;</li>
+<li>карточка: имя, город, реестровый номер, дата.</li>
+</ol>
+<p>Одинаковость кадра — это и есть научная честность, и это единственный способ сделать монтаж 10 000 встреч.</p>
+<hr>
+<h2 id="4-форматы">4. Форматы</h2>
+<div class="tw"><table><thead><tr><th>Формат</th><th>Длина</th><th>Что внутри</th></tr></thead><tbody>
+<tr><td><strong>«Одна встреча»</strong></td><td>12–18 мин</td><td>стандартный эпизод; 2–3 встречи + комментарий субъекта</td></tr>
+<tr><td><strong>«Эшелон»</strong></td><td>40–50 мин</td><td>город, 120 встреч за 3 дня, усталость как отдельный сюжет</td></tr>
+<tr><td><strong>«Приём»</strong></td><td>90 мин</td><td>прямой эфир: 60-секундные контакты, чат, счётчик в реальном времени</td></tr>
+<tr><td><strong>«Замер»</strong></td><td>20–25 мин</td><td>научный выпуск: батарея, результаты, что изменилось</td></tr>
+<tr><td><strong>«Пятеро»</strong></td><td>25 мин</td><td>раз в год: возврат к ядру, проверка, кто остался рядом</td></tr>
+<tr><td><strong>«Ошибка»</strong></td><td>8–12 мин</td><td>признание провала: сорванная встреча, плохое поведение, неверная гипотеза</td></tr>
+</tbody></table></div>
+<p>Соотношение в сезоне: 70 % «Одна встреча», 15 % «Эшелон/Приём», 10 % «Замер», 5 % «Ошибка». Последние 5 % — обязательны, они держат доверие.</p>
+<hr>
+<h2 id="5-двенадцать-вопросов-задаются-каждому-всегда-в-одном-порядке">5. Двенадцать вопросов (задаются каждому, всегда в одном порядке)</h2>
+<ol>
+<li>Как вас зовут полностью и как вас зовут дома?</li>
+<li>Где вы выросли и что там было главным?</li>
+<li>Чем вы зарабатываете и умеете делать лучше большинства?</li>
+<li>Что вы делали вчера с 18:00 до 22:00?</li>
+<li>Кто из людей оказал на вас наибольшее влияние?</li>
+<li>Чего вы боитесь больше, чем признаётесь?</li>
+<li>Что вы никогда никому не рассказывали, но расскажете сейчас?</li>
+<li>Что бы вы делали, если бы деньги не имели значения?</li>
+<li>Кому вы должны и кому должны вы?</li>
+<li>Что вы думаете обо мне через 10 минут после знакомства?</li>
+<li>Если бы вы могли передать одну вещь миллиону людей — что?</li>
+<li>Что вы будете помнить об этом разговоре через год?</li>
+</ol>
+<blockquote><p>Вопрос 10 — главный. Он превращает знакомство в обратное наблюдение: <strong>незнакомец тоже моделирует тебя.</strong> Именно этот обмен и есть предмет EX.</p></blockquote>
+<p>Вопрос дня (для теста «угадай выбор»): один закрытый, меняется раз в 100 встреч. Первые сто: <em>«10 000 € сейчас или 100 € в месяц десять лет?»</em></p>
+<hr>
+<h2 id="6-редакционный-кодекс">6. Редакционный кодекс</h2>
+<ol>
+<li>В каждом эпизоде — дисклеймер: «один человек, N=1, вот протокол, вот данные».</li>
+<li>Запрещены: рейтинги участников, голосования, «конкурс на лучшую историю», драматическая музыка на чужих травмах, повторные съёмки «для эмоции».</li>
+<li>Участник всегда может сказать «стоп» — и это выйдет в эпизоде (с его согласия).</li>
+<li>Ни один эпизод не заканчивается обещанием: финал = число и следующий шаг.</li>
+<li>Если гипотеза не подтвердилась — эпизод выходит без изменений и с объяснением.</li>
+<li>Никаких заголовков вида «наука доказала». Только: «протокол показывает».</li>
+<li>Деньги: ссылка на реестр расходов в описании каждого эпизода.</li>
+</ol>
+<hr>
+<h2 id="7-сезонная-арка-26-эпизодов-1-000-контактов">7. Сезонная арка (26 эпизодов = 1 000 контактов)</h2>
+<div class="tw"><table><thead><tr><th>Блок</th><th>Эпизоды</th><th>Драматургия</th></tr></thead><tbody>
+<tr><td>I. Настройка</td><td>1–4</td><td>зачем, протокол, первые встречи, страх камеры</td></tr>
+<tr><td>II. Первый слой</td><td>5–9</td><td>150 пройдено: «я больше не помню всех»</td></tr>
+<tr><td>III. Машина</td><td>10–15</td><td>эшелоны, усталость, 500: первый «серый слой»</td></tr>
+<tr><td>IV. Трещина</td><td>16–20</td><td>ошибки, выгорание, конфликт с аудиторией, замер</td></tr>
+<tr><td>V. Тысяча</td><td>21–24</td><td>1 000: что изменилось, сравнение с baseline</td></tr>
+<tr><td>VI. После</td><td>25–26</td><td>«Пятеро» + открытые данные + анонс 10 000</td></tr>
+</tbody></table></div>
+<hr>
+<h2 id="8-тизер-на-90-секунд-можно-снять-на-этой-неделе">8. Тизер на 90 секунд (можно снять на этой неделе)</h2>
+<pre><code>0:00  Чёрный экран. Шум ленты. Таймкод TC 00:00:00:00.
+0:04  Голос: «Привет, друзья.»
+0:07  Пауза. На экране — определение: ДРУГ (сущ.) — тот, кого знаешь лично.
+0:14  Текст: «В этом кадре — 4 000 человек, которые считают меня другом.
+              Я не знаю ни одного.»
+0:22  Монтаж: 20 лиц по 1,5 сек, у каждого таймкод и номер.
+0:52  «Я собираюсь узнать миллион. Лично. По протоколу. С камерой.»
+1:02  Счётчик: L3 000/10000, L2 000, L1 000.
+1:12  «Дальше я буду считать. И показывать, что со мной происходит.»
+1:24  EX.  |  ПРОТОКОЛ ОТКРЫТ  |  ПЕРВАЯ ВСТРЕЧА — [дата]</code></pre>
+<hr>
+<h2 id="9-каналы-и-публикация">9. Каналы и публикация</h2>
+<ul>
+<li><strong>Основной:</strong> YouTube (длинные эпизоды) + короткие вертикальные фрагменты (не нарезки эмоций, а «один вопрос — один человек»).</li>
+<li><strong>Прямые эфиры:</strong> еженедельный «Приём» + эшелоны.</li>
+<li><strong>Текст:</strong> дневник субъекта (Telegram/Substack) — ежедневный, 300–500 слов; это backup и одновременно источник цитат.</li>
+<li><strong>Данные:</strong> отдельная страница с реестром и графиками, обновляется еженедельно.</li>
+<li><strong>Языки:</strong> RU/EN с первого дня; субтитры — часть протокола, а не «локализация потом».</li>
+</ul>
+<hr>
+<h2 id="10-метрики-контента-не-подписчики">10. Метрики контента (не подписчики)</h2>
+<div class="tw"><table><thead><tr><th>Метрика</th><th>Зачем</th></tr></thead><tbody>
+<tr><td>средний досмотр</td><td>честность формата</td></tr>
+<tr><td>доля досмотревших до финального числа</td><td>держится ли «научная» часть</td></tr>
+<tr><td>заявки на участие с заполненной верификацией</td><td>реальная воронка, а не хайп</td></tr>
+<tr><td>доля участников, согласившихся на публикацию</td><td>этическая температура проекта</td></tr>
+<tr><td>возвраты к «Пятеро»</td><td>работают ли отношения, а не только контент</td></tr>
+</tbody></table></div>
+  </article>
+  <aside class="toc"><div class="t">На этой странице</div><a class="" href="#1-суть-в-трёх-строках">1. Суть в трёх строках</a><a class="" href="#2-название-и-графика">2. Название и графика</a><a class="" href="#3-правило-кадра-одно-для-всего-проекта">3. Правило кадра (одно для всего проекта)</a><a class="" href="#4-форматы">4. Форматы</a><a class="" href="#5-двенадцать-вопросов-задаются-каждому-всегда-в-одном-порядке">5. Двенадцать вопросов (задаются каждому, всегда в одном порядке)</a><a class="" href="#6-редакционный-кодекс">6. Редакционный кодекс</a><a class="" href="#7-сезонная-арка-26-эпизодов-1-000-контактов">7. Сезонная арка (26 эпизодов = 1 000 контактов)</a><a class="" href="#8-тизер-на-90-секунд-можно-снять-на-этой-неделе">8. Тизер на 90 секунд (можно снять на этой неделе)</a><a class="" href="#9-каналы-и-публикация">9. Каналы и публикация</a><a class="" href="#10-метрики-контента-не-подписчики">10. Метрики контента (не подписчики)</a></aside>
+</div></div>
+<footer><div class="foot-in">
+  <span>EX · ONEDOPEA · 2026 · протокол v1</span>
+  <nav>
+    <a href="../index.html">Лендинг</a>
+    <a href="../docs/index.html">Документы</a>
+    <a href="../docs/PITCH.html">Питч</a>
+    <a href="../join.html">Записаться</a>
+  </nav>
+</div></footer>
+</body>
+</html>

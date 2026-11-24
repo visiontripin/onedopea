@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" fill="none">
+  <defs>
+    <linearGradient id="pdBg" x1="60" y1="36" x2="544" y2="568" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#EE3A8C"/>
+      <stop offset=".52" stop-color="#D82376"/>
+      <stop offset="1" stop-color="#8F114C"/>
+    </linearGradient>
+    <radialGradient id="pdGlow" cx="0" cy="0" r="1" gradientTransform="matrix(0 250 -250 0 210 140)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFB4D7" stop-opacity=".48"/>
+      <stop offset="1" stop-color="#FFB4D7" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="pdPinSh" x="150" y="106" width="300" height="390" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="20" stdDeviation="18" flood-color="#5B092F" flood-opacity=".3"/>
+    </filter>
+  </defs>
+  <rect x="22" y="22" width="556" height="556" rx="128" fill="url(#pdBg)"/>
+  <rect x="22" y="22" width="556" height="556" rx="128" fill="url(#pdGlow)"/>
+  <path d="M96 456h408" stroke="#FFD6E9" stroke-opacity=".28" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- Location Pin -->
+  <g filter="url(#pdPinSh)">
+    <path d="M292 128c-76 0-136 59-136 132 0 94 136 206 136 206s136-112 136-206c0-73-60-132-136-132Z" fill="#FFF8FC"/>
+    <circle cx="292" cy="258" r="68" fill="#FDE7F2"/>
+    <text x="292" y="284" text-anchor="middle" fill="#C41968" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="78" font-weight="800">₽</text>
+  </g>
+
+  <!-- 0% commission badge -->
+  <rect x="358" y="108" width="144" height="56" rx="28" fill="#18121E" stroke="#FFE3F0" stroke-width="4"/>
+  <text x="430" y="143" text-anchor="middle" fill="#6EE7B7" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="22" font-weight="800">0% сбор</text>
+</svg>

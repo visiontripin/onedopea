@@ -310,8 +310,9 @@ canvas{display:block;width:100%;height:100%}
 #hud{position:fixed;left:50%;bottom:clamp(10px,2.2vh,22px);transform:translateX(-50%);
   z-index:90;display:flex;align-items:center;gap:12px;user-select:none}
 #ch-dots{display:flex;align-items:center;gap:7px}
-#ch-dots i{display:block;width:6px;height:6px;border-radius:50%;
+#ch-dots i{display:block;width:7px;height:7px;border-radius:50%;cursor:pointer;
   background:rgba(125,251,164,.25);transition:all .3s ease}
+#ch-dots i:hover{background:rgba(125,251,164,.6)}
 #ch-dots i.on{width:20px;border-radius:99px;background:var(--green);box-shadow:0 0 8px rgba(0,255,85,.8)}
 .hud-btn{min-width:34px;height:34px;padding:0 8px;border:0;border-radius:10px;background:transparent;
   color:rgba(125,251,164,.72);font:700 12px/1 var(--mono);letter-spacing:.1em;cursor:pointer;
@@ -539,6 +540,10 @@ body.paused #slide-panel{filter:saturate(.72)}
   <div id="oracle-cta">
     <a class="mlink" id="oracle-tg" href="https://t.me/onedopea" target="_blank" rel="noopener noreferrer"
        aria-label="ONEDOPEA — открыть Telegram">Telegram</a>
+    <a class="mlink mlink--alt" id="oracle-ex" href="EX/index.html" target="_blank" rel="noopener noreferrer"
+       aria-label="ONEDOPEA — документальный эксперимент EX">EX</a>
+    <a class="mlink mlink--alt" id="oracle-gh" href="https://github.com/visiontripin" target="_blank" rel="noopener noreferrer"
+       aria-label="ONEDOPEA — открыть GitHub">GitHub</a>
     <a class="mlink mlink--alt" id="oracle-soundcloud" href="https://soundcloud.com/onedopea" target="_blank" rel="noopener noreferrer"
        aria-label="ONEDOPEA — открыть SoundCloud">SoundCloud</a>
   </div>
@@ -571,6 +576,7 @@ body.paused #slide-panel{filter:saturate(.72)}
     <ul>
       <li><kbd>ЗАПУСК</kbd><span>Старт показа на заставке (клик или ПРОБЕЛ / ENTER)</span></li>
       <li><kbd>← →</kbd><span>Переключение проектов (каналов)</span></li>
+      <li><kbd>1 – 7</kbd><span>Прямой переход к каналу проекта (или клик по точкам внизу)</span></li>
       <li><kbd>СВАЙП</kbd><span>Влево/вправо — каналы, вверх/вниз — скорость</span></li>
       <li><kbd>↑ ↓</kbd><span>Интенсивность матричного дождя (0–5)</span></li>
       <li><kbd>[ ]</kbd><span>Скорость времени ×0.5 … ×2.0</span></li>
@@ -585,7 +591,7 @@ body.paused #slide-panel{filter:saturate(.72)}
       <li><kbd>konami</kbd><span>Золотой режим</span></li>
       <li><kbd>stats</kbd><span>Статистика сеанса</span></li>
     </ul>
-    <div class="help-sect">КАНАЛ 01 BOTCONTROL — платформа и боты на ней • КАНАЛ 02 ПОДРАБОТКА.МСК — отдельный продукт</div>
+    <div class="help-sect">01 BOTCONTROL • 02 ТИТАН • 03 VISION AUDIO • 04 ПОДРАБОТКА.МСК • 05 ЛЕСНОЕ·АФИША • 06 ПЕРЕКУР+ • 07 EX</div>
   </div>
 </div>
 
@@ -601,7 +607,9 @@ body.paused #slide-panel{filter:saturate(.72)}
 const C=document.getElementById('c');
 const X=C.getContext('2d',{alpha:false});
 const oracleEl=document.getElementById('oracle'),oracleWrap=document.getElementById('oracle-wrap'),
-      oracleCta=document.getElementById('oracle-cta'),oracleTg=document.getElementById('oracle-tg'),oracleSoundcloud=document.getElementById('oracle-soundcloud'),
+      oracleCta=document.getElementById('oracle-cta'),oracleTg=document.getElementById('oracle-tg'),
+      oracleEx=document.getElementById('oracle-ex'),oracleGh=document.getElementById('oracle-gh'),
+      oracleSoundcloud=document.getElementById('oracle-soundcloud'),
       typingEl=document.getElementById('typing-el');
 const slideWrap=document.getElementById('slide-wrap'),slidePanel=document.getElementById('slide-panel'),
       slideLogo=document.getElementById('slide-logo'),slideTitle=document.getElementById('slide-title'),
@@ -628,7 +636,7 @@ const GLYPHS='アイウエオカキクケコサシスセソタチツテトナニ
 const S=18,N=10,MAX_CRUMBS=300;
 
 /* ══════════ ЛОГОТИП: ORACLE (песочные часы) ══════════ */
-const LOGO_ORACLE=`<svg class="cyber-logo-oracle" xmlns="http://w3.org" viewBox="0 0 240 260" width="100%" height="100%" fill="none">
+const LOGO_ORACLE=`<svg class="cyber-logo-oracle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 260" width="100%" height="100%" fill="none">
   <defs>
     <filter id="neon-glow-oracle" x="-30%" y="-30%" width="160%" height="160%">
       <feDropShadow dx="0" dy="0" stdDeviation="2.5" flood-color="#4ade80" flood-opacity="0.85"/>
@@ -680,7 +688,7 @@ const LOGO_ORACLE=`<svg class="cyber-logo-oracle" xmlns="http://w3.org" viewBox=
 </svg>`;
 
 /* ══════════ ЛОГОТИП: DAROMVPL (кораблик с подарком) ══════════ */
-const LOGO_BOAT=`<svg class="cyber-logo-boat" xmlns="http://w3.org" viewBox="0 0 240 240" width="100%" height="100%" fill="none">
+const LOGO_BOAT=`<svg class="cyber-logo-boat" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%" fill="none">
   <defs>
     <filter id="neon-glow-boat" x="-30%" y="-30%" width="160%" height="160%">
       <feDropShadow dx="0" dy="0" stdDeviation="2.5" flood-color="#4ade80" flood-opacity="0.85"/>
@@ -735,7 +743,12 @@ sphere:`<svg viewBox="-1 -1 448.66 446.57" xmlns="http://www.w3.org/2000/svg" ar
 <ellipse cx="391.35" cy="55.25" rx="42.5" ry="45" fill="#7dfba4"/>
 <path d="M 371.02 22.81 C 368.77 29.44 370.04 67.08 369.94 79.44 C 369.88 86.87 369.98 92.36 377.72 87.73 L 417.93 60.89 C 419.10 60.09 420.96 58.37 422.30 57.45 L 420.84 52.40 L 407.71 43.63 L 399.31 38.03 L 390.91 32.43 L 379.53 24.83 C 376.31 22.65 374.85 21.36 371.02 22.81 Z" fill="#04150c"/></svg>`,
 coin:`<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 10h30v22H20l-9 8v-8H6z"/><circle cx="36" cy="34" r="9" fill="#050d08"/><path d="M33 30h5a2.5 2.5 0 0 1 0 5h-5v-5zm0 5v4m-1.5-9h3m-3 12h6" stroke-width="1.8"/></svg>`,
-map:`<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="none" stroke="#7dfba4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 40h40" opacity=".5"/><path d="M8 40V26l6-4v18M20 40V20l7-5v25M33 40V28l7-4v16" opacity=".8"/><path d="M19 4c5.5 0 10 4.4 10 9.8 0 7-10 15.2-10 15.2S9 20.8 9 13.8C9 8.4 13.5 4 19 4z" fill="#04150c"/><circle cx="19" cy="14" r="3.4" fill="#eafff2" stroke="none"/></svg>`
+map:`<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="none" stroke="#7dfba4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 40h40" opacity=".5"/><path d="M8 40V26l6-4v18M20 40V20l7-5v25M33 40V28l7-4v16" opacity=".8"/><path d="M19 4c5.5 0 10 4.4 10 9.8 0 7-10 15.2-10 15.2S9 20.8 9 13.8C9 8.4 13.5 4 19 4z" fill="#04150c"/><circle cx="19" cy="14" r="3.4" fill="#eafff2" stroke="none"/></svg>`,
+crane:`<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="none" stroke="#7dfba4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 41h38" opacity=".45"/><rect x="8" y="31" width="22" height="8" rx="2" fill="#04150c"/><circle cx="13" cy="40" r="3" fill="#04150c"/><circle cx="25" cy="40" r="3" fill="#04150c"/><path d="M16 31L39 9l4 3-21 19"/><path d="M40 12v14"/><path d="M38 26h4v4a2 2 0 0 1-4 0z" fill="#eafff2" stroke="none"/></svg>`,
+wave:`<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="none" stroke="#7dfba4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="19" fill="#04150c"/><circle cx="24" cy="24" r="12" stroke-dasharray="4 4" opacity=".6"/><path d="M15 24v-4M19.5 28v-8M24 31V17M28.5 28v-8M33 24v-4" stroke="#eafff2" stroke-width="2.2"/></svg>`,
+forest:`<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="none" stroke="#7dfba4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M24 5c7.5 0 13.5 5.9 13.5 13.2C37.5 28 24 42 24 42S10.5 28 10.5 18.2C10.5 10.9 16.5 5 24 5z" fill="#04150c"/><path d="M24 11l-6 9h4l-5 7h14l-5-7h4z" fill="#4ade80" fill-opacity=".28"/><circle cx="37" cy="9" r="2" fill="#eafff2" stroke="none"/></svg>`,
+cup:`<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="none" stroke="#7dfba4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 21h21v8a9 9 0 0 1-9 9h-3a9 9 0 0 1-9-9v-8z" fill="#04150c"/><path d="M31 23h3.5a4.5 4.5 0 0 1 0 9H31"/><path d="M16 15c-1.5-2.5 2-4 1-7M24 15c-1.5-2.5 2-4 1-7" stroke="#eafff2"/><path d="M8 42h25" opacity=".55"/></svg>`,
+circle:`<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="none" stroke="#7dfba4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="16" stroke-dasharray="3 4" opacity=".6"/><circle cx="24" cy="24" r="6" fill="#04150c"/><circle cx="24" cy="8" r="2.6" fill="#eafff2" stroke="none"/><circle cx="38" cy="16" r="2.6" fill="#4ade80" stroke="none"/><circle cx="38" cy="32" r="2.6" fill="#eafff2" stroke="none"/><circle cx="24" cy="40" r="2.6" fill="#4ade80" stroke="none"/><circle cx="10" cy="32" r="2.6" fill="#eafff2" stroke="none"/><circle cx="10" cy="16" r="2.6" fill="#4ade80" stroke="none"/></svg>`
 };
 function svgIcon(str,vb){ return vb ? str.replace(/viewBox="[^"]*"/,'viewBox="'+vb+'"') : str; }
 const LOGOS={
@@ -871,22 +884,146 @@ const MOCK_DASH=`<svg viewBox="0 0 640 190" preserveAspectRatio="xMidYMid meet" 
 <rect x="372" y="147" width="88" height="6" rx="3" fill="#7dfba4" stroke="none" opacity=".26"/>
 </g></svg>`;
 
-/* ══════════ ЭКРАНЫ: скриншоты (src) с фолбэком на SVG-мокап ══════════
-   Положите рядом скрин1.png и скрин2.png — подставятся они. */
+/* ══════════ ПАНЕЛЬ ТИТАН (расчёт крана и вылета стрелы) ══════════ */
+const MOCK_TITAN=`<svg viewBox="0 0 640 190" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+<g fill="none" stroke="#7dfba4" stroke-width="1.4" stroke-linecap="round">
+<rect x="16" y="16" width="308" height="158" rx="13" opacity=".4"/>
+<path d="M16 146h308" opacity=".28"/>
+<path d="M56 146V36M56 146h236" stroke-dasharray="4 5" opacity=".24"/>
+<rect x="52" y="128" width="54" height="18" rx="4" fill="#0a3d1e"/>
+<circle cx="66" cy="148" r="5" fill="#061a0e"/><circle cx="92" cy="148" r="5" fill="#061a0e"/>
+<path d="M84 128L238 42l8 6-144 84" fill="#061a0e" opacity=".9"/>
+<path d="M242 46v58" stroke-dasharray="3 3"/>
+<rect class="node" x="228" y="104" width="28" height="22" rx="4" fill="#0a3d1e"/>
+<circle class="blink" cx="242" cy="46" r="4" fill="#eafff2" stroke="none"/>
+<path d="M84 160h158" opacity=".45"/>
+<rect x="344" y="16" width="280" height="158" rx="13" opacity=".32"/>
+<rect x="362" y="34" width="244" height="8" rx="4" opacity=".28"/><rect x="362" y="34" width="122" height="8" rx="4" fill="#7dfba4" stroke="none" opacity=".55"/><circle cx="484" cy="38" r="5" fill="#eafff2" stroke="none"/>
+<rect x="362" y="62" width="244" height="8" rx="4" opacity=".28"/><rect x="362" y="62" width="154" height="8" rx="4" fill="#7dfba4" stroke="none" opacity=".45"/><circle cx="516" cy="66" r="5" fill="#eafff2" stroke="none"/>
+<rect x="362" y="90" width="244" height="8" rx="4" opacity=".28"/><rect x="362" y="90" width="176" height="8" rx="4" fill="#7dfba4" stroke="none" opacity=".4"/><circle cx="538" cy="94" r="5" fill="#eafff2" stroke="none"/>
+<rect x="362" y="116" width="244" height="44" rx="10" fill="#061a0e" opacity=".9"/>
+<rect x="378" y="128" width="94" height="7" rx="3.5" fill="#7dfba4" stroke="none" opacity=".62"/>
+<rect x="378" y="142" width="136" height="5" rx="2.5" fill="#7dfba4" stroke="none" opacity=".28"/>
+<rect x="536" y="128" width="54" height="20" rx="10" fill="#7dfba4" stroke="none" opacity=".45"/>
+</g></svg>`;
+
+/* ══════════ ПАНЕЛЬ VISION AUDIO (плеер + спектр волны) ══════════ */
+const MOCK_VISION=`<svg viewBox="0 0 640 190" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+<g fill="none" stroke="#7dfba4" stroke-width="1.4" stroke-linecap="round">
+<rect x="16" y="16" width="248" height="158" rx="13" opacity=".36"/>
+<circle cx="72" cy="72" r="34" fill="#061a0e"/><circle cx="72" cy="72" r="21" stroke-dasharray="5 4" opacity=".55"/><circle class="blink" cx="72" cy="72" r="6" fill="#eafff2" stroke="none"/>
+<rect x="120" y="52" width="118" height="7" rx="3.5" fill="#7dfba4" stroke="none" opacity=".58"/>
+<rect x="120" y="66" width="84" height="5" rx="2.5" fill="#7dfba4" stroke="none" opacity=".28"/>
+<rect x="120" y="82" width="68" height="14" rx="7" opacity=".45"/>
+<rect x="34" y="122" width="212" height="16" rx="6" opacity=".3"/><rect x="44" y="127" width="112" height="5" rx="2.5" fill="#7dfba4" stroke="none" opacity=".36"/>
+<rect x="34" y="144" width="212" height="16" rx="6" opacity=".2"/><rect x="44" y="149" width="92" height="5" rx="2.5" fill="#7dfba4" stroke="none" opacity=".24"/>
+<rect x="282" y="16" width="342" height="158" rx="13" opacity=".36"/>
+<g stroke-width="4">
+<path d="M312 104V80M326 114V70M340 124V60M354 108V76M368 130V54M382 118V66M396 102V82M410 126V58M424 114V70M438 98V86" stroke="#7dfba4" opacity=".88"/>
+<path d="M452 122V62M466 110V74M480 128V56M494 106V78M508 118V66M522 100V84M536 120V64M550 108V76M564 96V88M578 112V72M592 102V82" opacity=".34"/>
+</g>
+<circle cx="324" cy="148" r="13" fill="#0a3d1e"/><polygon points="321,142 331,148 321,154" fill="#eafff2" stroke="none"/>
+<rect x="352" y="145" width="186" height="6" rx="3" opacity=".3"/><rect x="352" y="145" width="94" height="6" rx="3" fill="#7dfba4" stroke="none" opacity=".6"/>
+<rect x="552" y="139" width="54" height="18" rx="9" opacity=".5"/>
+</g></svg>`;
+
+/* ══════════ ПАНЕЛЬ ЛЕСНОЕ·АФИША (векторная карта кварталов + ЛесPay) ══════════ */
+const MOCK_AFISHA=`<svg viewBox="0 0 640 190" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+<g fill="none" stroke="#7dfba4" stroke-width="1.4" stroke-linecap="round">
+<rect x="16" y="16" width="328" height="158" rx="13" opacity=".4"/>
+<path d="M26 74h308M26 128h308M124 26v138M236 26v138" stroke-width="6" opacity=".16"/>
+<rect x="42" y="36" width="66" height="26" rx="5" fill="#061a0e" opacity=".8"/>
+<rect x="140" y="36" width="80" height="26" rx="5" fill="#061a0e" opacity=".8"/>
+<rect x="252" y="36" width="70" height="26" rx="5" fill="#061a0e" opacity=".8"/>
+<rect x="42" y="86" width="66" height="30" rx="5" fill="#061a0e" opacity=".8"/>
+<rect x="140" y="86" width="80" height="30" rx="6" fill="#0a3d1e"/>
+<rect x="252" y="86" width="70" height="30" rx="5" fill="#061a0e" opacity=".8"/>
+<path d="M32 152c64-16 128-10 190 4 42 10 76 6 112-10" stroke-dasharray="4 5" opacity=".45"/>
+<g class="pin"><circle cx="180" cy="101" r="9" fill="#0a3d1e"/><circle cx="180" cy="101" r="3.5" fill="#eafff2" stroke="none"/></g>
+<g class="pin2"><circle cx="75" cy="49" r="7" fill="#0a3d1e"/><circle cx="75" cy="49" r="2.8" fill="#eafff2" stroke="none"/></g>
+<g class="pin3"><circle cx="287" cy="101" r="7" fill="#0a3d1e"/><circle cx="287" cy="101" r="2.8" fill="#eafff2" stroke="none"/></g>
+<rect x="362" y="16" width="262" height="158" rx="13" opacity=".32"/>
+<rect x="378" y="30" width="68" height="20" rx="8" fill="#0a3d1e"/><rect x="454" y="30" width="68" height="20" rx="8" opacity=".3"/><rect x="530" y="30" width="78" height="20" rx="8" opacity=".3"/>
+<rect x="378" y="60" width="230" height="46" rx="9" opacity=".42"/>
+<rect x="390" y="71" width="114" height="6" rx="3" fill="#7dfba4" stroke="none" opacity=".56"/>
+<rect x="390" y="84" width="148" height="4" rx="2" fill="#7dfba4" stroke="none" opacity=".25"/>
+<rect x="552" y="69" width="44" height="16" rx="8" fill="#7dfba4" stroke="none" opacity=".42"/>
+<rect x="378" y="114" width="230" height="46" rx="9" opacity=".28"/>
+<rect x="390" y="125" width="98" height="6" rx="3" fill="#7dfba4" stroke="none" opacity=".4"/>
+<rect x="390" y="138" width="132" height="4" rx="2" fill="#7dfba4" stroke="none" opacity=".2"/>
+</g></svg>`;
+
+/* ══════════ ПАНЕЛЬ ПЕРЕКУР+ (расписание пауз + анти-сон таймер) ══════════ */
+const MOCK_PEREKUR=`<svg viewBox="0 0 640 190" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+<g fill="none" stroke="#7dfba4" stroke-width="1.4" stroke-linecap="round">
+<rect x="16" y="16" width="356" height="158" rx="13" opacity=".36"/>
+<rect x="32" y="34" width="324" height="36" rx="9" opacity=".45"/>
+<rect x="46" y="46" width="124" height="6" rx="3" fill="#7dfba4" stroke="none" opacity=".56"/>
+<rect x="46" y="57" width="168" height="4" rx="2" fill="#7dfba4" stroke="none" opacity=".24"/>
+<rect x="314" y="46" width="28" height="13" rx="6.5" opacity=".75"/><circle class="blink" cx="335" cy="52.5" r="4" fill="#4ade80" stroke="none"/>
+<rect x="32" y="78" width="324" height="36" rx="9" opacity=".34"/>
+<rect x="46" y="90" width="108" height="6" rx="3" fill="#7dfba4" stroke="none" opacity=".42"/>
+<rect x="46" y="101" width="150" height="4" rx="2" fill="#7dfba4" stroke="none" opacity=".2"/>
+<rect x="314" y="90" width="28" height="13" rx="6.5" opacity=".6"/><circle cx="335" cy="96.5" r="4" fill="#4ade80" stroke="none" opacity=".8"/>
+<rect x="32" y="122" width="324" height="36" rx="9" opacity=".25"/>
+<rect x="46" y="134" width="138" height="6" rx="3" fill="#7dfba4" stroke="none" opacity=".34"/>
+<rect x="46" y="145" width="184" height="4" rx="2" fill="#7dfba4" stroke="none" opacity=".18"/>
+<rect x="390" y="16" width="234" height="158" rx="13" opacity=".36"/>
+<circle cx="507" cy="86" r="44" opacity=".24" stroke-width="5"/>
+<path d="M507 42a44 44 0 1 1-36 69" stroke="#7dfba4" stroke-width="5"/>
+<path d="M507 66v22l14 8" stroke="#eafff2" stroke-width="2.2"/>
+<rect x="432" y="144" width="150" height="16" rx="8" fill="#0a3d1e"/>
+<rect x="454" y="150" width="106" height="4" rx="2" fill="#7dfba4" stroke="none" opacity=".58"/>
+</g></svg>`;
+
+/* ══════════ ПАНЕЛЬ EX (вечерний круг 10–25 человек + протокол памяти) ══════════ */
+const MOCK_EX=`<svg viewBox="0 0 640 190" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+<g fill="none" stroke="#7dfba4" stroke-width="1.4" stroke-linecap="round">
+<rect x="16" y="16" width="248" height="158" rx="13" opacity=".38"/>
+<circle cx="140" cy="95" r="54" stroke-dasharray="4 5" opacity=".5"/>
+<circle cx="140" cy="95" r="16" fill="#0a3d1e"/>
+<circle class="blink" cx="140" cy="41" r="4.5" fill="#eafff2" stroke="none"/>
+<circle cx="187" cy="68" r="4" fill="#7dfba4" stroke="none" opacity=".8"/>
+<circle cx="187" cy="122" r="4" fill="#7dfba4" stroke="none" opacity=".8"/>
+<circle cx="140" cy="149" r="4.5" fill="#eafff2" stroke="none"/>
+<circle cx="93" cy="122" r="4" fill="#7dfba4" stroke="none" opacity=".8"/>
+<circle cx="93" cy="68" r="4" fill="#7dfba4" stroke="none" opacity=".8"/>
+<rect x="282" y="16" width="342" height="158" rx="13" opacity=".34"/>
+<rect x="300" y="34" width="306" height="36" rx="9" opacity=".45"/>
+<rect x="314" y="46" width="138" height="6" rx="3" fill="#7dfba4" stroke="none" opacity=".58"/>
+<rect x="314" y="57" width="210" height="4" rx="2" fill="#7dfba4" stroke="none" opacity=".25"/>
+<rect x="300" y="78" width="306" height="36" rx="9" opacity=".32"/>
+<rect x="314" y="90" width="164" height="6" rx="3" fill="#7dfba4" stroke="none" opacity=".44"/>
+<rect x="314" y="101" width="196" height="4" rx="2" fill="#7dfba4" stroke="none" opacity=".2"/>
+<rect x="300" y="122" width="306" height="36" rx="9" fill="#061a0e" opacity=".9"/>
+<rect x="314" y="136" width="188" height="6" rx="3" fill="#7dfba4" stroke="none" opacity=".6"/>
+<rect x="536" y="131" width="54" height="18" rx="9" fill="#7dfba4" stroke="none" opacity=".42"/>
+</g></svg>`;
+
+/* ══════════ ЭКРАНЫ: SVG-мокапы интерфейсов проектов ══════════ */
 const SHOTS={
   botcontrol:{tall:true,gallery:[
-    {src:'скрин1.png',svg:MOCK_SCREEN1,alt:'BotControl — список сценариев'},
-    {src:'скрин2.png',svg:MOCK_SCREEN2,alt:'BotControl — редактор сценария'}
+    {svg:MOCK_SCREEN1,alt:'BotControl — список сценариев'},
+    {svg:MOCK_SCREEN2,alt:'BotControl — редактор сценария'}
   ]},
-  msk:{tall:false,svg:MOCK_DASH}
+  titan:{tall:false,svg:MOCK_TITAN},
+  vision:{tall:false,svg:MOCK_VISION},
+  msk:{tall:false,svg:MOCK_DASH},
+  afisha:{tall:false,svg:MOCK_AFISHA},
+  perekur:{tall:false,svg:MOCK_PEREKUR},
+  ex:{tall:false,svg:MOCK_EX}
 };
 
 /* ══════════ КАНАЛЫ ══════════ */
 const ITEMS=[
 {
   word:'BOTCONTROL',icon:'sphere',hold:10000,
-  lead:'Платформа-конструктор: Telegram-боты собираются прямо с телефона — сценарии, кнопки, рассылки, запуск в один тап. Без сервера и без кода. Все боты ниже построены именно на ней.',
-  links:[['Репозиторий','https://github.com/visiontripin/oracle'],['Бот','https://t.me/AppBotcontrol_bot']],
+  lead:'Автономная среда для сборки и круглосуточного запуска Telegram-ботов со смартфона или ПК без аренды VPS: шифрование в Android Keystore, визуальные сценарии, локальный AI LiteRT-LM и совместимость с Python.',
+  links:[
+    ['Открыть сайт','https://visiontripin.github.io/Bot-Control/'],
+    ['Telegram-бот','https://t.me/AppBotcontrol_bot'],
+    ['GitHub','https://github.com/visiontripin/Bot-Control']
+  ],
   shot:SHOTS.botcontrol,
   subs:{
     title:'СОБРАНО НА BOTCONTROL',
@@ -895,7 +1032,7 @@ const ITEMS=[
        desc:'Ассистент в Telegram: ответы, тексты, разбор задач и автоматизация рутины в одном диалоге.',
        url:'https://t.me/OneDope_bot'},
       {name:'DAROMVPL',logo:'boat',
-       desc:'Сервис безвозмездного обмена и дара вещей в пригородном лесном районе: отдай ненужное — забери нужное.',
+       desc:'Сервис безвозмездного обмена и дара вещей в Пригороде Лесное: отдай ненужное — забери нужное.',
        url:'https://t.me/daromvpl'},
       {name:'ПОДРАБОТКА.МСК БОТ',icon:'coin',
        desc:'Поиск подработок в Telegram: смены рядом с домом, фильтры по району и оплате, отклик в одно сообщение.',
@@ -904,10 +1041,65 @@ const ITEMS=[
   }
 },
 {
-  word:'ПОДРАБОТКА.МСК',icon:'map',hold:7500,
-  lead:'Отдельный самостоятельный продукт: веб-сервис поиска подработок по Москве. Карта смен, фильтры по районам и метро, отклик и договорённости в один клик.',
-  links:[['Репозиторий','https://github.com/visiontripin/eco/tree/arena/7b0a04c4-eco'],['Бот','https://t.me/Podrabotko_bot']],
+  word:'ТИТАН',icon:'crane',hold:8000,
+  lead:'Круглосуточная аренда автокранов 14–500 т по Москве и области с фиксированной сметой до выезда: инженерный онлайн-калькулятор тоннажа и вылета стрелы, печатный расчёт смены, сравнение парка и ЭДО с НДС.',
+  links:[
+    ['Открыть сервис','https://visiontripin.github.io/titan/'],
+    ['GitHub','https://github.com/visiontripin/titan']
+  ],
+  shot:SHOTS.titan,
+  subs:null
+},
+{
+  word:'VISION AUDIO',icon:'wave',hold:8000,
+  lead:'Независимая музыкальная экосистема и local-first веб-плеер без рекламы: офлайн-фонотека в IndexedDB, живая волновая форма Web Audio, смарт-плейлисты, импорт архивом и концепт потока «Моя волна».',
+  links:[
+    ['Запустить плеер','https://visiontripin.github.io/Vision/'],
+    ['GitHub','https://github.com/visiontripin/Vision']
+  ],
+  shot:SHOTS.vision,
+  subs:null
+},
+{
+  word:'ПОДРАБОТКА.МСК',icon:'map',hold:8000,
+  lead:'Платформа разовых смен на 4–12 ч в Москве и области без комиссии для исполнителя: три роли в одном приложении (исполнитель, заказчик, модератор), фильтр по метро и МЦД, отклик в 1 клик и воронка набора бригады.',
+  links:[
+    ['Приложение','https://visiontripin.github.io/Podrabotka/docs/app.html'],
+    ['Telegram-бот','https://t.me/Podrabotko_bot'],
+    ['GitHub','https://github.com/visiontripin/Podrabotka']
+  ],
   shot:SHOTS.msk,
+  subs:null
+},
+{
+  word:'ЛЕСНОЕ·АФИША',icon:'forest',hold:8000,
+  lead:'Гиперлокальная платформа событий и досуга Пригорода Лесное: интерактивная векторная карта домов и площадок, семейные фильтры, список «Мои планы», кабинеты жителей и организаторов, модерация и ЛесPay.',
+  links:[
+    ['Открыть афишу','https://visiontripin.github.io/Afisha-PL/'],
+    ['GitHub','https://github.com/visiontripin/Afisha-PL']
+  ],
+  shot:SHOTS.afisha,
+  subs:null
+},
+{
+  word:'ПЕРЕКУР+',icon:'cup',hold:8000,
+  lead:'PWA и настольная утилита для спокойного ритма рабочего дня: перекур, обед и разминка по расписанию, защита вкладки от сна (Web Worker, Wake Lock, тихий аудио-поток) и голосовые напоминания на русском.',
+  links:[
+    ['Открыть Перекур+','https://visiontripin.github.io/IIepekyp/'],
+    ['GitHub','https://github.com/visiontripin/IIepekyp']
+  ],
+  shot:SHOTS.perekur,
+  subs:null
+},
+{
+  word:'EX // ЭКСПЕРИМЕНТ',icon:'circle',hold:8000,
+  lead:'Документальный эксперимент о том, сколько людей человек может знать лично: вечерние круги по 10–25 человек со стартом за 0 €, две минуты внимания каждому, проверка памяти через сутки и месяц (100 → 500 → 1 000) и открытый реестр.',
+  links:[
+    ['Открыть EX','EX/index.html'],
+    ['Презентация','EX/deck.html'],
+    ['Заявка на вечер','EX/join.html']
+  ],
+  shot:SHOTS.ex,
   subs:null
 }
 ];
@@ -943,8 +1135,8 @@ let rewStart=0,rewKind='none',rewContentT=0,rewStage2=false,rewSkipContent=false
 let touchStartX=0,touchStartY=0,currentUrl='';
 const sessionStart=Date.now();
 
-const BOOT_LOGS=[[0,'ИНИЦИАЛИЗАЦИЯ ЯДРА…'],[.18,'ЗАГРУЗКА ТАБЛИЦЫ ГЛИФОВ [218]'],[.36,'ЗАГРУЗКА КАНАЛОВ [2]'],
-[.54,'СИНХРОНИЗАЦИЯ С TELEGRAM…'],[.72,'КАЛИБРОВКА ЭЛТ-ЛЮМИНОФОРА'],[.88,'ДЕКОДИРОВАНИЕ ONEDOPEA…'],[1,'ГОТОВО К ЗАПУСКУ']];
+const BOOT_LOGS=[[0,'ИНИЦИАЛИЗАЦИЯ ЯДРА…'],[.18,'ЗАГРУЗКА ТАБЛИЦЫ ГЛИФОВ [218]'],[.36,'ЗАГРУЗКА КАНАЛОВ [7]'],
+[.54,'СИНХРОНИЗАЦИЯ ПРОЕКТОВ И TELEGRAM…'],[.72,'КАЛИБРОВКА ЭЛТ-ЛЮМИНОФОРА'],[.88,'ДЕКОДИРОВАНИЕ ONEDOPEA…'],[1,'ГОТОВО К ЗАПУСКУ']];
 
 function randomGlyph(){return GLYPHS[(Math.random()*GLYPHS.length)|0];}
 function pad2(n){return String(n).padStart(2,'0');}
@@ -965,7 +1157,12 @@ function isNightNow(){const h=new Date().getHours();return h>=23||h<7;}
 function applyNight(){const n=isNightNow();if(n===nightOn)return;nightOn=n;document.body.classList.toggle('night',n);}
 
 /* ══════════ ТОЧКИ КАНАЛОВ ══════════ */
-ITEMS.forEach(()=>{const i=document.createElement('i');dotsEl.appendChild(i);});
+ITEMS.forEach((it,k)=>{
+  const i=document.createElement('i');
+  i.title='Канал '+pad2(k+1)+': '+it.word;
+  i.addEventListener('click',()=>jumpToChannel(k));
+  dotsEl.appendChild(i);
+});
 function updateDots(active){[...dotsEl.children].forEach((d,k)=>d.classList.toggle('on',k===active));}
 function setNavVisible(on){
   [prevBtn,nextBtn].forEach(b=>{
@@ -1405,9 +1602,9 @@ function updateTitle(now){
       phase='hold';phaseStart=now;
       oracleEl.classList.remove('inactive');oracleEl.classList.add('done');
       oracleCta.classList.add('show');
-      [oracleTg,oracleSoundcloud].forEach(link=>link.classList.add('glitch-in'));
-      setTimeout(()=>[oracleTg,oracleSoundcloud].forEach(link=>link.classList.remove('glitch-in')),520);
-      announce('ONEDOPEA — Telegram');
+      [oracleTg,oracleEx,oracleGh,oracleSoundcloud].filter(Boolean).forEach(link=>link.classList.add('glitch-in'));
+      setTimeout(()=>[oracleTg,oracleEx,oracleGh,oracleSoundcloud].filter(Boolean).forEach(link=>link.classList.remove('glitch-in')),520);
+      announce('ONEDOPEA — Telegram, EX, GitHub, SoundCloud');
     }
     return;
   }
@@ -1469,27 +1666,36 @@ function updateTyping(now){
 }
 
 /* ══════════ НАВИГАЦИЯ ══════════ */
-function canNavigate(){return phase==='hold'&&((idx>=0&&idx<ITEMS.length)||idx===-1);}
+function canNavigate(){
+  return (phase==='hold'||(phase==='enter'&&vNow-phaseStart>260))&&((idx>=0&&idx<ITEMS.length)||idx===-1);
+}
 function startManualExit(target){
+  if(paused)togglePause(false);
   if(idx===-1){pendingIdx=target;phase='between';phaseStart=vNow+200;oracleCta.classList.remove('show');return;}
   manualTarget=target;fastExit=true;phase='exit';phaseStart=vNow;
   slidePanel.classList.remove('crt-on');void slidePanel.offsetWidth;slidePanel.classList.add('crt-off','fast');
 }
+function jumpToChannel(target){
+  if(target<0||target>=ITEMS.length||target===idx||!canNavigate())return;
+  startManualExit(target);
+}
 function doNext(){
   if(!canNavigate())return;
+  if(paused)togglePause(false);
   if(idx===-1){startManualExit(0);return;}
   if(idx===ITEMS.length-1){triggerTvOff(vNow);return;}
   startManualExit(idx+1);
 }
 function doPrev(){
   if(!canNavigate())return;
+  if(paused)togglePause(false);
   if(idx===-1){startManualExit(ITEMS.length-1);return;}
   startManualExit((idx+ITEMS.length-1)%ITEMS.length);
 }
 function navPulse(btn){btn.classList.remove('pulse');void btn.offsetWidth;btn.classList.add('pulse');}
 nextBtn.addEventListener('click',()=>{navPulse(nextBtn);doNext();});
 prevBtn.addEventListener('click',()=>{navPulse(prevBtn);doPrev();});
-[oracleTg,oracleSoundcloud].forEach(link=>{
+[oracleTg,oracleEx,oracleGh,oracleSoundcloud].filter(Boolean).forEach(link=>{
   link.addEventListener('mouseenter',()=>{link.classList.remove('static');void link.offsetWidth;link.classList.add('static');buzz(6);});
   link.addEventListener('animationend',()=>link.classList.remove('static'));
 });
@@ -1505,6 +1711,7 @@ document.addEventListener('keydown',e=>{
   if(helpEl.classList.contains('show'))return;
   if(e.key==='ArrowRight'){e.preventDefault();doNext();return;}
   if(e.key==='ArrowLeft'){e.preventDefault();doPrev();return;}
+  if(!e.repeat&&e.key>='1'&&e.key<=String(ITEMS.length)){e.preventDefault();jumpToChannel(Number(e.key)-1);return;}
   if(e.key==='ArrowUp'){e.preventDefault();bumpRain(1);return;}
   if(e.key==='ArrowDown'){e.preventDefault();bumpRain(-1);return;}
   if(e.key===' '){e.preventDefault();togglePause();return;}
@@ -1821,7 +2028,7 @@ function loop(rawNow){
 /* ══════════ СТАРТ ══════════ */
 applyNight();applyRainLevel();buildBoot();
 phaseStart=vNow+420;
-console.log('%cONEDOPEA %c// v4.4 %cзаставка → кнопка «ЗАПУСК» • КАНАЛ 01 BOTCONTROL • КАНАЛ 02 ПОДРАБОТКА.МСК • финал без матрицы • H — справка','color:#0f0;font-weight:bold;font-size:14px','color:#7dfba4','color:#0a0');
+console.log('%cONEDOPEA %c// v4.6 %c01 BOTCONTROL • 02 ТИТАН • 03 VISION AUDIO • 04 ПОДРАБОТКА.МСК • 05 ЛЕСНОЕ·АФИША • 06 ПЕРЕКУР+ • H — справка','color:#0f0;font-weight:bold;font-size:14px','color:#7dfba4','color:#0a0');
 requestAnimationFrame(loop);
 </script>
 </body>

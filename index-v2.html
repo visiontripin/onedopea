@@ -610,9 +610,11 @@ body.paused #slide-panel{filter:saturate(.72)}
   #bug.is-sucked,#rew.is-sucked,.glitch-in,.glitch-out,#tv-effect.active,#tv-effect.on,#zap.go,
   .mlink.static,#osd.show,#bug.flick{animation-duration:1ms!important}
 }
+.ver-hub-back{position:fixed;top:12px;left:12px;z-index:10000;padding:8px 13px;border:1px solid rgba(125,251,164,.35);border-radius:999px;color:#eafff2;background:rgba(3,12,7,.78);font:700 10px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.12em;text-decoration:none;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:all .2s ease}.ver-hub-back:hover{border-color:#7dfba4;background:rgba(12,38,22,.9);color:#fff}
 </style>
 </head>
 <body>
+<a class="ver-hub-back" href="./" aria-label="Вернуться к выбору версии">↶ ВЕРСИИ</a>
 <canvas id="c"></canvas>
 <div class="vignette" aria-hidden="true"></div>
 <div id="antigravity-field" aria-hidden="true">

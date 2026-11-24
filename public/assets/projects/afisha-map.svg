@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" fill="none">
+  <defs>
+    <linearGradient id="afCanvas" x1="0" y1="0" x2="900" y2="560" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F5FBF6"/>
+      <stop offset="1" stop-color="#DFEFE3"/>
+    </linearGradient>
+    <linearGradient id="afAmber" x1="560" y1="180" x2="780" y2="430" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFB020"/>
+      <stop offset="1" stop-color="#FF7A3D"/>
+    </linearGradient>
+    <filter id="afSh" x="68" y="48" width="764" height="476" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="18" stdDeviation="20" flood-color="#123822" flood-opacity=".15"/>
+    </filter>
+  </defs>
+  <rect width="900" height="560" rx="32" fill="url(#afCanvas)"/>
+  <circle cx="804" cy="78" r="138" fill="#FCE2A6" opacity=".46"/>
+  <circle cx="104" cy="498" r="118" fill="#BDECD7" opacity=".48"/>
+
+  <g filter="url(#afSh)">
+    <rect x="86" y="68" width="728" height="424" rx="24" fill="#0C1F16"/>
+  </g>
+  <path d="M110 68h680a24 24 0 0 1 24 24v50H86V92a24 24 0 0 1 24-24Z" fill="#11291D"/>
+  <circle cx="116" cy="105" r="5" fill="#A8E05F"/>
+  <circle cx="135" cy="105" r="5" fill="#FFB020"/>
+  <circle cx="154" cy="105" r="5" fill="#2FD4A7"/>
+  <rect x="182" y="94" width="268" height="22" rx="11" fill="#183828"/>
+  <text x="198" y="109" fill="#A8E05F" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.3">ЛЕСНОЕ·АФИША · ПРИГОРОД ЛЕСНОЕ</text>
+  <rect x="614" y="92" width="172" height="26" rx="13" fill="#23371E" stroke="#A8E05F" stroke-opacity=".4"/>
+  <text x="700" y="109" text-anchor="middle" fill="#D9F99D" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10" font-weight="700">55.5601, 37.8126 · LIVE</text>
+
+  <!-- Interactive Vector Map Stage -->
+  <rect x="110" y="160" width="424" height="306" rx="18" fill="#10291D" stroke="#264D38"/>
+  <!-- Roads & blocks -->
+  <path d="M126 248h392M126 358h392M242 174v278M394 174v278" stroke="#254834" stroke-width="14" stroke-linecap="round"/>
+  <path d="M134 416c78-26 146-18 228 8 54 16 96 10 156-18" stroke="#C9B98A" stroke-opacity=".55" stroke-width="2.5" stroke-dasharray="5 7"/>
+
+  <rect x="148" y="188" width="72" height="42" rx="8" fill="#1B3C2B" stroke="#35684C"/>
+  <rect x="266" y="188" width="104" height="42" rx="8" fill="#1B3C2B" stroke="#35684C"/>
+  <rect x="416" y="188" width="88" height="42" rx="8" fill="#1B3C2B" stroke="#35684C"/>
+  <rect x="148" y="272" width="72" height="64" rx="8" fill="#1B3C2B" stroke="#35684C"/>
+  <rect x="266" y="272" width="104" height="64" rx="10" fill="#214B35" stroke="#4C9A6A"/>
+  <rect x="416" y="272" width="88" height="64" rx="8" fill="#1B3C2B" stroke="#35684C"/>
+
+  <!-- Glowing Pins -->
+  <circle cx="318" cy="296" r="24" fill="#FFB020" opacity=".22"/>
+  <circle cx="318" cy="296" r="13" fill="#FFB020" stroke="#0C1F16" stroke-width="3"/>
+  <text x="318" y="300" text-anchor="middle" fill="#1E1304" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11" font-weight="800">4</text>
+
+  <circle cx="184" cy="208" r="12" fill="#2FD4A7" stroke="#0C1F16" stroke-width="3"/>
+  <circle cx="458" cy="304" r="12" fill="#FF5D73" stroke="#0C1F16" stroke-width="3"/>
+  <circle cx="452" cy="208" r="12" fill="#4CC3FF" stroke="#0C1F16" stroke-width="3"/>
+
+  <!-- Map Legend Chips -->
+  <rect x="126" y="424" width="96" height="26" rx="13" fill="#0B1C14" stroke="#2D5740"/>
+  <text x="174" y="441" text-anchor="middle" fill="#FFB020" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10" font-weight="700">🎨 Детям</text>
+  <rect x="230" y="424" width="92" height="26" rx="13" fill="#0B1C14" stroke="#2D5740"/>
+  <text x="276" y="441" text-anchor="middle" fill="#2FD4A7" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10" font-weight="700">🏃 Спорт</text>
+  <rect x="330" y="424" width="112" height="26" rx="13" fill="#0B1C14" stroke="#2D5740"/>
+  <text x="386" y="441" text-anchor="middle" fill="#FF8FA0" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10" font-weight="700">☕ Соседи</text>
+
+  <!-- Right Column: Date Strip & Event Cards -->
+  <rect x="552" y="160" width="238" height="58" rx="15" fill="#132C1E" stroke="#264D38"/>
+  <rect x="562" y="170" width="68" height="38" rx="10" fill="#2D3B1E" stroke="#FFB020"/>
+  <text x="596" y="186" text-anchor="middle" fill="#FFB020" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="9.5" font-weight="800">СУББОТА</text>
+  <text x="596" y="201" text-anchor="middle" fill="#F3EEDF" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11" font-weight="800">7 событий</text>
+  <text x="672" y="193" text-anchor="middle" fill="#9DB3A0" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11" font-weight="700">ВС · 5</text>
+  <text x="744" y="193" text-anchor="middle" fill="#9DB3A0" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11" font-weight="700">ВСЕ</text>
+
+  <rect x="552" y="232" width="238" height="112" rx="16" fill="#142F20" stroke="#35684C"/>
+  <rect x="568" y="246" width="68" height="20" rx="10" fill="url(#afAmber)"/>
+  <text x="602" y="260" text-anchor="middle" fill="#221204" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="9.5" font-weight="800">ПРОМО</text>
+  <text x="568" y="286" fill="#F3EEDF" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="13.5" font-weight="800">Ярмарка соседей</text>
+  <text x="568" y="305" fill="#9DB3A0" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11">Центральный бульвар · 12:00</text>
+  <text x="568" y="328" fill="#A8E05F" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11" font-weight="700">✓ Иду (48 жителей)</text>
+
+  <rect x="552" y="356" width="238" height="110" rx="16" fill="#142F20" stroke="#264D38"/>
+  <text x="568" y="384" fill="#2FD4A7" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10" font-weight="800">БЕСПЛАТНО · ДЕТЯМ 6+</text>
+  <text x="568" y="407" fill="#F3EEDF" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="13.5" font-weight="800">Лесной забег и чай</text>
+  <text x="568" y="426" fill="#9DB3A0" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11">Литературный сквер · 10:30</text>
+  <rect x="568" y="436" width="206" height="20" rx="10" fill="#1C3F2C"/>
+  <text x="671" y="450" text-anchor="middle" fill="#FFD460" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10" font-weight="700">♥ В моих планах</text>
+</svg>

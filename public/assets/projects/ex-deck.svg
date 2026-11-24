@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" fill="none">
+  <defs>
+    <linearGradient id="exDkBg" x1="20" y1="10" x2="880" y2="550" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FAFBFD"/>
+      <stop offset="1" stop-color="#E5EBF6"/>
+    </linearGradient>
+    <filter id="exDkSh" x="80" y="64" width="740" height="440" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#223052" flood-opacity=".11"/>
+    </filter>
+  </defs>
+  <rect width="900" height="560" rx="32" fill="url(#exDkBg)"/>
+  <g filter="url(#exDkSh)">
+    <rect x="98" y="80" width="704" height="400" rx="26" fill="#FFFFFF"/>
+  </g>
+  <text x="136" y="128" fill="#5B73BD" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10.5" font-weight="800" letter-spacing="1.5">СТРУКТУРА ПОДПРОЕКТА EX · ANTIGRAVITY DESIGN CODE</text>
+  <text x="136" y="160" fill="#23324A" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="23" font-weight="800">От вечернего круга до проверяемого архива</text>
+
+  <rect x="136" y="186" width="198" height="178" rx="18" fill="#F7F9FE" stroke="#DCE5F5"/>
+  <text x="154" y="216" fill="#5B73BD" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11" font-weight="800">01 · ЛЕНДИНГ И ЗАЯВКА</text>
+  <text x="154" y="246" fill="#23324A" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="18" font-weight="800">EX / join.html</text>
+  <text x="154" y="272" fill="#64748B" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11.5">• Суть за 5 минут</text>
+  <text x="154" y="294" fill="#64748B" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11.5">• Запись на вечер без БД</text>
+  <text x="154" y="316" fill="#64748B" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11.5">• Старт с бюджетом 0 €</text>
+  <text x="154" y="338" fill="#64748B" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11.5">• Шаблоны согласий</text>
+
+  <rect x="351" y="186" width="198" height="178" rx="18" fill="#1D273B"/>
+  <text x="369" y="216" fill="#9DB4F8" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11" font-weight="800">02 · ПРЕЗЕНТАЦИЯ</text>
+  <text x="369" y="246" fill="#FFFFFF" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="18" font-weight="800">deck.html (12)</text>
+  <text x="369" y="272" fill="#C4D1EC" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11.5">• 12 слайдов с клавиатуры</text>
+  <text x="369" y="294" fill="#C4D1EC" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11.5">• Прямой экспорт в PDF</text>
+  <text x="369" y="316" fill="#C4D1EC" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11.5">• Питч, математика, роли</text>
+  <text x="369" y="338" fill="#93C5FD" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11.5" font-weight="700">✓ Пресс-кит и запуск</text>
+
+  <rect x="566" y="186" width="198" height="178" rx="18" fill="#FBF9FF" stroke="#E4DCF7"/>
+  <text x="584" y="216" fill="#7C63C4" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11" font-weight="800">03 · ИНСТРУМЕНТЫ</text>
+  <text x="584" y="246" fill="#23324A" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="18" font-weight="800">Python + Ledger</text>
+  <text x="584" y="272" fill="#64748B" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11.5">• build_site.py (MD→HTML)</text>
+  <text x="584" y="294" fill="#64748B" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11.5">• check_links.py (327 ссылок)</text>
+  <text x="584" y="316" fill="#64748B" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11.5">• encounters.ndjson + схема</text>
+  <text x="584" y="338" fill="#64748B" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11.5">• ex_math.py расчёт числа</text>
+
+  <rect x="136" y="384" width="628" height="62" rx="16" fill="#F5F8FE" stroke="#DCE5F5"/>
+  <text x="450" y="412" text-anchor="middle" fill="#23324A" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="12.5" font-weight="800">«Каждый блогер говорит „привет, друзья“ людям, которых не знает. EX начинается с честности.»</text>
+  <text x="450" y="431" text-anchor="middle" fill="#697892" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11">Ветка экспериментов ONEDOPEA · MIT + CC BY-NC 4.0 · Полный пакет документов и сценариев круга</text>
+</svg>

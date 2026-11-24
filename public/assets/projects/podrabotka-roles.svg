@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" fill="none">
+  <defs>
+    <linearGradient id="pdRlBg" x1="20" y1="10" x2="880" y2="550" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FDF7FB"/>
+      <stop offset="1" stop-color="#F0E0EB"/>
+    </linearGradient>
+    <filter id="pdRlSh" x="80" y="64" width="740" height="440" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#6E1943" flood-opacity=".13"/>
+    </filter>
+  </defs>
+  <rect width="900" height="560" rx="32" fill="url(#pdRlBg)"/>
+  <g filter="url(#pdRlSh)">
+    <rect x="98" y="80" width="704" height="400" rx="26" fill="#FFFFFF"/>
+  </g>
+  <text x="136" y="128" fill="#C41968" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10.5" font-weight="800" letter-spacing="1.5">ТРИ РОЛИ · ОДИН КОД · ДВА РЕЖИМА РАБОТЫ</text>
+  <text x="136" y="160" fill="#1F1926" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="23" font-weight="800">Кабинеты, воронка бригад и модерация</text>
+
+  <!-- 3 role cards -->
+  <rect x="136" y="186" width="198" height="178" rx="18" fill="#FFF8FB" stroke="#F1CDE0"/>
+  <rect x="154" y="204" width="84" height="24" rx="12" fill="#FDE6F1"/>
+  <text x="196" y="220" text-anchor="middle" fill="#B81662" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10.5" font-weight="800">РАБОЧИЙ</text>
+  <text x="154" y="256" fill="#1F1926" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="22" font-weight="800">34 200 ₽</text>
+  <text x="154" y="276" fill="#746678" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11">Заработано · 100% выходов</text>
+  <text x="154" y="312" fill="#4C4150" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11.5">• Отклик с запиской</text>
+  <text x="154" y="334" fill="#4C4150" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11.5">• Мини-чат и оценки</text>
+
+  <rect x="351" y="186" width="198" height="178" rx="18" fill="#1E1826"/>
+  <rect x="369" y="204" width="114" height="24" rx="12" fill="#D82376"/>
+  <text x="426" y="220" text-anchor="middle" fill="#FFFFFF" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10" font-weight="800">РАБОТОДАТЕЛЬ</text>
+  <text x="369" y="256" fill="#FFFFFF" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="20" font-weight="800">Бригада 4 / 5</text>
+  <rect x="369" y="268" width="162" height="7" rx="3.5" fill="#352B42"/>
+  <rect x="369" y="268" width="130" height="7" rx="3.5" fill="#F45BA0"/>
+  <text x="369" y="306" fill="#D5CCE0" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11.5">• Клон смены на завтра</text>
+  <text x="369" y="328" fill="#D5CCE0" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11.5">• Воронка кандидатов</text>
+
+  <rect x="566" y="186" width="198" height="178" rx="18" fill="#F7FBF9" stroke="#C8E8D8"/>
+  <rect x="584" y="204" width="98" height="24" rx="12" fill="#DCFCE7"/>
+  <text x="633" y="220" text-anchor="middle" fill="#15803D" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10" font-weight="800">МОДЕРАТОР</text>
+  <text x="584" y="256" fill="#1F1926" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="20" font-weight="800">Проверенный ★</text>
+  <text x="584" y="276" fill="#64786E" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11">Верификация и отзывы</text>
+  <text x="584" y="312" fill="#3F5249" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11.5">• Пересчёт рейтинга</text>
+  <text x="584" y="334" fill="#3F5249" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11.5">• Тарифы и 5 регионов</text>
+
+  <!-- Dual engine bar -->
+  <rect x="136" y="384" width="628" height="62" rx="16" fill="#FAF5F8" stroke="#EADAE4"/>
+  <text x="450" y="411" text-anchor="middle" fill="#2A2033" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="12.5" font-weight="800">React 18 + TypeScript  ·  Node 22 + node:sqlite (22 REST API)  ⇄  Offline browserDb</text>
+  <text x="450" y="431" text-anchor="middle" fill="#7D6B7B" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11">Работает и как full-stack сервер, и полностью автономно в браузере + Telegram-бот @Podrabotko_bot</text>
+</svg>

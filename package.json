@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "predev": "rm -rf public/EX && cp -r EX public/EX",
     "dev": "next dev --hostname 0.0.0.0",
-    "build": "next build",
-    "build:pages": "NEXT_PUBLIC_BASE_PATH=/onedopea next build && node scripts/sync-pages-export.mjs",
+    "build": "rm -rf public/EX && next build",
+    "build:pages": "rm -rf public/EX && NEXT_PUBLIC_BASE_PATH=/onedopea next build && node scripts/sync-pages-export.mjs",
     "start": "next start --hostname 0.0.0.0"
   },
   "dependencies": {

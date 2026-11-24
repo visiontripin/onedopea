@@ -65,3 +65,63 @@ body:before{content:"";position:fixed;z-index:-3;inset:0;pointer-events:none;bac
 .project-artwork-perekur .project-art-controls>button{border-color:#eddaca;color:#a9572f;background:rgba(255,252,248,.92)}
 .project-artwork-perekur .project-art-controls>div button{background:#e5c9b5}
 .project-artwork-perekur .project-art-controls>div button.active{background:#e8753c;box-shadow:0 0 0 3px rgba(232,117,60,.16)}
+
+/* BotControl project identity: cool Telegram sky & slate paper. */
+.project-artwork-botcontrol{background:radial-gradient(ellipse at 50% 38%,#f8fbff,#e8f0fc 66%,#dfe9f8)}
+.project-artwork-botcontrol .project-art-meta{color:#6a81a4}
+.project-artwork-botcontrol .project-art-controls>button{border-color:#d6e3f5;color:#3d6fa8;background:rgba(250,253,255,.92)}
+.project-artwork-botcontrol .project-art-controls>div button{background:#c5d6ec}
+.project-artwork-botcontrol .project-art-controls>div button.active{background:#487ec6;box-shadow:0 0 0 3px rgba(72,126,198,.16)}
+
+/* TITAN project identity: warm sand-concrete & industrial amber. */
+.project-artwork-titan{background:radial-gradient(ellipse at 50% 38%,#fffdf8,#f4ede0 68%,#ece3d2)}
+.project-artwork-titan .project-art-meta{color:#8c7c62}
+.project-artwork-titan .project-art-controls>button{border-color:#e6dcc8;color:#9a6b16;background:rgba(255,253,248,.92)}
+.project-artwork-titan .project-art-controls>div button{background:#dccfb7}
+.project-artwork-titan .project-art-controls>div button.active{background:#d99216;box-shadow:0 0 0 3px rgba(217,146,22,.17)}
+
+/* Vision Audio project identity: warm sunset-coral blush paper. */
+.project-artwork-vision{background:radial-gradient(ellipse at 50% 38%,#fffaf7,#f8eae3 68%,#f2dfd6)}
+.project-artwork-vision .project-art-meta{color:#9f7466}
+.project-artwork-vision .project-art-controls>button{border-color:#eed9cf;color:#b8522d;background:rgba(255,252,250,.92)}
+.project-artwork-vision .project-art-controls>div button{background:#e5c7ba}
+.project-artwork-vision .project-art-controls>div button.active{background:#eb6534;box-shadow:0 0 0 3px rgba(235,101,52,.16)}
+
+/* Podrabotka.MSK project identity: crisp berry-rose mist paper. */
+.project-artwork-podrabotka{background:radial-gradient(ellipse at 50% 38%,#fff9fc,#f7e8f0 68%,#f0dce8)}
+.project-artwork-podrabotka .project-art-meta{color:#9b6e84}
+.project-artwork-podrabotka .project-art-controls>button{border-color:#ecd5e2;color:#b12668;background:rgba(255,251,253,.92)}
+.project-artwork-podrabotka .project-art-controls>div button{background:#e2c2d3}
+.project-artwork-podrabotka .project-art-controls>div button.active{background:#d82376;box-shadow:0 0 0 3px rgba(216,35,118,.16)}
+
+/* Lesnoe Afisha project identity: fresh spruce-meadow paper. */
+.project-artwork-afisha{background:radial-gradient(ellipse at 50% 38%,#f7fcf9,#e5f2e9 68%,#dcebe1)}
+.project-artwork-afisha .project-art-meta{color:#668773}
+.project-artwork-afisha .project-art-controls>button{border-color:#cfe4d6;color:#256f46;background:rgba(250,254,251,.92)}
+.project-artwork-afisha .project-art-controls>div button{background:#bed8c7}
+.project-artwork-afisha .project-art-controls>div button.active{background:#2d8a56;box-shadow:0 0 0 3px rgba(45,138,86,.16)}
+
+/* EX documentary experiment identity: calm editorial slate-ivory paper. */
+.project-artwork-ex{background:radial-gradient(ellipse at 50% 38%,#fcfdff,#eaeff9 68%,#e1e8f5)}
+.project-artwork-ex .project-art-meta{color:#667696}
+.project-artwork-ex .project-art-controls>button{border-color:#d6dff0;color:#3d5488;background:rgba(252,253,255,.92)}
+.project-artwork-ex .project-art-controls>div button{background:#c5d0e6}
+.project-artwork-ex .project-art-controls>div button.active{background:#5b73bd;box-shadow:0 0 0 3px rgba(91,115,189,.16)}
+
+/* Version Hub (v1 / v2 / v3) & Capsules shell */
+.hub-options{display:grid;width:min(1080px,100%);grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.hub-card{text-decoration:none;color:#2d3b55;min-height:295px}
+.hub-card-v3{border-color:rgba(130,152,228,.55)!important;background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(235,241,255,.95))!important;box-shadow:0 24px 56px rgba(78,101,168,.16)!important}
+.hub-badge-row{display:flex;align-items:center;justify-content:space-between;width:100%;gap:8px}
+.hub-pill-tag{padding:4px 9px;border-radius:999px;font-size:8px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#556cb8;background:rgba(113,143,228,.13)}
+.hub-pill-tag.hot{color:#fff;background:linear-gradient(130deg,#ef4444,#6366f1)}
+.hub-card-wrap{display:flex;flex-direction:column;gap:8px}
+.hub-sublinks{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;padding:0 4px}
+.hub-sublinks a{padding:5px 10px;border:1px solid rgba(128,149,196,.22);border-radius:999px;background:rgba(255,255,255,.74);color:#5d6f94;font-size:10px;font-weight:700;text-decoration:none;transition:all .2s ease}
+.hub-sublinks a:hover{background:#fff;color:#3d5699;transform:translateY(-1px);box-shadow:0 5px 14px rgba(67,87,137,.09)}
+.gate-top-right{position:absolute;top:24px;right:clamp(20px,5vw,64px);display:flex;gap:8px;z-index:5}
+.v3-capsule-shell{position:fixed;inset:0;background:#fff}
+.v3-capsule-shell iframe{width:100%;height:100%;border:0;display:block}
+.matrix-back-group{position:absolute;z-index:10000;top:12px;left:12px;display:flex;gap:8px;flex-wrap:wrap}
+.matrix-back-group .matrix-back{position:static;text-decoration:none;display:inline-flex;align-items:center}
+@media(max-width:920px){.hub-options{grid-template-columns:1fr;width:min(540px,100%)}.hub-card{min-height:220px}.gate-top-right{top:16px;right:16px}}

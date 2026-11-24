@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" fill="none">
+  <defs>
+    <linearGradient id="bcCanvas" x1="0" y1="0" x2="900" y2="560" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F4F8FE"/>
+      <stop offset="1" stop-color="#DFEAFA"/>
+    </linearGradient>
+    <linearGradient id="bcBlue" x1="120" y1="180" x2="430" y2="430" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4B87C5"/>
+      <stop offset="1" stop-color="#27507B"/>
+    </linearGradient>
+    <filter id="bcShadow" x="68" y="48" width="764" height="476" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="18" stdDeviation="20" flood-color="#2A4A78" flood-opacity=".14"/>
+    </filter>
+  </defs>
+  <rect width="900" height="560" rx="32" fill="url(#bcCanvas)"/>
+  <circle cx="792" cy="78" r="138" fill="#C6DCFB" opacity=".5"/>
+  <circle cx="108" cy="498" r="118" fill="#FDE7B6" opacity=".42"/>
+  <g filter="url(#bcShadow)">
+    <rect x="86" y="68" width="728" height="424" rx="24" fill="#FFFFFF"/>
+  </g>
+  <path d="M110 68h680a24 24 0 0 1 24 24v52H86V92a24 24 0 0 1 24-24Z" fill="#F6F9FE"/>
+  <circle cx="116" cy="106" r="5" fill="#4B87C5"/>
+  <circle cx="135" cy="106" r="5" fill="#F59E0B"/>
+  <circle cx="154" cy="106" r="5" fill="#CBD8EA"/>
+  <rect x="182" y="95" width="248" height="22" rx="11" fill="#EAF1FB"/>
+  <text x="198" y="110" fill="#4F6B8E" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.4">BOTCONTROL · ANDROID &amp; WINDOWS</text>
+  <rect x="632" y="93" width="154" height="26" rx="13" fill="#ECFDF3"/>
+  <circle cx="649" cy="106" r="4.5" fill="#22C55E"/>
+  <text x="661" y="110" fill="#1F6F43" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10" font-weight="700">БЕЗ VPS · KEYSTORE</text>
+  <rect x="86" y="144" width="728" height="1" fill="#E6EEF8"/>
+
+  <!-- Left column: Active bots on phone -->
+  <text x="116" y="178" fill="#6D829E" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.3">ЗАПУЩЕННЫЕ БОТЫ НА УСТРОЙСТВЕ</text>
+  <rect x="116" y="192" width="310" height="82" rx="16" fill="#F7FAFF" stroke="#DCE7F7"/>
+  <rect x="132" y="209" width="46" height="46" rx="14" fill="url(#bcBlue)"/>
+  <path d="M166 223l-21 8.5 6.5 2.4 2.5 7.6 3.5-4.8 5.6 4.1 2.9-17.8Z" fill="#FFFFFF"/>
+  <text x="192" y="228" fill="#1F3147" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="14" font-weight="700">@AppBotcontrol_bot</text>
+  <text x="192" y="247" fill="#6F839D" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11">Демо-презентация · 8 слайдов · ИИ</text>
+  <rect x="366" y="213" width="44" height="22" rx="11" fill="#DCFCE7"/>
+  <circle cx="398" cy="224" r="7" fill="#22C55E"/>
+
+  <rect x="116" y="286" width="310" height="76" rx="16" fill="#F9FBFF" stroke="#E4ECF8"/>
+  <rect x="132" y="301" width="44" height="44" rx="13" fill="#EEF4FC"/>
+  <circle cx="154" cy="323" r="12" stroke="#4B87C5" stroke-width="2.2"/>
+  <path d="M149 317h10l-5 6 5 6h-10l5-6-5-6Z" stroke="#4B87C5" stroke-width="1.8" stroke-linejoin="round"/>
+  <text x="190" y="320" fill="#25364C" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="13.5" font-weight="700">ORACLE · @OneDope_bot</text>
+  <text x="190" y="338" fill="#7689A3" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11">Диалоговый ассистент · автоответы</text>
+
+  <rect x="116" y="374" width="310" height="84" rx="16" fill="#F9FBFF" stroke="#E4ECF8"/>
+  <rect x="132" y="391" width="44" height="44" rx="13" fill="#FFF6E5"/>
+  <path d="M143 417h22l-3 8h-16l-3-8Zm7-10 4-5 4 5v10h-8v-10Z" stroke="#D97706" stroke-width="2" stroke-linejoin="round"/>
+  <text x="190" y="410" fill="#25364C" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="13.5" font-weight="700">Даром в ПЛ · @daromvpl</text>
+  <text x="190" y="429" fill="#7689A3" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11">Визард объявлений · дайджест канала</text>
+  <text x="190" y="446" fill="#4B87C5" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10" font-weight="700">BootReceiver · автозапуск после ребута</text>
+
+  <!-- Right column: Rule & Keyboard Constructor -->
+  <rect x="454" y="174" width="332" height="284" rx="20" fill="#F7FAFF" stroke="#DCE7F7"/>
+  <text x="478" y="202" fill="#5D7494" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.3">КОНСТРУКТОР ПРАВИЛ И КНОПОК</text>
+
+  <rect x="478" y="218" width="284" height="46" rx="12" fill="#FFFFFF" stroke="#D6E3F6"/>
+  <rect x="490" y="230" width="66" height="22" rx="7" fill="#EBF3FE"/>
+  <text x="502" y="245" fill="#2E649E" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10.5" font-weight="700">/start</text>
+  <text x="568" y="245" fill="#334762" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="12" font-weight="600">Приветствие + меню 2×2</text>
+
+  <path d="M620 264v18" stroke="#94B2D8" stroke-width="2" stroke-dasharray="3 4"/>
+
+  <rect x="478" y="282" width="136" height="42" rx="11" fill="#FFFFFF" stroke="#D6E3F6"/>
+  <text x="496" y="307" fill="#2A3E59" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11.5" font-weight="700">🎞 10 анимаций</text>
+  <rect x="626" y="282" width="136" height="42" rx="11" fill="#FFFFFF" stroke="#D6E3F6"/>
+  <text x="644" y="307" fill="#2A3E59" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11.5" font-weight="700">⏰ Расписание</text>
+
+  <rect x="478" y="336" width="136" height="42" rx="11" fill="#FFFBEB" stroke="#F8D88C"/>
+  <text x="496" y="361" fill="#925709" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11.5" font-weight="700">🧠 Локальный ИИ</text>
+  <rect x="626" y="336" width="136" height="42" rx="11" fill="#EEF4FE" stroke="#C8DCF8"/>
+  <text x="644" y="361" fill="#2B588C" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11.5" font-weight="700">📥 Импорт .py</text>
+
+  <rect x="478" y="394" width="284" height="46" rx="12" fill="url(#bcBlue)"/>
+  <text x="502" y="422" fill="#FFFFFF" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="12" font-weight="700">▶ APK v1.7.4  ·  BotControl.exe  ·  Termux</text>
+</svg>

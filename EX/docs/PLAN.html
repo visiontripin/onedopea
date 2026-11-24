@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ПЛАН ДЕЙСТВИЙ — EX</title>
+<meta name="description" content="EX — эксперимент о том, что делает с человеком количество людей, которых он знает лично.">
+<style>
+:root{
+  --ink:#121317;--ink-2:#45474d;--ink-3:#7c7f86;
+  --line:#e8e8ec;--line-2:#f0f0f3;--wash:#f7f7f9;
+  --sans:"Google Sans Flex","Google Sans",Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:88px}
+body{background:#fff;color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.65;
+  letter-spacing:-.006em;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--ink);color:#fff}
+.top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.86);
+  backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1080px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:14px}
+.brand{font-weight:600;font-size:16px;letter-spacing:-.03em;display:flex;gap:8px;align-items:center}
+.brand i{width:7px;height:7px;border-radius:50%;background:var(--ink);display:inline-block}
+.crumb{font-size:13px;color:var(--ink-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.top .sp{flex:1}
+.pill{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;font-weight:500;
+  padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--wash);
+  transition:background .16s,border-color .16s;white-space:nowrap}
+.pill:hover{background:#f1f1f4;border-color:#dcdce2}
+.pill.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pill.dark:hover{background:#2a2c33}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+.layout{display:grid;grid-template-columns:1fr;gap:40px;padding:44px 0 96px}
+@media(min-width:960px){.layout{grid-template-columns:minmax(0,1fr) 240px;gap:56px;align-items:start}}
+article{max-width:76ch}
+article h1{font-size:clamp(29px,4.6vw,42px);font-weight:500;letter-spacing:-.035em;line-height:1.1;margin-bottom:22px}
+article h2{font-size:clamp(21px,2.8vw,27px);font-weight:500;letter-spacing:-.025em;margin:44px 0 14px;line-height:1.2}
+article h3{font-size:19px;font-weight:500;letter-spacing:-.015em;margin:32px 0 10px}
+article h4{font-size:16px;font-weight:600;margin:24px 0 8px}
+article p{color:var(--ink-2);margin:0 0 14px}
+article strong{color:var(--ink);font-weight:500}
+article em{font-style:normal;border-bottom:1px solid var(--ink-3)}
+article a{color:var(--ink);border-bottom:1px solid #c9cad1;transition:border-color .16s}
+article a:hover{border-bottom-color:var(--ink)}
+article ul,article ol{margin:0 0 16px;padding-left:22px;color:var(--ink-2)}
+article li{margin:0 0 7px}
+article li::marker{color:var(--ink-3)}
+article hr{border:0;border-top:1px solid var(--line-2);margin:32px 0}
+article blockquote{border-left:2px solid var(--ink);padding:2px 0 2px 18px;margin:20px 0;
+  color:var(--ink);font-size:17px}
+article blockquote p{margin:0 0 8px;color:var(--ink)}
+article blockquote p:last-child{margin:0}
+article code{font-family:var(--mono);font-size:.9em;background:var(--wash);
+  border:1px solid var(--line);border-radius:6px;padding:1px 5px}
+article pre{background:#0d0e11;color:#e9eaee;border-radius:14px;padding:16px 18px;
+  overflow-x:auto;margin:18px 0;font-size:13px;line-height:1.6}
+article pre code{background:none;border:0;padding:0;color:inherit;font-size:inherit}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:16px;margin:18px 0}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:460px}
+th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line-2);vertical-align:top}
+th{font-size:12.5px;font-weight:500;color:var(--ink-3);background:var(--wash);white-space:nowrap}
+td{color:var(--ink-2)}
+td:first-child{color:var(--ink)}
+tr:last-child td{border-bottom:0}
+aside.toc{position:sticky;top:84px;font-size:13.5px}
+aside.toc .t{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+aside.toc a{display:block;color:var(--ink-2);padding:5px 0;border-left:1px solid var(--line);
+  padding-left:12px;line-height:1.35}
+aside.toc a:hover{color:var(--ink);border-left-color:var(--ink)}
+aside.toc a.lvl3{padding-left:24px;font-size:12.5px;color:var(--ink-3)}
+.doc-meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:26px;
+  font-size:13px;color:var(--ink-3)}
+.doc-meta .tag{background:var(--wash);border:1px solid var(--line);border-radius:999px;padding:4px 11px}
+footer{border-top:1px solid var(--line);padding:26px 0 48px;font-size:13.5px;color:var(--ink-3)}
+.foot-in{max-width:1080px;margin:0 auto;padding:0 24px;display:flex;flex-wrap:wrap;
+  gap:12px 24px;justify-content:space-between}
+.foot-in nav{display:flex;flex-wrap:wrap;gap:6px 16px}
+.foot-in a{color:var(--ink-2);border-bottom:1px solid transparent}
+.foot-in a:hover{border-bottom-color:var(--ink-3)}
+.cards{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-top:26px}
+.card{border:1px solid var(--line);border-radius:20px;padding:20px;transition:border-color .18s,transform .18s}
+.card:hover{border-color:#d5d5dc;transform:translateY(-1px)}
+.card h3{margin:0 0 6px;font-size:17px;font-weight:500;letter-spacing:-.01em}
+.card p{margin:0;font-size:14px;color:var(--ink-2);line-height:1.5}
+.card .k{font-size:12px;color:var(--ink-3);margin-bottom:8px;letter-spacing:.04em;text-transform:uppercase}
+@media print{
+  .top,aside.toc,footer{display:none}
+  body{font-size:11.5pt}
+  article{max-width:none}
+  a{border:0}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <a class="brand" href="../index.html"><i></i>EX</a>
+  <span class="crumb">EX / docs</span>
+  <span class="sp"></span>
+  <a class="pill dark" href="../index.html">Лендинг</a><a class="pill" href="../docs/index.html">Документы</a><a class="pill" href="../deck.html">Презентация</a><a class="pill" href="../join.html">Заявка</a>
+</div></header>
+<div class="wrap"><div class="layout">
+  <article>
+    <div class="doc-meta"><span class="tag">EX/docs/PLAN.md</span><a href="PLAN.md" download>скачать .md</a></div>
+    <h1 id="top">EX // ПЛАН ДЕЙСТВИЙ</h1>
+<blockquote><p><strong>Ревизия v1.1 (бюджет 0 €).</strong> Старт переписан под реальность: первые 1 500 контактов проходятся без денег, групповым форматом «круг» на 10–25 человек, 3 вечера в неделю = 60 контактов в неделю. Календарь ниже (фазы 0–2) читается как «недели», а не «месяцы с бюджетом»; деньги появляются на этапе 1 500 → 10 000. Практическая часть: <a href="START-ZERO.html"><code>START-ZERO.md</code></a>, короткая версия: <a href="PLAN-SIMPLE.html"><code>PLAN-SIMPLE.md</code></a>.</p></blockquote>
+<p>Версия 1. Порядок — обязательный: <strong>протокол → пилот → сезон → масштаб</strong>. Каждый переход закрывается решением go/no-go по метрикам (см. § 9). Прыжок в «миллион» в первый месяц = смерть проекта на 300-м участнике.</p>
+<hr>
+<h2 id="1-на-ком-ставить-ты-или-кто-то-из-ближнего-окружения">1. На ком ставить: ты или кто-то из ближнего окружения</h2>
+<div class="tw"><table><thead><tr><th>Вариант</th><th>Плюсы</th><th>Минусы</th><th>Вердикт</th></tr></thead><tbody>
+<tr><td><strong>A. Субъект — автор идеи</strong></td><td>максимальная мотивация; доступ к смыслу; сам себе лучший интервьюируемый</td><td>конфликт «автор = данные»; риск, что монтаж подгонится под гипотезу; личная цена</td><td><strong>рекомендуется, но с разделением власти</strong></td></tr>
+<tr><td><strong>B. Субъект — человек из ближнего окружения</strong></td><td>дистанция, честнее картинка, автор — наблюдатель</td><td>чужой человек должен выдержать 3 года публичности; риск эксплуатации близкого; юридически и этически тяжелее</td><td>возможно только при письменном контракте и внешнем продюсере</td></tr>
+<tr><td><strong>C. Два субъекта параллельно</strong> (автор + контрольный)</td><td>решает главную научную проблему — нет контроля</td><td>двойной бюджет, двойной монтаж</td><td><strong>рекомендуется как цель к сезону 2</strong></td></tr>
+</tbody></table></div>
+<p><strong>Рекомендация:</strong> субъект — автор (A), но:</p>
+<ol>
+<li>редакционный и методологический контроль — снаружи (showrunner и методолог не друзья автора);</li>
+<li>автор <strong>не видит</strong> первичную обработку до публикации эпизода;</li>
+<li>согласие субъекта подписывается до старта и включает право этического совета остановить проект против его воли;</li>
+<li>через сезон добавляется контрольный субъект (C).</li>
+</ol>
+<p>Почему не «наймём актёра»: тогда это шоу, а не эксперимент, и первая же публикация это вскроет.</p>
+<hr>
+<h2 id="2-фазы">2. Фазы</h2>
+<h3 id="фаза-0-протокол-недели-18">ФАЗА 0 — ПРОТОКОЛ (недели 1–8)</h3>
+<p>Никаких съёмок встреч. Только фундамент. Это самая скучная и самая важная фаза.</p>
+<ul>
+<li>☐ Pre-registration: гипотезы H1–H3, метрики, план анализа, дата публикации (OSF)</li>
+<li>☐ Батарея замеров: полный набор + ежедневный микро-замер + тест «угадай выбор»</li>
+<li>☐ Согласия: L1/L2/L3/L4 отдельно, + отдельное согласие на использование изображения,</li>
+<ul>
+<li>отдельное на публикацию обезличенных данных (см. <a href="../templates/consent-L3.html"><code>templates/consent-L3.md</code></a>)</li>
+</ul>
+<li>☐ Этический каркас и stop-rules (см. <a href="ETHICS.html"><code>ETHICS.md</code></a>)</li>
+<li>☐ Юридический пакет: DPIA, реестр обработки, политика удаления, правила донатов</li>
+<li>☐ Fiscal host (принимает деньги вместо тебя) + публичный реестр расходов</li>
+<li>☐ Платформа: заявка → верификация → слот → напоминание → карточка встречи</li>
+<li>☐ Реестр встреч по схеме <a href="../ledger/schema.json"><code>ledger/schema.json</code></a></li>
+<li>☐ Бренд-пакет EX: логотип-глитч, шрифт, таймкод-плашка, звуковая подпись</li>
+<li>☐ Найм: методолог, DPO/юрист, showrunner, консультант по этике (см. <a href="ROLES.html"><code>ROLES.md</code></a>)</li>
+<li>☐ Контрольный субъект: найден и подписан (стартует вместе с сезоном 1)</li>
+</ul>
+<p><strong>Выход фазы:</strong> 40–60 страниц документов, ноль минут эфира. Если этого не выдержал — дальше нет смысла.</p>
+<hr>
+<h3 id="фаза-1-пилот-100-недели-916">ФАЗА 1 — ПИЛОТ: 100 (недели 9–16)</h3>
+<p>Цель — не «100 контактов», а <strong>отладка машины</strong> на малом числе.</p>
+<ul>
+<li>100 контактов L3 (очные встречи) в одном городе, 20–25 в неделю, 4 недели</li>
+<li>2 камеры, фиксированная схема света и звука, один и тот же набор из 12 вопросов</li>
+<li>Замеры: до пилота, после 50, после 100. Три друга оценивают субъекта</li>
+<li>Монтаж: 6 эпизодов по 12–18 мин + технический спецвыпуск «как мы это считаем»</li>
+<li>Публикация <strong>всех</strong> документов, включая сырые логи очереди</li>
+<li>Проверка: приходит ли аудитория, встаёт ли очередь, сколько стоит одна встреча</li>
+</ul>
+<p><strong>Go/no-go:</strong> стоимость одной встречи ≤ 60 €, доля дошедших до слота ≥ 60 %, субъект проходит медосмотр/психологический чек без красных флагов. Иначе — переделка формата, не масштабирование.</p>
+<hr>
+<h3 id="фаза-2-сезон-1-1-000-месяцы-49">ФАЗА 2 — СЕЗОН 1: 1 000 (месяцы 4–9)</h3>
+<p>Первый настоящий сезон. 1 000 контактов: ~600 L2 (звонки/круги) + 400 L3 (очные). Здесь появляется то, ради чего всё: <strong>прохождение слоя 500</strong>.</p>
+<ul>
+<li>Города: 4–6 выездов («эшелоны» по 120 очных встреч за 3 дня)</li>
+<li>26 эпизодов: 24 обычных + 1 на вехе 500 + 1 на вехе 1 000 (полный замер, длинный формат)</li>
+<li>Контрольный субъект проходит батарею по тому же графику</li>
+<li>Публикация первого препринта: узнавание, точность «угадай выбор», благополучие</li>
+<li>Экономика: донаты + 2–3 гранта/партнёра; первый внешний аудит расходов</li>
+</ul>
+<p><strong>Go/no-go:</strong> нет клинических красных флагов; удержание аудитории (средний досмотр ≥ 45 %); подтверждённая ёмкость очереди ≥ 10 000 заявок. Иначе — проект остаётся на 1 000 и закрывается как завершённое исследование (это тоже достойный финал, и он должен быть прописан заранее).</p>
+<hr>
+<h3 id="фаза-3-сезон-2-10-000-месяцы-921">ФАЗА 3 — СЕЗОН 2: 10 000 (месяцы 9–21)</h3>
+<p>Технически самый тяжёлый отрезок: 10 000 очных встреч = 3,6 года одного человека, поэтому он укладывается в 12 месяцев только распределённо.</p>
+<ul>
+<li><strong>Ядро:</strong> 2 500 L3 (очные) — 3 параллельные съёмочные группы, 8 городов</li>
+<li><strong>Рост:</strong> 7 500 L2 — круги по 6, звонки, «приёмы» в эфире по 90 минут</li>
+<li><strong>Марафон (1 раз, спецвыпуск):</strong> 30 дней × 40 контактов = 1 200, затем месяц восстановления</li>
+<li>Второй субъект (или контрольный) выходит на протокол</li>
+<li>Первая научная публикация (журнал/препринт), независимый анализ</li>
+<li>Открытие обезличенного датасета сезона 1</li>
+</ul>
+<p><strong>Go/no-go:</strong> доля контактов, которые субъект ещё узнаёт через 30 дней, измерена и опубликована (это ключевой результат); платформа держит 1 000 заявок/день; бюджет не ушёл в минус.</p>
+<hr>
+<h3 id="фаза-4-сезон-3-100-000-годы-23">ФАЗА 4 — СЕЗОН 3: 100 000 (годы 2–3)</h3>
+<p>Здесь проект перестаёт быть «про одного человека» и становится <strong>инфраструктурой</strong>.</p>
+<ul>
+<li>100 000 контактов в основном L1/L2: приёмы в эфире, региональные «эшелоны», круги с ведущими-волонтёрами (обученными по протоколу)</li>
+<li>5–8 региональных представителей; каждый держит свой счётчик, все пишут в один реестр</li>
+<li>Субъект лично закрывает 5 000–8 000 очных (это предел)</li>
+<li>Продукт-спутник: публичный «счётчик EX» и открытый протокол, по которому <strong>любой</strong> может пройти свой собственный EX-100 и сдать данные — это и есть масштабирование гипотезы без масштабирования одного человека</li>
+</ul>
+<hr>
+<h3 id="фаза-5-финал-1-000-000-годы-35">ФАЗА 5 — ФИНАЛ: 1 000 000 (годы 3–5)</h3>
+<p>Честно: миллион — это <strong>не миллион друзей и не миллион очных встреч</strong>. Это миллион зафиксированных контактов на уровнях L0/L1 + архив L2/L3, и так и говорится.</p>
+<ul>
+<li>1 000 000 записей в реестре: голос, лицо, имя, ответ на один вопрос</li>
+<li>Пик: годовой марафон «EX-1M» — 12 месяцев публичного счёта в прямом эфире</li>
+<li>Финальный замер: полная батарея + 3 друга + контрольный субъект + сравнение с базой пятилетней давности (речь, голос, лица, идентичность)</li>
+<li>Итог: препринт, датасет, документальный фильм 90 мин, книга-дневник, возвращение к пяти («кто эти пятеро сейчас»)</li>
+</ul>
+<hr>
+<h3 id="фаза-6-после-год-5">ФАЗА 6 — ПОСЛЕ (год 5+)</h3>
+<p>Самое интересное и почти всегда пропускаемое: <strong>что происходит, когда контакты прекращаются</strong>. Обратный эксперимент: 12 месяцев тишины, 5 друзей, замеры каждые 3 месяца. Плюс: что стало с 1 000 людьми, с которыми он встречался в первый год.</p>
+<hr>
+<h2 id="3-первые-14-дней-конкретно-по-дням">3. Первые 14 дней (конкретно, по дням)</h2>
+<div class="tw"><table><thead><tr><th>День</th><th>Действие</th><th>Результат к вечеру</th></tr></thead><tbody>
+<tr><td>1</td><td>Выбрать субъекта окончательно; написать себе письмо «зачем» и запечатать</td><td>решение + baseline «до»</td></tr>
+<tr><td>2</td><td>Черновик pre-registration на 3 страницы (гипотезы, метрики, дозы)</td><td>документ v0.1</td></tr>
+<tr><td>3</td><td>5 интервью с потенциальными методологами (по 45 мин)</td><td>шорт-лист из 2</td></tr>
+<tr><td>4</td><td>Написать 12 вопросов, которые задаются <strong>каждому</strong> участнику</td><td>ядро формата</td></tr>
+<tr><td>5</td><td>Собрать baseline: пройти батарею на себе (WHO-5, PHQ-9, GAD-7, IRI, RMET, n-back, 3-мин монолог на запись)</td><td>первый датасет</td></tr>
+<tr><td>6</td><td>Схема реестра: поля карточки встречи; завести <code>ledger/</code></td><td>схема v1</td></tr>
+<tr><td>7</td><td>Выходной. Записать дневник: чего боюсь в этом проекте</td><td>честный текст (потом — контент)</td></tr>
+<tr><td>8</td><td>Юрист: 60-мин консультация по GDPR и праву на изображение</td><td>список из 10 требований</td></tr>
+<tr><td>9</td><td>Черновик согласия L3 (см. шаблон) + правила эфира</td><td>документы v0.1</td></tr>
+<tr><td>10</td><td>Лендинг <code>/EX/</code> + форма заявки (без верификации)</td><td>10 первых заявок</td></tr>
+<tr><td>11</td><td>20 интервью с людьми «зачем вам это» (по 15 мин)</td><td>материал для первого эпизода</td></tr>
+<tr><td>12</td><td>Смета фазы 0–1 и fiscal host: 3 письма</td><td>1 ответ</td></tr>
+<tr><td>13</td><td>Тестовая встреча L3 с другом — не в счёт, но по полному протоколу</td><td>найденные дыры чек-листа</td></tr>
+<tr><td>14</td><td>Пилотный тизер 90 сек из материала дней 1–13</td><td>первый публичный артефакт</td></tr>
+</tbody></table></div>
+<hr>
+<h2 id="4-календарь-сводно">4. Календарь (сводно)</h2>
+<div class="tw"><table><thead><tr><th>Период</th><th>Фаза</th><th>Контактов накопленно</th><th>Публикаций</th></tr></thead><tbody>
+<tr><td>нед. 1–8</td><td>0 Протокол</td><td>0</td><td>1 тизер, документы</td></tr>
+<tr><td>нед. 9–16</td><td>1 Пилот</td><td>100</td><td>6 эпизодов</td></tr>
+<tr><td>мес. 4–9</td><td>2 Сезон 1</td><td>1 000</td><td>26 эпизодов + препринт</td></tr>
+<tr><td>мес. 9–21</td><td>3 Сезон 2</td><td>10 000</td><td>40 эпизодов + публикация + датасет</td></tr>
+<tr><td>год 2–3</td><td>4 Сезон 3</td><td>100 000</td><td>региональная сеть + открытый протокол</td></tr>
+<tr><td>год 3–5</td><td>5 Финал</td><td>1 000 000</td><td>фильм, книга, датасет</td></tr>
+<tr><td>год 5+</td><td>6 После</td><td>—</td><td>обратный эксперимент</td></tr>
+</tbody></table></div>
+<hr>
+<h2 id="5-деньги-кратко-детали-moneymd">5. Деньги (кратко; детали — <a href="MONEY.html"><code>MONEY.md</code></a>)</h2>
+<div class="tw"><table><thead><tr><th>Фаза</th><th>Прямые расходы</th><th>Команда</th><th>Итого, EUR</th></tr></thead><tbody>
+<tr><td>0</td><td>5–10 тыс.</td><td>6–9 тыс./мес</td><td>~60 тыс.</td></tr>
+<tr><td>1</td><td>15–25 тыс.</td><td>12–18 тыс./мес</td><td>~110 тыс.</td></tr>
+<tr><td>2</td><td>350–450 тыс.</td><td>25–35 тыс./мес</td><td>~750 тыс.</td></tr>
+<tr><td>3</td><td>600–800 тыс.</td><td>40–55 тыс./мес</td><td>~1,5 млн</td></tr>
+<tr><td>4</td><td>400 тыс.</td><td>60–90 тыс./мес</td><td>~2,5 млн</td></tr>
+<tr><td>5</td><td>300 тыс.</td><td>60 тыс./мес</td><td>~2 млн</td></tr>
+</tbody></table></div>
+<p><strong>Итого до миллиона: ориентировочно 7–8 млн €</strong> за 4–5 лет. Это не «неограниченный бюджет» — это конкретная сумма, и её нужно называть вслух с первого дня. Ключевое: 70 % денег уходит на очные встречи и людей, а не на технику.</p>
+<p>Финансовая модель донатов: 3 источника — регулярные подписки (40 %), разовые донаты (30 %), гранты и партнёрства (30 %). Излишек сверх плана — в фонд, а не в карман (правило зафиксировано в <a href="MONEY.html"><code>MONEY.md</code></a> § 4).</p>
+<hr>
+<h2 id="6-платформа-минимальная-архитектура">6. Платформа: минимальная архитектура</h2>
+<pre><code>заявка (форма)  →  верификация (KYC-lite: видео-кружок + документ + анти-сибил)
+     →  очередь (публичный счётчик, неизменяемый лог)
+     →  слот (расписание, часовые пояса, лимиты на человека в день)
+     →  встреча (L1/L2/L3 по протоколу, карточка в реестре)
+     →  публикация (согласие проверено, эпизод собран, реестр обновлён)
+     →  follow-up (30-дневный тест узнавания, «помнит ли он вас»)</code></pre>
+<p>Технологии, которых достаточно на старте: форма (Tally/Typeform) → Notion/Airtable → Cal.com + Zoom → ffmpeg-пайплайн → S3-совместимое хранилище с версионированием. Дорогую разработку начинать <strong>только после</strong> 1 000 встреч: до этого узкое горло — не софт, а люди.</p>
+<hr>
+<h2 id="7-контент-план-кратко-детали-contentmd">7. Контент-план (кратко; детали — <a href="CONTENT.html"><code>CONTENT.md</code></a>)</h2>
+<ul>
+<li><strong>Сезон = 1 000 контактов.</strong> Миллион — не сезон, а горизонт.</li>
+<li>Форматы: «Одна встреча» (12–18 мин), «Эшелон» (40 мин, город), «Приём» (прямой эфир), «Замер» (научный спецвыпуск), «Пятеро» (раз в год — возврат к ядру).</li>
+<li>Стиль: нейропанк / CRT / таймкод / зеленоватый монитор. См. <a href="../index.html"><code>index.html</code></a>.</li>
+<li>Правило: <strong>каждый эпизод заканчивается числом</strong>, а не эмоцией: «на сегодня: L3 — 437 / 10 000; помню по имени — 311; точность предсказания — 61 %».</li>
+</ul>
+<hr>
+<h2 id="8-риски-и-что-с-ними-делать">8. Риски и что с ними делать</h2>
+<div class="tw"><table><thead><tr><th>Риск</th><th>Вероятность</th><th>Ответ</th></tr></thead><tbody>
+<tr><td>Субъект выгорает на 300-й встрече</td><td>высокая</td><td>лимит 6 встреч/день, 1 день тишины/нед., отпуск 2 нед. каждые 8 недель, клиницист</td></tr>
+<tr><td>Публика сломала проект («фейк!»)</td><td>высокая</td><td>публичные сырые логи, независимый аудит, контрольный субъект</td></tr>
+<tr><td>Участник чувствует себя использованным</td><td>средняя</td><td>правила эфира, никаких обещаний дружбы, право удалить себя из монтажа</td></tr>
+<tr><td>Сталкинг/доксинг субъекта</td><td>средняя</td><td>служба безопасности, не публиковать адреса и маршруты в реальном времени</td></tr>
+<tr><td>Донаты иссякли</td><td>средняя</td><td>резерв 4 месяца, снижение темпа вместо сокращения протокола</td></tr>
+<tr><td>Научная критика («это N=1»)</td><td>100 %</td><td>прямо заявить рамки в первом выпуске (§ 7 PROTOCOL)</td></tr>
+<tr><td>Хайп-деградация («стань знаменитым за 30 дней»)</td><td>высокая</td><td>редакционный кодекс: отказ от любых форматов с рейтингами/голосованиями по участникам</td></tr>
+</tbody></table></div>
+<hr>
+<h2 id="9-метрики-gono-go">9. Метрики go/no-go</h2>
+<div class="tw"><table><thead><tr><th>Гейт</th><th>Метрика</th><th>Порог</th></tr></thead><tbody>
+<tr><td>0 → 1</td><td>протокол и согласия готовы, есть методолог</td><td>100 % документов</td></tr>
+<tr><td>1 → 2</td><td>стоимость встречи / доходимость / психика</td><td>≤ 60 € / ≥ 60 % / без флагов</td></tr>
+<tr><td>2 → 3</td><td>очередь и удержание</td><td>≥ 10 000 заявок / досмотр ≥ 45 %</td></tr>
+<tr><td>3 → 4</td><td>платформа и публикация</td><td>1 000 заявок/день / статья подана</td></tr>
+<tr><td>4 → 5</td><td>инфраструктура и деньги</td><td>сеть работает без субъекта / резерв 4 мес</td></tr>
+</tbody></table></div>
+<hr>
+<h2 id="10-что-не-делать-жёсткие-запреты">10. Что не делать (жёсткие запреты)</h2>
+<ol>
+<li>Не называть подписчиков друзьями. Никогда, ни в шутку.</li>
+<li>Не покупать подписчиков и не «нагонять» охват.</li>
+<li>Не менять протокол по ходу сезона без публичной записи об отклонении.</li>
+<li>Не показывать участника без подписанного согласия — даже «на секундочку».</li>
+<li>Не проводить встречи с несовершеннолетними.</li>
+<li>Не платить участникам за отзывы и не обещать им аудиторию.</li>
+<li>Не публиковать медицинские и психологические результаты субъекта без отдельного согласия и без клинического комментария.</li>
+<li>Не считать просмотр контактом.</li>
+</ol>
+<hr>
+<h2 id="11-следующие-три-действия-начинать-сегодня">11. Следующие три действия (начинать сегодня)</h2>
+<ol>
+<li><strong>Написать pre-registration v0.1 на три страницы</strong> — гипотезы, метрики, дозы. Файл <code>PROTOCOL.md</code> уже готов как основа; нужно только выбрать 12 вопросов.</li>
+<li><strong>Провести baseline-замер на себе и записать 3-минутный монолог на видео.</strong> Это нулевая точка, и без неё весь проект теряет смысл — её нельзя восстановить потом.</li>
+<li><strong>Отправить 5 писем методологам</strong> (соц. психология / network science) с предложением роли PI. Пока их нет — это не эксперимент.</li>
+</ol>
+  </article>
+  <aside class="toc"><div class="t">На этой странице</div><a class="" href="#1-на-ком-ставить-ты-или-кто-то-из-ближнего-окружения">1. На ком ставить: ты или кто-то из ближнего окружения</a><a class="" href="#2-фазы">2. Фазы</a><a class="lvl3" href="#фаза-0-протокол-недели-18">ФАЗА 0 — ПРОТОКОЛ (недели 1–8)</a><a class="lvl3" href="#фаза-1-пилот-100-недели-916">ФАЗА 1 — ПИЛОТ: 100 (недели 9–16)</a><a class="lvl3" href="#фаза-2-сезон-1-1-000-месяцы-49">ФАЗА 2 — СЕЗОН 1: 1 000 (месяцы 4–9)</a><a class="lvl3" href="#фаза-3-сезон-2-10-000-месяцы-921">ФАЗА 3 — СЕЗОН 2: 10 000 (месяцы 9–21)</a><a class="lvl3" href="#фаза-4-сезон-3-100-000-годы-23">ФАЗА 4 — СЕЗОН 3: 100 000 (годы 2–3)</a><a class="lvl3" href="#фаза-5-финал-1-000-000-годы-35">ФАЗА 5 — ФИНАЛ: 1 000 000 (годы 3–5)</a><a class="lvl3" href="#фаза-6-после-год-5">ФАЗА 6 — ПОСЛЕ (год 5+)</a><a class="" href="#3-первые-14-дней-конкретно-по-дням">3. Первые 14 дней (конкретно, по дням)</a><a class="" href="#4-календарь-сводно">4. Календарь (сводно)</a><a class="" href="#5-деньги-кратко-детали-moneymd">5. Деньги (кратко; детали — MONEY.md)</a><a class="" href="#6-платформа-минимальная-архитектура">6. Платформа: минимальная архитектура</a><a class="" href="#7-контент-план-кратко-детали-contentmd">7. Контент-план (кратко; детали — CONTENT.md)</a><a class="" href="#8-риски-и-что-с-ними-делать">8. Риски и что с ними делать</a><a class="" href="#9-метрики-gono-go">9. Метрики go/no-go</a><a class="" href="#10-что-не-делать-жёсткие-запреты">10. Что не делать (жёсткие запреты)</a><a class="" href="#11-следующие-три-действия-начинать-сегодня">11. Следующие три действия (начинать сегодня)</a></aside>
+</div></div>
+<footer><div class="foot-in">
+  <span>EX · ONEDOPEA · 2026 · протокол v1</span>
+  <nav>
+    <a href="../index.html">Лендинг</a>
+    <a href="../docs/index.html">Документы</a>
+    <a href="../docs/PITCH.html">Питч</a>
+    <a href="../join.html">Записаться</a>
+  </nav>
+</div></footer>
+</body>
+</html>
