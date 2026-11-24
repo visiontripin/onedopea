@@ -2,6 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
+const resolveHref = (raw) => (raw && raw.startsWith('/') ? `${basePath}${raw}` : raw);
+
 function Icon({ name }) {
   const paths = {
     heart: <path d="M20.8 4.7a5.4 5.4 0 0 0-7.6 0L12 5.9l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6l1.2 1.2L12 21l7.6-7.5 1.2-1.2a5.4 5.4 0 0 0 0-7.6Z" />,
@@ -56,7 +59,7 @@ export default function PostWrapper({ post, children }) {
       <div className="post-copy">
         <div className="post-caption"><strong>{post.author}</strong> {post.caption}</div>
         {post.tags?.length > 0 && <div className="post-tags">{post.tags.map((tag) => <a key={tag} href={`#tag-${tag}`}>#{tag}</a>)}</div>}
-        {(post.links || (post.href ? [{ label: post.action, url: post.href }] : [])).length > 0 && <div className="post-outlinks">{(post.links || [{ label: post.action, url: post.href }]).map((link) => <a className="post-outlink" href={link.url} key={link.url} target="_blank" rel="noreferrer">{link.label} <span>↗</span></a>)}</div>}
+        {(post.links || (post.href ? [{ label: post.action, url: post.href }] : [])).length > 0 && <div className="post-outlinks">{(post.links || [{ label: post.action, url: post.href }]).map((link) => <a className="post-outlink" href={resolveHref(link.url)} key={link.url} target="_blank" rel="noreferrer">{link.label} <span>↗</span></a>)}</div>}
         {commentsAdded.map((text, index) => <p className="local-comment" key={`${post.id}-comment-${index}`}><strong>Вы</strong> {text}</p>)}
         {commentOpen && <form className="comment-form" onSubmit={(event) => { event.preventDefault(); if (comment.trim()) { setCommentsAdded((items) => [...items, comment.trim()]); setComment(''); setCommentOpen(false); } }}><input value={comment} onChange={(event) => setComment(event.target.value)} placeholder="Добавить комментарий…" aria-label="Комментарий" /><button type="submit" disabled={!comment.trim()}>Опубликовать</button></form>}
       </div>

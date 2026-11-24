@@ -1,21 +1,22 @@
-# ONEDOPEA portfolio
+# ONEDOPEA · Единое пространство портфолио (v1 · v2 · v3 · EX)
 
-Next.js App Router portfolio with two selectable looks: the legacy Matrix experience and the light Antigravity feed. The public GitHub Pages URL is:
+Живой адрес: **<https://visiontripin.github.io/onedopea/>**
 
-**https://visiontripin.github.io/onedopea/**
+Репозиторий объединяет все ветки и редакции сайта **ONEDOPEA** с единым переключателем версий на главном экране:
 
-GitHub Pages is currently configured to serve the `main` branch root. Run `npm run build:pages` to create the static Next.js export and sync it into that document root; the script also writes `.nojekyll`, which is required so GitHub Pages serves Next.js' `_next` assets. Commit the generated root files to update the published site. The Actions workflow validates this build on pushes and pull requests.
+- **`/` — Выбор версии (`v1` · `v2` · `v3`)** — единый хаб навигации по всем редакциям портфолио.
+- **`/v1/` — Первая версия (Matrix Archive)** — классическая одноэкранная ЭЛТ-сцена `ONEDOPEA`, демонстрация доски изменений (`v1/plan.html`), прототип кабинета (`v1/account.html`) и мобильный архив (`v1/ONEDOPEA-v3-phone.zip`).
+- **`/v2/` — Вторая версия (Старый сайт One & Dope)** — сохранённая предыдущая версия сайта с выбором между **One** (`v2/matrix.html`) и **Dope** (исходная лента на 3 проекта), а также автономная гибридная сборка `index-v2.html`.
+- **`/v3/` — Новая версия (3D Red & Blue Capsules · 7 проектов)** — интерактивный вход через 3D-капсулы (`v3/capsules.html` на локальном Three.js r128):
+  - **Красная капсула → `One`** (`matrix.html` — 7-канальная ЭЛТ-сцена)
+  - **Синяя капсула → `Dope`** (обновлённая светлая лента со всеми проектами: **BotControl**, **ТИТАН**, **Vision Audio**, **Подработка.МСК**, **Лесное·Афиша**, **Перекур+** и **EX**)
+- **`/EX/` — Документальный эксперимент EX** — автономный подпроект о личных встречах `100 → 500 → 1 000` (`EX/index.html`, презентация `EX/deck.html`, заявка на вечерний круг `EX/join.html`, протокол, этика и открытый реестр).
 
-## Local development
+## Локальный запуск и сборка
 
 ```bash
 npm install
-cp .env.example .env.local
-npm run dev
+npm run dev          # локальная разработка на 0.0.0.0:3000
+npm run build:pages  # статический экспорт Next.js и синхронизация корня для GitHub Pages
+python3 EX/tools/check_links.py  # проверка целостности ссылок и реестра EX
 ```
-
-The feed works with demo content before Supabase is configured. To enable Supabase-backed publishing and `/admin`, create a Supabase project, fill `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` in `.env.local`, then run `supabase/schema.sql` in the Supabase SQL editor. Create an Auth user and add its UUID to `public.admin_users`. Never commit `.env.local` or service-role keys.
-
-For the GitHub Pages build, set those two public values as repository Actions variables with the same names. They are public browser keys; database and Storage access must remain protected by the included RLS policies. Without them, the public demo feed still works and the admin page asks for configuration.
-
-Upload audio/video files in `/admin`; they are stored in `portfolio-media`. SVG input is sanitized before rendering. `public/matrix.html` is the self-contained legacy version embedded by the Matrix style button.

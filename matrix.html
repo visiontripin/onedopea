@@ -540,6 +540,8 @@ body.paused #slide-panel{filter:saturate(.72)}
   <div id="oracle-cta">
     <a class="mlink" id="oracle-tg" href="https://t.me/onedopea" target="_blank" rel="noopener noreferrer"
        aria-label="ONEDOPEA — открыть Telegram">Telegram</a>
+    <a class="mlink mlink--alt" id="oracle-ex" href="EX/index.html" target="_blank" rel="noopener noreferrer"
+       aria-label="ONEDOPEA — документальный эксперимент EX">EX</a>
     <a class="mlink mlink--alt" id="oracle-gh" href="https://github.com/visiontripin" target="_blank" rel="noopener noreferrer"
        aria-label="ONEDOPEA — открыть GitHub">GitHub</a>
     <a class="mlink mlink--alt" id="oracle-soundcloud" href="https://soundcloud.com/onedopea" target="_blank" rel="noopener noreferrer"
@@ -574,7 +576,7 @@ body.paused #slide-panel{filter:saturate(.72)}
     <ul>
       <li><kbd>ЗАПУСК</kbd><span>Старт показа на заставке (клик или ПРОБЕЛ / ENTER)</span></li>
       <li><kbd>← →</kbd><span>Переключение проектов (каналов)</span></li>
-      <li><kbd>1 – 6</kbd><span>Прямой переход к каналу проекта (или клик по точкам внизу)</span></li>
+      <li><kbd>1 – 7</kbd><span>Прямой переход к каналу проекта (или клик по точкам внизу)</span></li>
       <li><kbd>СВАЙП</kbd><span>Влево/вправо — каналы, вверх/вниз — скорость</span></li>
       <li><kbd>↑ ↓</kbd><span>Интенсивность матричного дождя (0–5)</span></li>
       <li><kbd>[ ]</kbd><span>Скорость времени ×0.5 … ×2.0</span></li>
@@ -589,7 +591,7 @@ body.paused #slide-panel{filter:saturate(.72)}
       <li><kbd>konami</kbd><span>Золотой режим</span></li>
       <li><kbd>stats</kbd><span>Статистика сеанса</span></li>
     </ul>
-    <div class="help-sect">01 BOTCONTROL • 02 ТИТАН • 03 VISION AUDIO • 04 ПОДРАБОТКА.МСК • 05 ЛЕСНОЕ·АФИША • 06 ПЕРЕКУР+</div>
+    <div class="help-sect">01 BOTCONTROL • 02 ТИТАН • 03 VISION AUDIO • 04 ПОДРАБОТКА.МСК • 05 ЛЕСНОЕ·АФИША • 06 ПЕРЕКУР+ • 07 EX</div>
   </div>
 </div>
 
@@ -606,7 +608,8 @@ const C=document.getElementById('c');
 const X=C.getContext('2d',{alpha:false});
 const oracleEl=document.getElementById('oracle'),oracleWrap=document.getElementById('oracle-wrap'),
       oracleCta=document.getElementById('oracle-cta'),oracleTg=document.getElementById('oracle-tg'),
-      oracleGh=document.getElementById('oracle-gh'),oracleSoundcloud=document.getElementById('oracle-soundcloud'),
+      oracleEx=document.getElementById('oracle-ex'),oracleGh=document.getElementById('oracle-gh'),
+      oracleSoundcloud=document.getElementById('oracle-soundcloud'),
       typingEl=document.getElementById('typing-el');
 const slideWrap=document.getElementById('slide-wrap'),slidePanel=document.getElementById('slide-panel'),
       slideLogo=document.getElementById('slide-logo'),slideTitle=document.getElementById('slide-title'),
@@ -744,7 +747,8 @@ map:`<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="tr
 crane:`<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="none" stroke="#7dfba4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 41h38" opacity=".45"/><rect x="8" y="31" width="22" height="8" rx="2" fill="#04150c"/><circle cx="13" cy="40" r="3" fill="#04150c"/><circle cx="25" cy="40" r="3" fill="#04150c"/><path d="M16 31L39 9l4 3-21 19"/><path d="M40 12v14"/><path d="M38 26h4v4a2 2 0 0 1-4 0z" fill="#eafff2" stroke="none"/></svg>`,
 wave:`<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="none" stroke="#7dfba4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="19" fill="#04150c"/><circle cx="24" cy="24" r="12" stroke-dasharray="4 4" opacity=".6"/><path d="M15 24v-4M19.5 28v-8M24 31V17M28.5 28v-8M33 24v-4" stroke="#eafff2" stroke-width="2.2"/></svg>`,
 forest:`<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="none" stroke="#7dfba4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M24 5c7.5 0 13.5 5.9 13.5 13.2C37.5 28 24 42 24 42S10.5 28 10.5 18.2C10.5 10.9 16.5 5 24 5z" fill="#04150c"/><path d="M24 11l-6 9h4l-5 7h14l-5-7h4z" fill="#4ade80" fill-opacity=".28"/><circle cx="37" cy="9" r="2" fill="#eafff2" stroke="none"/></svg>`,
-cup:`<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="none" stroke="#7dfba4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 21h21v8a9 9 0 0 1-9 9h-3a9 9 0 0 1-9-9v-8z" fill="#04150c"/><path d="M31 23h3.5a4.5 4.5 0 0 1 0 9H31"/><path d="M16 15c-1.5-2.5 2-4 1-7M24 15c-1.5-2.5 2-4 1-7" stroke="#eafff2"/><path d="M8 42h25" opacity=".55"/></svg>`
+cup:`<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="none" stroke="#7dfba4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 21h21v8a9 9 0 0 1-9 9h-3a9 9 0 0 1-9-9v-8z" fill="#04150c"/><path d="M31 23h3.5a4.5 4.5 0 0 1 0 9H31"/><path d="M16 15c-1.5-2.5 2-4 1-7M24 15c-1.5-2.5 2-4 1-7" stroke="#eafff2"/><path d="M8 42h25" opacity=".55"/></svg>`,
+circle:`<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="none" stroke="#7dfba4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="24" r="16" stroke-dasharray="3 4" opacity=".6"/><circle cx="24" cy="24" r="6" fill="#04150c"/><circle cx="24" cy="8" r="2.6" fill="#eafff2" stroke="none"/><circle cx="38" cy="16" r="2.6" fill="#4ade80" stroke="none"/><circle cx="38" cy="32" r="2.6" fill="#eafff2" stroke="none"/><circle cx="24" cy="40" r="2.6" fill="#4ade80" stroke="none"/><circle cx="10" cy="32" r="2.6" fill="#eafff2" stroke="none"/><circle cx="10" cy="16" r="2.6" fill="#4ade80" stroke="none"/></svg>`
 };
 function svgIcon(str,vb){ return vb ? str.replace(/viewBox="[^"]*"/,'viewBox="'+vb+'"') : str; }
 const LOGOS={
@@ -972,6 +976,30 @@ const MOCK_PEREKUR=`<svg viewBox="0 0 640 190" preserveAspectRatio="xMidYMid mee
 <rect x="454" y="150" width="106" height="4" rx="2" fill="#7dfba4" stroke="none" opacity=".58"/>
 </g></svg>`;
 
+/* ══════════ ПАНЕЛЬ EX (вечерний круг 10–25 человек + протокол памяти) ══════════ */
+const MOCK_EX=`<svg viewBox="0 0 640 190" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+<g fill="none" stroke="#7dfba4" stroke-width="1.4" stroke-linecap="round">
+<rect x="16" y="16" width="248" height="158" rx="13" opacity=".38"/>
+<circle cx="140" cy="95" r="54" stroke-dasharray="4 5" opacity=".5"/>
+<circle cx="140" cy="95" r="16" fill="#0a3d1e"/>
+<circle class="blink" cx="140" cy="41" r="4.5" fill="#eafff2" stroke="none"/>
+<circle cx="187" cy="68" r="4" fill="#7dfba4" stroke="none" opacity=".8"/>
+<circle cx="187" cy="122" r="4" fill="#7dfba4" stroke="none" opacity=".8"/>
+<circle cx="140" cy="149" r="4.5" fill="#eafff2" stroke="none"/>
+<circle cx="93" cy="122" r="4" fill="#7dfba4" stroke="none" opacity=".8"/>
+<circle cx="93" cy="68" r="4" fill="#7dfba4" stroke="none" opacity=".8"/>
+<rect x="282" y="16" width="342" height="158" rx="13" opacity=".34"/>
+<rect x="300" y="34" width="306" height="36" rx="9" opacity=".45"/>
+<rect x="314" y="46" width="138" height="6" rx="3" fill="#7dfba4" stroke="none" opacity=".58"/>
+<rect x="314" y="57" width="210" height="4" rx="2" fill="#7dfba4" stroke="none" opacity=".25"/>
+<rect x="300" y="78" width="306" height="36" rx="9" opacity=".32"/>
+<rect x="314" y="90" width="164" height="6" rx="3" fill="#7dfba4" stroke="none" opacity=".44"/>
+<rect x="314" y="101" width="196" height="4" rx="2" fill="#7dfba4" stroke="none" opacity=".2"/>
+<rect x="300" y="122" width="306" height="36" rx="9" fill="#061a0e" opacity=".9"/>
+<rect x="314" y="136" width="188" height="6" rx="3" fill="#7dfba4" stroke="none" opacity=".6"/>
+<rect x="536" y="131" width="54" height="18" rx="9" fill="#7dfba4" stroke="none" opacity=".42"/>
+</g></svg>`;
+
 /* ══════════ ЭКРАНЫ: SVG-мокапы интерфейсов проектов ══════════ */
 const SHOTS={
   botcontrol:{tall:true,gallery:[
@@ -982,7 +1010,8 @@ const SHOTS={
   vision:{tall:false,svg:MOCK_VISION},
   msk:{tall:false,svg:MOCK_DASH},
   afisha:{tall:false,svg:MOCK_AFISHA},
-  perekur:{tall:false,svg:MOCK_PEREKUR}
+  perekur:{tall:false,svg:MOCK_PEREKUR},
+  ex:{tall:false,svg:MOCK_EX}
 };
 
 /* ══════════ КАНАЛЫ ══════════ */
@@ -1061,6 +1090,17 @@ const ITEMS=[
   ],
   shot:SHOTS.perekur,
   subs:null
+},
+{
+  word:'EX // ЭКСПЕРИМЕНТ',icon:'circle',hold:8000,
+  lead:'Документальный эксперимент о том, сколько людей человек может знать лично: вечерние круги по 10–25 человек со стартом за 0 €, две минуты внимания каждому, проверка памяти через сутки и месяц (100 → 500 → 1 000) и открытый реестр.',
+  links:[
+    ['Открыть EX','EX/index.html'],
+    ['Презентация','EX/deck.html'],
+    ['Заявка на вечер','EX/join.html']
+  ],
+  shot:SHOTS.ex,
+  subs:null
 }
 ];
 const SPECIAL={type:'title',word:'ONEDOPEA',url:'https://t.me/onedopea'};
@@ -1095,7 +1135,7 @@ let rewStart=0,rewKind='none',rewContentT=0,rewStage2=false,rewSkipContent=false
 let touchStartX=0,touchStartY=0,currentUrl='';
 const sessionStart=Date.now();
 
-const BOOT_LOGS=[[0,'ИНИЦИАЛИЗАЦИЯ ЯДРА…'],[.18,'ЗАГРУЗКА ТАБЛИЦЫ ГЛИФОВ [218]'],[.36,'ЗАГРУЗКА КАНАЛОВ [6]'],
+const BOOT_LOGS=[[0,'ИНИЦИАЛИЗАЦИЯ ЯДРА…'],[.18,'ЗАГРУЗКА ТАБЛИЦЫ ГЛИФОВ [218]'],[.36,'ЗАГРУЗКА КАНАЛОВ [7]'],
 [.54,'СИНХРОНИЗАЦИЯ ПРОЕКТОВ И TELEGRAM…'],[.72,'КАЛИБРОВКА ЭЛТ-ЛЮМИНОФОРА'],[.88,'ДЕКОДИРОВАНИЕ ONEDOPEA…'],[1,'ГОТОВО К ЗАПУСКУ']];
 
 function randomGlyph(){return GLYPHS[(Math.random()*GLYPHS.length)|0];}
@@ -1562,9 +1602,9 @@ function updateTitle(now){
       phase='hold';phaseStart=now;
       oracleEl.classList.remove('inactive');oracleEl.classList.add('done');
       oracleCta.classList.add('show');
-      [oracleTg,oracleGh,oracleSoundcloud].filter(Boolean).forEach(link=>link.classList.add('glitch-in'));
-      setTimeout(()=>[oracleTg,oracleGh,oracleSoundcloud].filter(Boolean).forEach(link=>link.classList.remove('glitch-in')),520);
-      announce('ONEDOPEA — Telegram, GitHub, SoundCloud');
+      [oracleTg,oracleEx,oracleGh,oracleSoundcloud].filter(Boolean).forEach(link=>link.classList.add('glitch-in'));
+      setTimeout(()=>[oracleTg,oracleEx,oracleGh,oracleSoundcloud].filter(Boolean).forEach(link=>link.classList.remove('glitch-in')),520);
+      announce('ONEDOPEA — Telegram, EX, GitHub, SoundCloud');
     }
     return;
   }
@@ -1655,7 +1695,7 @@ function doPrev(){
 function navPulse(btn){btn.classList.remove('pulse');void btn.offsetWidth;btn.classList.add('pulse');}
 nextBtn.addEventListener('click',()=>{navPulse(nextBtn);doNext();});
 prevBtn.addEventListener('click',()=>{navPulse(prevBtn);doPrev();});
-[oracleTg,oracleGh,oracleSoundcloud].filter(Boolean).forEach(link=>{
+[oracleTg,oracleEx,oracleGh,oracleSoundcloud].filter(Boolean).forEach(link=>{
   link.addEventListener('mouseenter',()=>{link.classList.remove('static');void link.offsetWidth;link.classList.add('static');buzz(6);});
   link.addEventListener('animationend',()=>link.classList.remove('static'));
 });

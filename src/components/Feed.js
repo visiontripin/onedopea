@@ -18,10 +18,10 @@ function PostMedia({ post }) {
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
-export default function Feed({ onMatrix, onChooseStyle, posts = demoPosts }) {
-  const [count, setCount] = useState(4);
+export default function Feed({ onMatrix, onChooseStyle, posts = demoPosts, legacyV2 = false }) {
+  const [count, setCount] = useState(legacyV2 ? 3 : 4);
   const sentinel = useRef(null);
-  const projectsCount = posts.filter((post) => post.featuredProject).length || 6;
+  const projectsCount = posts.filter((post) => post.featuredProject).length || 7;
 
   useEffect(() => {
     if (!sentinel.current || count >= posts.length) return;
@@ -58,6 +58,7 @@ export default function Feed({ onMatrix, onChooseStyle, posts = demoPosts }) {
       <BioHeader
         postsCount={posts.length}
         projectsCount={projectsCount}
+        legacyV2={legacyV2}
         onMatrix={onMatrix}
         onChooseStyle={onChooseStyle}
       />
@@ -76,7 +77,9 @@ export default function Feed({ onMatrix, onChooseStyle, posts = demoPosts }) {
         </div>
       </section>
       <footer className="feed-footer">
-        <span>ONEDOPEA · DOPE</span>
+        <span>ONEDOPEA · {legacyV2 ? 'V2 DOPE' : 'V3 DOPE'}</span>
+        <a href={`${basePath}/`}>Все версии (v1–v3)</a>
+        {!legacyV2 && <a href={`${basePath}/EX/index.html`}>EX ↗</a>}
         <a href="https://github.com/visiontripin" target="_blank" rel="noreferrer">GitHub ↗</a>
         <a href="https://t.me/onedopea" target="_blank" rel="noreferrer">Telegram ↗</a>
         <a href="https://soundcloud.com/onedopea" target="_blank" rel="noreferrer">SoundCloud ↗</a>
