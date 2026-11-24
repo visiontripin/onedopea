@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MATH — EX</title>
+<meta name="description" content="EX — эксперимент о том, что делает с человеком количество людей, которых он знает лично.">
+<style>
+:root{
+  --ink:#121317;--ink-2:#45474d;--ink-3:#7c7f86;
+  --line:#e8e8ec;--line-2:#f0f0f3;--wash:#f7f7f9;
+  --sans:"Google Sans Flex","Google Sans",Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:88px}
+body{background:#fff;color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.65;
+  letter-spacing:-.006em;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--ink);color:#fff}
+.top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.86);
+  backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1080px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:14px}
+.brand{font-weight:600;font-size:16px;letter-spacing:-.03em;display:flex;gap:8px;align-items:center}
+.brand i{width:7px;height:7px;border-radius:50%;background:var(--ink);display:inline-block}
+.crumb{font-size:13px;color:var(--ink-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.top .sp{flex:1}
+.pill{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;font-weight:500;
+  padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--wash);
+  transition:background .16s,border-color .16s;white-space:nowrap}
+.pill:hover{background:#f1f1f4;border-color:#dcdce2}
+.pill.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pill.dark:hover{background:#2a2c33}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+.layout{display:grid;grid-template-columns:1fr;gap:40px;padding:44px 0 96px}
+@media(min-width:960px){.layout{grid-template-columns:minmax(0,1fr) 240px;gap:56px;align-items:start}}
+article{max-width:76ch}
+article h1{font-size:clamp(29px,4.6vw,42px);font-weight:500;letter-spacing:-.035em;line-height:1.1;margin-bottom:22px}
+article h2{font-size:clamp(21px,2.8vw,27px);font-weight:500;letter-spacing:-.025em;margin:44px 0 14px;line-height:1.2}
+article h3{font-size:19px;font-weight:500;letter-spacing:-.015em;margin:32px 0 10px}
+article h4{font-size:16px;font-weight:600;margin:24px 0 8px}
+article p{color:var(--ink-2);margin:0 0 14px}
+article strong{color:var(--ink);font-weight:500}
+article em{font-style:normal;border-bottom:1px solid var(--ink-3)}
+article a{color:var(--ink);border-bottom:1px solid #c9cad1;transition:border-color .16s}
+article a:hover{border-bottom-color:var(--ink)}
+article ul,article ol{margin:0 0 16px;padding-left:22px;color:var(--ink-2)}
+article li{margin:0 0 7px}
+article li::marker{color:var(--ink-3)}
+article hr{border:0;border-top:1px solid var(--line-2);margin:32px 0}
+article blockquote{border-left:2px solid var(--ink);padding:2px 0 2px 18px;margin:20px 0;
+  color:var(--ink);font-size:17px}
+article blockquote p{margin:0 0 8px;color:var(--ink)}
+article blockquote p:last-child{margin:0}
+article code{font-family:var(--mono);font-size:.9em;background:var(--wash);
+  border:1px solid var(--line);border-radius:6px;padding:1px 5px}
+article pre{background:#0d0e11;color:#e9eaee;border-radius:14px;padding:16px 18px;
+  overflow-x:auto;margin:18px 0;font-size:13px;line-height:1.6}
+article pre code{background:none;border:0;padding:0;color:inherit;font-size:inherit}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:16px;margin:18px 0}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:460px}
+th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line-2);vertical-align:top}
+th{font-size:12.5px;font-weight:500;color:var(--ink-3);background:var(--wash);white-space:nowrap}
+td{color:var(--ink-2)}
+td:first-child{color:var(--ink)}
+tr:last-child td{border-bottom:0}
+aside.toc{position:sticky;top:84px;font-size:13.5px}
+aside.toc .t{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+aside.toc a{display:block;color:var(--ink-2);padding:5px 0;border-left:1px solid var(--line);
+  padding-left:12px;line-height:1.35}
+aside.toc a:hover{color:var(--ink);border-left-color:var(--ink)}
+aside.toc a.lvl3{padding-left:24px;font-size:12.5px;color:var(--ink-3)}
+.doc-meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:26px;
+  font-size:13px;color:var(--ink-3)}
+.doc-meta .tag{background:var(--wash);border:1px solid var(--line);border-radius:999px;padding:4px 11px}
+footer{border-top:1px solid var(--line);padding:26px 0 48px;font-size:13.5px;color:var(--ink-3)}
+.foot-in{max-width:1080px;margin:0 auto;padding:0 24px;display:flex;flex-wrap:wrap;
+  gap:12px 24px;justify-content:space-between}
+.foot-in nav{display:flex;flex-wrap:wrap;gap:6px 16px}
+.foot-in a{color:var(--ink-2);border-bottom:1px solid transparent}
+.foot-in a:hover{border-bottom-color:var(--ink-3)}
+.cards{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-top:26px}
+.card{border:1px solid var(--line);border-radius:20px;padding:20px;transition:border-color .18s,transform .18s}
+.card:hover{border-color:#d5d5dc;transform:translateY(-1px)}
+.card h3{margin:0 0 6px;font-size:17px;font-weight:500;letter-spacing:-.01em}
+.card p{margin:0;font-size:14px;color:var(--ink-2);line-height:1.5}
+.card .k{font-size:12px;color:var(--ink-3);margin-bottom:8px;letter-spacing:.04em;text-transform:uppercase}
+@media print{
+  .top,aside.toc,footer{display:none}
+  body{font-size:11.5pt}
+  article{max-width:none}
+  a{border:0}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <a class="brand" href="../index.html"><i></i>EX</a>
+  <span class="crumb">EX / docs</span>
+  <span class="sp"></span>
+  <a class="pill dark" href="../index.html">Лендинг</a><a class="pill" href="../docs/index.html">Документы</a><a class="pill" href="../deck.html">Презентация</a><a class="pill" href="../join.html">Заявка</a>
+</div></header>
+<div class="wrap"><div class="layout">
+  <article>
+    <div class="doc-meta"><span class="tag">EX/docs/MATH.md</span><a href="MATH.md" download>скачать .md</a></div>
+    <h1 id="top">EX // MATH</h1>
+<p>Вся арифметика проекта. Если числа не сходятся — рушится либо гипотеза, либо формат. Таблицы ниже генерируются скриптом, не пишутся руками:</p>
+<pre><code>python3 EX/tools/ex_math.py</code></pre>
+<hr>
+<h2 id="0-слои-данбара-точка-отсчёта">0. Слои Данбара — точка отсчёта</h2>
+<div class="tw"><table><thead><tr><th>Слой</th><th>Размер</th><th>Что это</th><th>Что происходит в EX</th></tr></thead><tbody>
+<tr><td>поддержка</td><td>5</td><td>те, кому звонишь в 3 ночи</td><td>не трогаем, это ядро и защита субъекта</td></tr>
+<tr><td>симпатия</td><td>15</td><td>те, кого зовёшь на день рождения</td><td>L4, повторные контакты</td></tr>
+<tr><td>близкий круг</td><td>50</td><td>те, с кем ужинаешь</td><td>L4 → L3</td></tr>
+<tr><td>клан</td><td>150</td><td>предел устойчивых отношений, «свадьба»</td><td><strong>первый настоящий барьер</strong></td></tr>
+<tr><td>племя</td><td>500</td><td>знаешь имя и лицо, не знаешь жизнь</td><td>L3</td></tr>
+<tr><td>слабые связи</td><td>1 500</td><td>узнаёшь лицо/имя</td><td>L2/L3</td></tr>
+<tr><td>—</td><td>10 000</td><td>помнишь, что встречались, не помнишь чем</td><td>L3/L2, «серый слой»</td></tr>
+<tr><td>—</td><td>100 000</td><td>помнишь только категорию («тот парень из Лиона»)</td><td>L1</td></tr>
+<tr><td>—</td><td>1 000 000</td><td>не помнишь ничего, но изменился</td><td>L0/L1</td></tr>
+</tbody></table></div>
+<p>Это не «друзья». Это разные режимы памяти и внимания. Эксперимент измеряет переходы.</p>
+<hr>
+<h2 id="1-цена-узнать-n-человек-в-часах">1. Цена «узнать N человек» в часах</h2>
+<div class="tw"><table><thead><tr><th>N</th><th>уровень</th><th>на человека</th><th>часов контакта</th><th>если 24/7</th><th>если 40 ч/нед</th></tr></thead><tbody>
+<tr><td>100</td><td>L2</td><td>10 мин</td><td>17</td><td>0,0 мес</td><td>0,1 мес</td></tr>
+<tr><td>100</td><td>L3</td><td>45 мин</td><td>75</td><td>0,1 мес</td><td>0,4 мес</td></tr>
+<tr><td>1 000</td><td>L2</td><td>10 мин</td><td>167</td><td>0,2 мес</td><td>1,0 мес</td></tr>
+<tr><td>1 000</td><td>L3</td><td>45 мин</td><td>750</td><td>1,0 мес</td><td>4,3 мес</td></tr>
+<tr><td>10 000</td><td>L2</td><td>10 мин</td><td>1 667</td><td>2,3 мес</td><td>9,6 мес</td></tr>
+<tr><td>10 000</td><td>L3</td><td>45 мин</td><td>7 500</td><td>10,3 мес</td><td><strong>3,6 года</strong></td></tr>
+<tr><td>100 000</td><td>L2</td><td>10 мин</td><td>16 667</td><td>1,9 года</td><td>8,0 лет</td></tr>
+<tr><td>100 000</td><td>L3</td><td>45 мин</td><td>75 000</td><td>8,6 лет</td><td>35,9 лет</td></tr>
+<tr><td>1 000 000</td><td>L2</td><td>10 мин</td><td>166 667</td><td><strong>19 лет</strong></td><td>79,9 лет</td></tr>
+<tr><td>1 000 000</td><td>L3</td><td>45 мин</td><td>750 000</td><td><strong>85,6 года</strong></td><td>359 лет</td></tr>
+</tbody></table></div>
+<p><strong>Вывод, который нельзя обойти:</strong> миллион личных встреч — это 85 лет без сна. Либо определение «узнать» меняется, либо цель недостижима. EX меняет определение (см. <a href="PROTOCOL.html"><code>PROTOCOL.md</code></a>, уровни L0–L4) и говорит об этом прямо в первом выпуске.</p>
+<hr>
+<h2 id="2-пропускная-способность-форматов">2. Пропускная способность форматов</h2>
+<div class="tw"><table><thead><tr><th>формат</th><th>людей/слот</th><th>длина</th><th>слотов/день</th><th>дней/нед</th><th>людей/нед</th><th>до 1 млн по календарю</th></tr></thead><tbody>
+<tr><td>1:1 видеозвонок</td><td>1</td><td>10 мин</td><td>32</td><td>5</td><td>160</td><td>120 лет</td></tr>
+<tr><td>Круг 6 человек</td><td>6</td><td>40 мин</td><td>8</td><td>5</td><td>240</td><td>80 лет</td></tr>
+<tr><td>Приём в эфире (по 60 сек)</td><td>90</td><td>90 мин</td><td>2</td><td>5</td><td>900</td><td>21 год</td></tr>
+<tr><td>Эшелон: офлайн-день</td><td>120</td><td>8 ч</td><td>1</td><td>3</td><td>360</td><td>53 года</td></tr>
+<tr><td>Марафон 30 дней</td><td>1 200</td><td>8 ч</td><td>1</td><td>30</td><td>36 000</td><td>6 мес</td></tr>
+</tbody></table></div>
+<p>Марафон — не рабочий режим, а <strong>событие сезона</strong>: 30 дней, 1 200 контактов, потом месяц восстановления и полный замер. Один-два таких в год максимум. Это и есть «спецвыпуск».</p>
+<hr>
+<h2 id="3-воронка-сколько-подписчиков-нужно-на-входе">3. Воронка: сколько подписчиков нужно на входе</h2>
+<div class="tw"><table><thead><tr><th>шаг</th><th>конверсия</th><th>накопленный выход</th></tr></thead><tbody>
+<tr><td>подписался</td><td>100 %</td><td>1,000</td></tr>
+<tr><td>верифицировал личность</td><td>60 %</td><td>0,600</td></tr>
+<tr><td>дошёл до записи в слот</td><td>35 %</td><td>0,210</td></tr>
+<tr><td>пришёл / вышел на связь</td><td>75 %</td><td>0,158</td></tr>
+<tr><td>согласие на публикацию</td><td>85 %</td><td>0,134</td></tr>
+</tbody></table></div>
+<div class="tw"><table><thead><tr><th>нужно зафиксированных встреч</th><th>нужно живых подписчиков</th></tr></thead><tbody>
+<tr><td>1 000</td><td>7 470</td></tr>
+<tr><td>10 000</td><td>74 697</td></tr>
+<tr><td>100 000</td><td>746 965</td></tr>
+<tr><td>1 000 000</td><td>7 469 655</td></tr>
+</tbody></table></div>
+<p>Два следствия:</p>
+<ol>
+<li><strong>Шкала покупается охватом, а не временем.</strong> 10 000 встреч = ~75 000 подписчиков. Это реально. 1 000 000 встреч = 7,5 млн подписчиков. Это уже другой проект.</li>
+<li><strong>Верификация — узкое горло</strong> (60 % → 35 %). Поэтому она не «бюрократия», а главный инженерный продукт: чем дешевле доказать, что человек живой и настоящий, тем больше пропускная способность всей машины.</li>
+</ol>
+<hr>
+<h2 id="4-три-потолка-которые-нельзя-расширить">4. Три потолка, которые нельзя расширить</h2>
+<div class="tw"><table><thead><tr><th>Потолок</th><th>Физика</th><th>Как обходится</th></tr></thead><tbody>
+<tr><td>Внимание</td><td>~50 содержательных контактов в сутки, дальше качество падает</td><td>расписание + жёсткие слоты + день без контактов раз в неделю</td></tr>
+<tr><td>Память на лица/имена</td><td>1 500–10 000, дальше — категории</td><td>лог в реестре вместо памяти; «память вынесена наружу»</td></tr>
+<tr><td>Эмоциональная ёмкость</td><td>~150 отношений, каждое тянет внимание</td><td>честное правило: <strong>никто не становится другом автоматически</strong></td></tr>
+</tbody></table></div>
+<p>Третий пункт — главный этический предохранитель и главный драматургический двигатель: участник приходит с ожиданием «мы теперь друзья», а протокол запрещает обещать это. Разрыв ожидания и есть содержание проекта.</p>
+<hr>
+<h2 id="5-юнит-экономика-eur-2026">5. Юнит-экономика (EUR, 2026)</h2>
+<div class="tw"><table><thead><tr><th>уровень</th><th>EUR / контакт</th><th>что входит</th></tr></thead><tbody>
+<tr><td>L0/L1 — эфир</td><td>0,02–0,15</td><td>камера, свет, звук, модерация, стрим</td></tr>
+<tr><td>L2 — видеозвонок</td><td>1,0–4,0</td><td>платформа, верификация, ассистент на 10 звонков</td></tr>
+<tr><td>L3 — очная встреча</td><td>25–60</td><td>нейтральная локация, оператор, дорога, страховка</td></tr>
+<tr><td>L4 — повторный контакт</td><td>80–200</td><td>время, поездки, ужин, сувенир</td></tr>
+</tbody></table></div>
+<div class="tw"><table><thead><tr><th>контактов</th><th>EUR/контакт (микс)</th><th>прямые расходы, EUR</th></tr></thead><tbody>
+<tr><td>1 000</td><td>3</td><td>3 000</td></tr>
+<tr><td>10 000</td><td>45</td><td>450 000</td></tr>
+<tr><td>100 000</td><td>3</td><td>300 000</td></tr>
+<tr><td>1 000 000</td><td>0,12</td><td>120 000</td></tr>
+</tbody></table></div>
+<p><strong>Ключевой вывод:</strong> проект не «дорогой» — он <strong>дорогой ровно один раз</strong>, на отрезке 1 500 → 10 000, где очные встречи стоят 45 € каждая. Дальше цена контакта падает в 300 раз. Поэтому деньги нужны не «на миллион», а на <strong>машину очных встреч</strong> ~0,5 млн € и на её поддержку ~25–40 тыс. €/мес. Полная модель — в <a href="MONEY.html"><code>MONEY.md</code></a>.</p>
+<hr>
+<h2 id="6-дозировка-замеров-график-по-слоям-данбара">6. Дозировка замеров (график по слоям Данбара)</h2>
+<div class="tw"><table><thead><tr><th>веха</th><th>прирост</th><th>замеры</th><th>ритуал</th></tr></thead><tbody>
+<tr><td>5</td><td>—</td><td>полная батарея</td><td>«пятёрка»: кто эти люди и почему именно они</td></tr>
+<tr><td>15</td><td>10</td><td>полная батарея</td><td>кого из 15 я не вспомнил за 60 сек</td></tr>
+<tr><td>50</td><td>35</td><td>полная батарея</td><td>сколько из 50 знаю по имени</td></tr>
+<tr><td>150</td><td>100</td><td>полная батарея</td><td>аудит Данбара: кто реально остался</td></tr>
+<tr><td>500</td><td>350</td><td>полная батарея</td><td>первый «серый слой»: имена без лиц</td></tr>
+<tr><td>1 500</td><td>1 000</td><td>полная батарея</td><td>тест на узнавание лиц и имён</td></tr>
+<tr><td>10 000</td><td>8 500</td><td>сокращённая</td><td>архивный смотр: сколько помню из 10 000</td></tr>
+<tr><td>100 000</td><td>90 000</td><td>сокращённая</td><td>признание: я их не помню — и это данные</td></tr>
+<tr><td>1 000 000</td><td>900 000</td><td>сокращённая</td><td>финал: возврат к пяти</td></tr>
+</tbody></table></div>
+<p>Между вехами — ежедневный микро-замер (30 сек): настроение, сон, число контактов, один вопрос дня.</p>
+<hr>
+<h2 id="7-гипотеза-в-измеримой-форме">7. Гипотеза в измеримой форме</h2>
+<blockquote><p><strong>H1 (кривая забывания).</strong> Доля участников, которых субъект узнаёт через 30 дней, падает по степенному закону с показателем ≈ −0,5…−0,7; после ~1 500 контактов узнавание переходит от «лицо + имя» к «категория».</p>
+<p><strong>H2 (потолок благополучия).</strong> Показатели благополучия растут до слоя 150, выходят на плато на 500–1 500 и снижаются после 10 000 (тревога, утомление, ощущение «я никого не знаю по-настоящему»).</p>
+<p><strong>H3 (эффект модели чужого сознания).</strong> Точность предсказания поведения незнакомца (задача «угадай выбор») растёт с числом контактов до слоя ~500, затем упирается в потолок — то есть «умнее» человек становится не бесконечно, а до предела, заданного объёмом рабочей памяти.</p></blockquote>
+<p>H3 — самая близкая к пользовательской гипотезе формулировка, и она <strong>фальсифицируема</strong>. H1 — самая публикуемая. H2 — самая важная для субъекта.</p>
+<hr>
+<h2 id="8-старт-за-0-групповой-формат-круг-1025">8. Старт за 0 €: групповой формат (круг 10–25)</h2>
+<p>Пока бюджета нет, единственный работающий формат — круг: несколько человек в комнате, по 2 минуты рассказа о себе плюс 2–3 минуты личного разговора с каждым.</p>
+<p>Формула вечера: <code>20 мин (вход/согласия/закрытие) + N × 5 мин (круг + личное общение)</code>.</p>
+<div class="tw"><table><thead><tr><th>Людей в круге</th><th>Длина вечера</th><th>Календарных мин / человек</th><th>То же по одному (45 мин)</th><th>Экономия времени</th></tr></thead><tbody>
+<tr><td>10</td><td>70 мин</td><td>7,0</td><td>7,5 ч</td><td>6,4×</td></tr>
+<tr><td>15</td><td>95 мин</td><td>6,3</td><td>11,2 ч</td><td>7,1×</td></tr>
+<tr><td>20</td><td>120 мин</td><td>6,0</td><td>15,0 ч</td><td>7,5×</td></tr>
+<tr><td>25</td><td>145 мин</td><td>5,8</td><td>18,8 ч</td><td>7,8×</td></tr>
+</tbody></table></div>
+<p><strong>Плата за скорость:</strong> личного диалога — 2–3 минуты на человека вместо 45. В реестре такой контакт помечается как <code>format: circle_group</code>, <code>dialogue_min: 3</code>, уровень <strong>L2</strong>. Это «карточка знакомства» (имя, лицо, дело, интересы), а не «узнал человека». Смешивать эти вещи в данных нельзя.</p>
+<h3 id="скорость-набора-при-20-человек-в-круге">Скорость набора при 20 человек в круге</h3>
+<div class="tw"><table><thead><tr><th>Темп</th><th>В неделю</th><th>В месяц</th><th>До 1 000</th><th>До 10 000</th><th>До 100 000</th></tr></thead><tbody>
+<tr><td>1 вечер/нед</td><td>20</td><td>87</td><td>50 нед</td><td>9,6 года</td><td>96 лет</td></tr>
+<tr><td>3 вечера/нед</td><td>60</td><td>260</td><td>16,7 нед (≈4 мес)</td><td>3,2 года</td><td>32 года</td></tr>
+<tr><td>5 вечеров/нед</td><td>100</td><td>433</td><td>10 нед (≈2,5 мес)</td><td>1,9 года</td><td>19 лет</td></tr>
+</tbody></table></div>
+<blockquote><p>Ноль рублей не мешает пройти 1 000–1 500 человек за 4–6 месяцев. Он мешает только масштабу: 10 000 — три года, 100 000 — тридцать два. Отсюда единственный путь дальше: сеть организаторов по протоколу или эфир (L1).</p></blockquote>
+<h3 id="набор-на-один-вечер">Набор на один вечер</h3>
+<div class="tw"><table><thead><tr><th>Шаг</th><th>Людей</th></tr></thead><tbody>
+<tr><td>приглашений сделано</td><td>50</td></tr>
+<tr><td>ответили / записались</td><td>30</td></tr>
+<tr><td>подтвердили за день</td><td>24</td></tr>
+<tr><td>пришли</td><td>20</td></tr>
+</tbody></table></div>
+<p><strong>2,5 приглашения на одно место.</strong> Это самая тяжёлая часть нулевого бюджета — тяжелее съёмки и монтажа. Планировать её надо как отдельную работу, а не «как получится».</p>
+  </article>
+  <aside class="toc"><div class="t">На этой странице</div><a class="" href="#0-слои-данбара-точка-отсчёта">0. Слои Данбара — точка отсчёта</a><a class="" href="#1-цена-узнать-n-человек-в-часах">1. Цена «узнать N человек» в часах</a><a class="" href="#2-пропускная-способность-форматов">2. Пропускная способность форматов</a><a class="" href="#3-воронка-сколько-подписчиков-нужно-на-входе">3. Воронка: сколько подписчиков нужно на входе</a><a class="" href="#4-три-потолка-которые-нельзя-расширить">4. Три потолка, которые нельзя расширить</a><a class="" href="#5-юнит-экономика-eur-2026">5. Юнит-экономика (EUR, 2026)</a><a class="" href="#6-дозировка-замеров-график-по-слоям-данбара">6. Дозировка замеров (график по слоям Данбара)</a><a class="" href="#7-гипотеза-в-измеримой-форме">7. Гипотеза в измеримой форме</a><a class="" href="#8-старт-за-0-групповой-формат-круг-1025">8. Старт за 0 €: групповой формат (круг 10–25)</a><a class="lvl3" href="#скорость-набора-при-20-человек-в-круге">Скорость набора при 20 человек в круге</a><a class="lvl3" href="#набор-на-один-вечер">Набор на один вечер</a></aside>
+</div></div>
+<footer><div class="foot-in">
+  <span>EX · ONEDOPEA · 2026 · протокол v1</span>
+  <nav>
+    <a href="../index.html">Лендинг</a>
+    <a href="../docs/index.html">Документы</a>
+    <a href="../docs/PITCH.html">Питч</a>
+    <a href="../join.html">Записаться</a>
+  </nav>
+</div></footer>
+</body>
+</html>

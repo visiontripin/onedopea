@@ -1,0 +1,59 @@
+ONEDOPEA / EX — условия использования
+=====================================
+
+Проект состоит из двух частей с разными лицензиями.
+
+1. КОД — MIT
+------------
+Относится к: EX/tools/*.py, JS и CSS внутри HTML-файлов, схемы и конфиги.
+
+Copyright (c) 2026 ONEDOPEA
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+2. ТЕКСТЫ И МАТЕРИАЛЫ — CC BY-NC 4.0
+-------------------------------------
+Относится к: EX/docs/*, EX/templates/*, README, тексты лендинга и презентации,
+графики, протокол, этический каркас, сметы, а также будущие видео и записи.
+
+Вы можете:
+  · делиться — копировать и распространять материал в любом формате;
+  · адаптировать — перерабатывать, дополнять, использовать как основу.
+
+На условиях:
+  · указание авторства — ссылка на проект ONEDOPEA / EX и на эту лицензию;
+  · некоммерческое использование — нельзя продавать материалы, включать их
+    в платные продукты и курсы без письменного разрешения;
+  · без дополнительных ограничений — нельзя накладывать юридические или
+    технические ограничения, запрещающие другим делать то, что разрешено
+    лицензией.
+
+Полный текст: https://creativecommons.org/licenses/by-nc/4.0/legalcode
+
+Коммерческое использование, партнёрство и права на экранизацию обсуждаются
+отдельно — контакты в EX/docs/PRESS.md.
+
+
+3. ДАННЫЕ УЧАСТНИКОВ
+--------------------
+Записи встреч и персональные данные участников НЕ покрыты этими лицензиями
+и не распространяются публично. Публикуется только обезличенный реестр
+в EX/ledger/ — без имён, контактов и адресов. Участник может отозвать
+согласие в любой момент; порядок описан в EX/docs/ETHICS.md.

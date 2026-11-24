@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EX — прийти на вечер</title>
+<meta name="description" content="Запись на вечер-круг EX: 10–25 человек, два часа, знакомство и съёмка. Правила участия и форма заявки.">
+<style>
+:root{
+  --ink:#121317;--ink-2:#45474d;--ink-3:#7c7f86;
+  --line:#e8e8ec;--line-2:#f0f0f3;--wash:#f7f7f9;
+  --sans:"Google Sans Flex","Google Sans",Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#fff;color:var(--ink);font-family:var(--sans);font-size:16px;
+  line-height:1.6;letter-spacing:-.006em;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+::selection{background:var(--ink);color:#fff}
+.top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.86);
+  backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1000px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:12px}
+.brand{font-weight:600;font-size:16px;letter-spacing:-.03em;display:flex;gap:8px;align-items:center;text-decoration:none}
+.brand i{width:7px;height:7px;border-radius:50%;background:var(--ink);display:inline-block}
+.sp{flex:1}
+.pill{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;font-weight:500;
+  padding:9px 15px;border-radius:999px;border:1px solid var(--line);background:var(--wash);
+  text-decoration:none;transition:background .16s,border-color .16s;white-space:nowrap}
+.pill:hover{background:#f1f1f4;border-color:#dcdce2}
+.pill.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pill.dark:hover{background:#2a2c33}
+.wrap{max-width:1000px;margin:0 auto;padding:0 24px}
+section{padding:clamp(40px,7vw,72px) 0;border-bottom:1px solid var(--line-2)}
+section:last-of-type{border-bottom:0}
+.hero{padding-top:clamp(48px,8vh,84px)}
+.eyebrow{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:18px}
+h1{font-size:clamp(32px,5.4vw,58px);font-weight:500;letter-spacing:-.04em;line-height:1.04;max-width:18ch}
+h2{font-size:clamp(22px,3vw,32px);font-weight:500;letter-spacing:-.03em;margin-bottom:14px}
+h3{font-size:16px;font-weight:500;margin-bottom:6px}
+p{color:var(--ink-2);max-width:64ch}
+p+p{margin-top:12px}
+.lede{font-size:clamp(16px,1.9vw,19px);margin-top:20px;max-width:52ch}
+.grid{display:grid;gap:12px;margin-top:26px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.card{border:1px solid var(--line);border-radius:20px;padding:20px}
+.card .k{font-size:12.5px;color:var(--ink-3);margin-bottom:6px}
+.card .v{font-size:20px;font-weight:500;letter-spacing:-.02em}
+.card .d{font-size:14px;color:var(--ink-2);margin-top:6px;line-height:1.5}
+.card.wash{background:var(--wash);border-color:transparent}
+.rules{margin-top:22px;border-top:1px solid var(--line)}
+.rules li{list-style:none;display:grid;grid-template-columns:24px 1fr;gap:12px;
+  padding:12px 0;border-bottom:1px solid var(--line);font-size:15px;color:var(--ink-2)}
+.rules li b{color:var(--ink);font-weight:500}
+.rules li span:first-child{color:var(--ink-3);font-size:13px;padding-top:3px}
+.tl{margin-top:20px;border-top:1px solid var(--line)}
+.tl .row{display:grid;grid-template-columns:92px 1fr;gap:14px;padding:11px 0;
+  border-bottom:1px solid var(--line);font-size:15px}
+.tl .row .t{color:var(--ink-3);font-size:13px;font-variant-numeric:tabular-nums}
+form{margin-top:26px;border:1px solid var(--line);border-radius:24px;padding:clamp(18px,3vw,28px)}
+.f{display:grid;gap:6px;margin-bottom:16px}
+.f label{font-size:13px;color:var(--ink-3)}
+.f input,.f textarea,.f select{
+  font-family:inherit;font-size:15px;color:var(--ink);background:#fff;
+  border:1px solid var(--line);border-radius:12px;padding:11px 13px;width:100%;
+  transition:border-color .16s;appearance:none
+}
+.f input:focus,.f textarea:focus,.f select:focus{outline:none;border-color:var(--ink)}
+.f textarea{min-height:76px;resize:vertical}
+.row2{display:grid;gap:16px;grid-template-columns:1fr 1fr}
+@media(max-width:640px){.row2{grid-template-columns:1fr}}
+.check{display:grid;grid-template-columns:20px 1fr;gap:10px;font-size:14px;
+  color:var(--ink-2);margin-bottom:12px;align-items:start}
+.check input{width:18px;height:18px;margin-top:3px;accent-color:#121317}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.btn{font-family:inherit;font-size:14.5px;font-weight:500;padding:12px 20px;border-radius:999px;
+  border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;
+  transition:background .16s,opacity .16s}
+.btn:hover{background:#2a2c33}
+.btn.ghost{background:#fff;color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{background:var(--wash);border-color:#dcdce2}
+.out{margin-top:16px;display:none}
+.out.on{display:block}
+.out textarea{width:100%;min-height:150px;font-family:ui-monospace,Menlo,Consolas,monospace;
+  font-size:12.5px;line-height:1.55;border:1px solid var(--line);border-radius:14px;
+  padding:14px;color:var(--ink-2);background:var(--wash);resize:vertical}
+.note{font-size:13px;color:var(--ink-3);margin-top:12px;max-width:60ch}
+.warn{border-left:2px solid var(--ink);padding-left:16px;margin-top:22px;font-size:15px;color:var(--ink)}
+footer{border-top:1px solid var(--line);padding:26px 0 48px;font-size:13.5px;color:var(--ink-3)}
+.foot-in{display:flex;flex-wrap:wrap;gap:10px 22px;justify-content:space-between}
+.foot-in nav{display:flex;flex-wrap:wrap;gap:6px 16px}
+.foot-in a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid transparent}
+.foot-in a:hover{border-bottom-color:var(--ink-3)}
+</style>
+</head>
+<body>
+
+<header class="top"><div class="top-in">
+  <a class="brand" href="index.html"><i></i>EX</a>
+  <span class="sp"></span>
+  <a class="pill" href="index.html">О проекте</a>
+  <a class="pill" href="docs/index.html">Документы</a>
+  <a class="pill dark" href="#form">Записаться</a>
+</div></header>
+
+<div class="wrap">
+  <section class="hero">
+    <div class="eyebrow">вечер-круг · 10–25 человек · около 2 часов</div>
+    <h1>Приди и расскажи о себе две минуты</h1>
+    <p class="lede">Это эксперимент о том, сколько людей человек может знать лично.
+      Вечер бесплатный, без продаж и тренингов. Всё снимается на видео — но только
+      с вашего письменного согласия, и его можно отозвать в любой момент.</p>
+    <div class="grid g3">
+      <div class="card wash"><div class="k">Вход</div><div class="v">бесплатно</div><div class="d">20 мест, дальше лист ожидания</div></div>
+      <div class="card wash"><div class="k">Длительность</div><div class="v">~2 часа</div><div class="d">круг 50 минут + общение 45 минут</div></div>
+      <div class="card wash"><div class="k">Возраст</div><div class="v">18+</div><div class="d">без исключений</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Как проходит вечер</h2>
+    <div class="tl">
+      <div class="row"><span class="t">10 мин</span><span>Вход, правила, подписание согласия. Камеру включаем после подписи.</span></div>
+      <div class="row"><span class="t">50 мин</span><span>Круг. Каждый по очереди: имя, чем занимается, что интересно, ответ на вопрос вечера. Две минуты на человека, без перебивания.</span></div>
+      <div class="row"><span class="t">45 мин</span><span>Свободное общение. Ведущий подходит к каждому на 2–3 минуты поговорить лично.</span></div>
+      <div class="row"><span class="t">15 мин</span><span>Вопрос вечера: все сравнивают ответы, ведущий показывает, что предсказал. Прощаемся.</span></div>
+    </div>
+    <p class="note">Ведущий не обещает дружбу: на вечере двадцать человек, и он честно говорит,
+      что запомнит не всех. Это правило проекта, а не отношение лично к вам.</p>
+  </section>
+
+  <section>
+    <h2>Правила</h2>
+    <ul class="rules">
+      <li><span>01</span><div><b>Согласие до камеры.</b> Без подписанного согласия человек не попадает в кадр. Никаких исключений.</div></li>
+      <li><span>02</span><div><b>Можно сказать «пас».</b> Пропустить свой рассказ, промолчать на вопрос, уйти раньше — без объяснения причины.</div></li>
+      <li><span>03</span><div><b>Никаких личных тем по умолчанию.</b> О здоровье, политике, религии и травмах не спрашиваем. Если вы сами начнёте — остановим запись и спросим, оставлять ли.</div></li>
+      <li><span>04</span><div><b>Отзыв согласия — бессрочно.</b> Одно сообщение — и фрагмент удаляется из будущих версий.</div></li>
+      <li><span>05</span><div><b>Ничего не продаётся.</b> Ни курсы, ни подписки, ни «возможности». Вечер бесплатный.</div></li>
+      <li><span>06</span><div><b>18+.</b> Если есть сомнение в возрасте — вечер для этого человека переносится.</div></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Что взять с собой</h2>
+    <div class="grid g2">
+      <div class="card"><div class="k">нужно</div><div class="d">Ничего особенного. Телефон не нужен: мы просим убрать его в карман и не отвлекаться. Возьмите воду, если хочется.</div></div>
+      <div class="card"><div class="k">не нужно</div><div class="d">Готовиться, репетировать рассказ, приносить презентации и визитки. Две минуты своими словами — это всё, что требуется.</div></div>
+      <div class="card"><div class="k">если не хотите в кадр</div><div class="d">Скажите заранее в заявке. Камера будет направлена так, чтобы вас не было видно, либо мы не снимаем этот вечер.</div></div>
+      <div class="card"><div class="k">после вечера</div><div class="d">Вы получите копию записи и один короткий вопрос через месяц: «что запомнили». Больше ничего.</div></div>
+    </div>
+  </section>
+
+  <section id="form">
+    <h2>Заявка</h2>
+    <p>Заполните — и отправьте сообщение в Telegram. Форма ничего не передаёт на сервер:
+      текст собирается у вас в браузере, вы сами решаете, отправлять его или нет.</p>
+
+    <form id="join" autocomplete="off">
+      <div class="row2">
+        <div class="f">
+          <label for="name">Имя или псевдоним</label>
+          <input id="name" name="name" required placeholder="Как вас называть">
+        </div>
+        <div class="f">
+          <label for="city">Город</label>
+          <input id="city" name="city" required placeholder="Где вам удобно прийти">
+        </div>
+      </div>
+
+      <div class="f">
+        <label for="work">Чем занимаетесь</label>
+        <input id="work" name="work" required placeholder="Работа, учёба, дело — в одном предложении">
+      </div>
+
+      <div class="f">
+        <label for="interest">Что вам интересно</label>
+        <textarea id="interest" name="interest" required placeholder="Тема, занятие, вопрос, о котором можете говорить долго"></textarea>
+      </div>
+
+      <div class="row2">
+        <div class="f">
+          <label for="contact">Контакт для ответа</label>
+          <input id="contact" name="contact" required placeholder="@telegram или телефон">
+        </div>
+        <div class="f">
+          <label for="camera">Съёмка</label>
+          <select id="camera" name="camera">
+            <option value="готов быть в кадре">Готов(а) быть в кадре</option>
+            <option value="хочу прийти без съёмки">Хочу прийти без съёмки</option>
+            <option value="пока не решил(а)">Пока не решил(а)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="f">
+        <label for="when">Когда удобно</label>
+        <select id="when" name="when">
+          <option value="будни вечером">Будни вечером</option>
+          <option value="выходные днём">Выходные днём</option>
+          <option value="выходные вечером">Выходные вечером</option>
+          <option value="любое время">Любое время</option>
+        </select>
+      </div>
+
+      <label class="check"><input type="checkbox" id="age" required><span>Мне 18 или больше</span></label>
+      <label class="check"><input type="checkbox" id="rules" required><span>Я прочитал(а) правила: согласие до камеры, право сказать «пас», отзыв согласия в любой момент</span></label>
+
+      <div class="actions">
+        <button class="btn" type="submit">Собрать заявку</button>
+        <button class="btn ghost" type="reset">Очистить</button>
+      </div>
+    </form>
+
+    <div class="out" id="out">
+      <p style="margin-bottom:10px">Скопируйте текст и отправьте его в Telegram — или откройте письмо.</p>
+      <textarea id="text" readonly></textarea>
+      <div class="actions">
+        <button class="btn" id="copy" type="button">Скопировать</button>
+        <a class="btn ghost" id="tg" href="#" target="_blank" rel="noopener">Открыть Telegram</a>
+        <a class="btn ghost" id="mail" href="#">Написать на почту</a>
+      </div>
+      <p class="note">Ответ обычно приходит в течение 2–3 дней. Если вечер уже заполнен,
+        вас поставят в лист ожидания — это нормально, вечера идут каждую неделю.</p>
+    </div>
+
+    <div class="warn">
+      Ничего не оплачивается и не подтверждается автоматически: место появляется только
+      после ответа ведущего. Если вам обещают место за деньги от имени EX — это не мы.
+    </div>
+  </section>
+
+  <footer><div class="wrap"><div class="foot-in">
+    <span>EX · ONEDOPEA · 2026</span>
+    <nav>
+      <a href="index.html">Лендинг</a>
+      <a href="docs/index.html">Документы</a>
+      <a href="docs/START-ZERO.html">Как всё устроено</a>
+      <a href="docs/ETHICS.html">Этика и данные</a>
+      <a href="deck.html">Презентация</a>
+    </nav>
+  </div></div></footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  /* ─── контакты проекта: заменить на свои перед публикацией ─── */
+  var CONTACT = {
+    telegramUser: "onedopea",          // без @
+    email: "ex@onedopea.example"       // заменить
+  };
+
+  var form = document.getElementById('join');
+  var out = document.getElementById('out');
+  var text = document.getElementById('text');
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var v = function(id){ return document.getElementById(id).value.trim(); };
+    var payload = [
+      'Заявка на вечер EX',
+      '',
+      'Имя: ' + v('name'),
+      'Город: ' + v('city'),
+      'Чем занимаюсь: ' + v('work'),
+      'Интересы: ' + v('interest'),
+      'Контакт: ' + v('contact'),
+      'Съёмка: ' + v('camera'),
+      'Удобное время: ' + v('when'),
+      '',
+      'Возраст 18+: да',
+      'С правилами ознакомлен(а): да'
+    ].join('\n');
+
+    text.value = payload;
+    out.classList.add('on');
+
+    var subject = encodeURIComponent('EX — заявка на вечер');
+    var body = encodeURIComponent(payload);
+    document.getElementById('mail').href = 'mailto:' + CONTACT.email + '?subject=' + subject + '&body=' + body;
+    document.getElementById('tg').href = 'https://t.me/' + CONTACT.telegramUser;
+    out.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+
+  document.getElementById('copy').addEventListener('click', function(){
+    text.select();
+    text.setSelectionRange(0, 99999);
+    var done = function(btn){
+      btn.textContent = 'Скопировано';
+      setTimeout(function(){ btn.textContent = 'Скопировать'; }, 1600);
+    };
+    var btn = this;
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text.value).then(function(){ done(btn); });
+    } else {
+      try { document.execCommand('copy'); done(btn); } catch(err) {}
+    }
+  });
+})();
+</script>
+</body>
+</html>

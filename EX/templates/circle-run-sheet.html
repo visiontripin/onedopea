@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ЛИСТ ВЕДУЩЕГО — ВЕЧЕР-КРУГ — EX</title>
+<meta name="description" content="EX — эксперимент о том, что делает с человеком количество людей, которых он знает лично.">
+<style>
+:root{
+  --ink:#121317;--ink-2:#45474d;--ink-3:#7c7f86;
+  --line:#e8e8ec;--line-2:#f0f0f3;--wash:#f7f7f9;
+  --sans:"Google Sans Flex","Google Sans",Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:88px}
+body{background:#fff;color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.65;
+  letter-spacing:-.006em;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--ink);color:#fff}
+.top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.86);
+  backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1080px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:14px}
+.brand{font-weight:600;font-size:16px;letter-spacing:-.03em;display:flex;gap:8px;align-items:center}
+.brand i{width:7px;height:7px;border-radius:50%;background:var(--ink);display:inline-block}
+.crumb{font-size:13px;color:var(--ink-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.top .sp{flex:1}
+.pill{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;font-weight:500;
+  padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--wash);
+  transition:background .16s,border-color .16s;white-space:nowrap}
+.pill:hover{background:#f1f1f4;border-color:#dcdce2}
+.pill.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pill.dark:hover{background:#2a2c33}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+.layout{display:grid;grid-template-columns:1fr;gap:40px;padding:44px 0 96px}
+@media(min-width:960px){.layout{grid-template-columns:minmax(0,1fr) 240px;gap:56px;align-items:start}}
+article{max-width:76ch}
+article h1{font-size:clamp(29px,4.6vw,42px);font-weight:500;letter-spacing:-.035em;line-height:1.1;margin-bottom:22px}
+article h2{font-size:clamp(21px,2.8vw,27px);font-weight:500;letter-spacing:-.025em;margin:44px 0 14px;line-height:1.2}
+article h3{font-size:19px;font-weight:500;letter-spacing:-.015em;margin:32px 0 10px}
+article h4{font-size:16px;font-weight:600;margin:24px 0 8px}
+article p{color:var(--ink-2);margin:0 0 14px}
+article strong{color:var(--ink);font-weight:500}
+article em{font-style:normal;border-bottom:1px solid var(--ink-3)}
+article a{color:var(--ink);border-bottom:1px solid #c9cad1;transition:border-color .16s}
+article a:hover{border-bottom-color:var(--ink)}
+article ul,article ol{margin:0 0 16px;padding-left:22px;color:var(--ink-2)}
+article li{margin:0 0 7px}
+article li::marker{color:var(--ink-3)}
+article hr{border:0;border-top:1px solid var(--line-2);margin:32px 0}
+article blockquote{border-left:2px solid var(--ink);padding:2px 0 2px 18px;margin:20px 0;
+  color:var(--ink);font-size:17px}
+article blockquote p{margin:0 0 8px;color:var(--ink)}
+article blockquote p:last-child{margin:0}
+article code{font-family:var(--mono);font-size:.9em;background:var(--wash);
+  border:1px solid var(--line);border-radius:6px;padding:1px 5px}
+article pre{background:#0d0e11;color:#e9eaee;border-radius:14px;padding:16px 18px;
+  overflow-x:auto;margin:18px 0;font-size:13px;line-height:1.6}
+article pre code{background:none;border:0;padding:0;color:inherit;font-size:inherit}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:16px;margin:18px 0}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:460px}
+th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line-2);vertical-align:top}
+th{font-size:12.5px;font-weight:500;color:var(--ink-3);background:var(--wash);white-space:nowrap}
+td{color:var(--ink-2)}
+td:first-child{color:var(--ink)}
+tr:last-child td{border-bottom:0}
+aside.toc{position:sticky;top:84px;font-size:13.5px}
+aside.toc .t{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+aside.toc a{display:block;color:var(--ink-2);padding:5px 0;border-left:1px solid var(--line);
+  padding-left:12px;line-height:1.35}
+aside.toc a:hover{color:var(--ink);border-left-color:var(--ink)}
+aside.toc a.lvl3{padding-left:24px;font-size:12.5px;color:var(--ink-3)}
+.doc-meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:26px;
+  font-size:13px;color:var(--ink-3)}
+.doc-meta .tag{background:var(--wash);border:1px solid var(--line);border-radius:999px;padding:4px 11px}
+footer{border-top:1px solid var(--line);padding:26px 0 48px;font-size:13.5px;color:var(--ink-3)}
+.foot-in{max-width:1080px;margin:0 auto;padding:0 24px;display:flex;flex-wrap:wrap;
+  gap:12px 24px;justify-content:space-between}
+.foot-in nav{display:flex;flex-wrap:wrap;gap:6px 16px}
+.foot-in a{color:var(--ink-2);border-bottom:1px solid transparent}
+.foot-in a:hover{border-bottom-color:var(--ink-3)}
+.cards{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-top:26px}
+.card{border:1px solid var(--line);border-radius:20px;padding:20px;transition:border-color .18s,transform .18s}
+.card:hover{border-color:#d5d5dc;transform:translateY(-1px)}
+.card h3{margin:0 0 6px;font-size:17px;font-weight:500;letter-spacing:-.01em}
+.card p{margin:0;font-size:14px;color:var(--ink-2);line-height:1.5}
+.card .k{font-size:12px;color:var(--ink-3);margin-bottom:8px;letter-spacing:.04em;text-transform:uppercase}
+@media print{
+  .top,aside.toc,footer{display:none}
+  body{font-size:11.5pt}
+  article{max-width:none}
+  a{border:0}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <a class="brand" href="../index.html"><i></i>EX</a>
+  <span class="crumb">EX / templates</span>
+  <span class="sp"></span>
+  <a class="pill dark" href="../index.html">Лендинг</a><a class="pill" href="../docs/index.html">Документы</a><a class="pill" href="../deck.html">Презентация</a><a class="pill" href="../join.html">Заявка</a>
+</div></header>
+<div class="wrap"><div class="layout">
+  <article>
+    <div class="doc-meta"><span class="tag">EX/templates/circle-run-sheet.md</span><a href="circle-run-sheet.md" download>скачать .md</a></div>
+    <h1 id="top">EX // ЛИСТ ВЕДУЩЕГО — ВЕЧЕР-КРУГ</h1>
+<p>Распечатать на один вечер. Заполняется от руки, потом переносится в реестр. Номер вечера: <strong>EX-______</strong> · Дата: __.__.____ · Город: ____________ · Зал: __________</p>
+<hr>
+<h2 id="a-за-40-минут-до-начала">A. За 40 минут до начала</h2>
+<ul>
+<li>☐ столы/стулья расставлены кругом, все видят друг друга</li>
+<li>☐ окно за спиной ведущего, участники лицом к свету</li>
+<li>☐ камера 1 — общий план (штатив/книги), камера 2 — крупный план на круг</li>
+<li>☐ диктофон телефона лежит в центре стола, запись включена</li>
+<li>☐ память и батареи проверены, зарядка подключена</li>
+<li>☐ вода, стаканы, салфетки</li>
+<li>☐ согласия (__ шт.), ручки (__ шт.), карточки участников (__ шт.)</li>
+<li>☐ таймер на телефоне открыт (2 минуты)</li>
+<li>☐ лист с вопросом дня на видном месте</li>
+<li>☐ второй человек в комнате: ______________________ (не уходит до конца)</li>
+</ul>
+<hr>
+<h2 id="b-первые-10-минут">B. Первые 10 минут</h2>
+<ul>
+<li>☐ все пришли, обувь/куртки/сумки убраны из кадра</li>
+<li>☐ правила сказаны вслух по пунктам (см. ниже)</li>
+<li>☐ каждый подписал согласие <strong>до</strong> включения камеры</li>
+<li>☐ отказов нет · если есть — этот человек не в кадре, камера направлена на круг</li>
+<li>☐ камера включена, сказано: «запись началась»</li>
+</ul>
+<p><strong>Правила (читать дословно):</strong></p>
+<blockquote><p>«Мы здесь на два часа. Каждый рассказывает о себе две минуты: имя, чем занимаешься, что тебе интересно. Потом я подойду к каждому лично. Всё снимается, вот согласия. Можно сказать "пас" и пропустить свой рассказ — без объяснений. Можно уйти в любой момент. Я не обещаю никому дружбу: сегодня нас двадцать, и я честно говорю, что запомню не всех. Вопросы?»</p></blockquote>
+<hr>
+<h2 id="c-круг-50-минут">C. Круг: 50 минут</h2>
+<p>Таймер 2 минуты на человека. Ведущий останавливает мягко и сразу.</p>
+<p>Вопросы (всегда в этом порядке):</p>
+<ol>
+<li>Как тебя зовут и как зовут дома?</li>
+<li>Чем ты занимаешься?</li>
+<li>Что тебе по-настоящему интересно?</li>
+<li>Что ты умеешь лучше большинства?</li>
+<li>Что ты делал вчера вечером?</li>
+<li>Кто повлиял на тебя больше всех?</li>
+<li>Зачем ты пришёл сегодня?</li>
+<li>Что ты запомнишь об этом вечере через год?</li>
+</ol>
+<p><strong>Вопрос дня:</strong> «______________________________________________» Предсказание ведущего по каждому участнику записывается <strong>до</strong> оглашения ответов.</p>
+<div class="tw"><table><thead><tr><th>#</th><th>Имя / псевдоним</th><th>Чем занимается</th><th>Интерес</th><th>Предсказание</th><th>Ответ</th><th>✔/✘</th></tr></thead><tbody>
+<tr><td>1</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>2</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>3</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>4</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>5</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>6</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>7</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>8</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>9</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>10</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>11</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>12</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>13</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>14</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>15</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>16</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>17</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>18</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>19</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>20</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</tbody></table></div>
+<hr>
+<h2 id="d-личное-общение-45-минут">D. Личное общение: 45 минут</h2>
+<ul>
+<li>☐ подошёл к каждому хотя бы на 2 минуты</li>
+<li>☐ записал «якорь» — одна деталь, по которой вспомню (в карточке)</li>
+<li>☐ ни с кем не говорил больше 5 минут (остальные ждут)</li>
+<li>☐ телефон убран, смотрю в глаза, не отвлекаюсь на камеру</li>
+</ul>
+<hr>
+<h2 id="e-закрытие-15-минут">E. Закрытие: 15 минут</h2>
+<ul>
+<li>☐ огласил ответы на вопрос дня, показал свои предсказания, назвал число попаданий</li>
+<li>☐ сказал вслух: «запись будет у вас в течение двух недель»</li>
+<li>☐ сказал вслух: «отозвать согласие можно в любой момент, вот контакт»</li>
+<li>☐ спросил: «как вы сейчас?» — и выслушал</li>
+<li>☐ попрощался с каждым лично</li>
+<li>☐ камера выключена последней</li>
+</ul>
+<hr>
+<h2 id="f-сразу-после-в-тот-же-вечер">F. Сразу после (в тот же вечер)</h2>
+<ul>
+<li>☐ карточки перенесены в реестр <code>ledger/encounters.ndjson</code></li>
+<li>☐ записан счётчик: всего контактов сегодня ___, из них L2 ___</li>
+<li>☐ зафиксировано самочувствие: настроение __/7, усталость __/7</li>
+<li>☐ записан «один человек, которого запомню лучше всех»: ______________________</li>
+<li>☐ файлы скопированы на диск, имя папки: EX-______-____</li>
+<li>☐ участникам отправлено сообщение «спасибо, запись будет к __.__»</li>
+</ul>
+<h2 id="g-через-1-день-и-через-30-дней">G. Через 1 день и через 30 дней</h2>
+<ul>
+<li>☐ +1 день: тест «кого помню» — из ___ человек вспомнил ___ имён, ___ лиц</li>
+<li>☐ +30 дней: тест узнавания по фото — узнал ___ из ___, помню имя у ___</li>
+<li>☐ реестр обновлён результатом теста</li>
+</ul>
+<hr>
+<h2 id="h-красные-флаги-остановиться-немедленно">H. Красные флаги — остановиться немедленно</h2>
+<div class="tw"><table><thead><tr><th>Ситуация</th><th>Действие</th></tr></thead><tbody>
+<tr><td>Кто-то плачет или просит остановиться</td><td>камера стоп, вода, разговор, фрагмент не публикуется</td></tr>
+<tr><td>Признаки опьянения</td><td>не снимаем, помогаем уехать домой</td></tr>
+<tr><td>Возраст под вопросом</td><td>не снимаем до подтверждения 18+</td></tr>
+<tr><td>Агрессия, угрозы</td><td>вечер заканчивается, инцидент записывается</td></tr>
+<tr><td>Кто-то снимает на телефон без согласия</td><td>остановить, попросить удалить</td></tr>
+<tr><td>Ведущий не в состоянии вести</td><td>вечер заканчивается, это тоже данные</td></tr>
+</tbody></table></div>
+<p><strong>Инциденты за вечер:</strong></p>
+<pre><code>1) ____________________________________________________________
+2) ____________________________________________________________</code></pre>
+<p><strong>Подпись ведущего:</strong> ______________________ · <strong>Второй человек в комнате:</strong> ______________________</p>
+  </article>
+  <aside class="toc"><div class="t">На этой странице</div><a class="" href="#a-за-40-минут-до-начала">A. За 40 минут до начала</a><a class="" href="#b-первые-10-минут">B. Первые 10 минут</a><a class="" href="#c-круг-50-минут">C. Круг: 50 минут</a><a class="" href="#d-личное-общение-45-минут">D. Личное общение: 45 минут</a><a class="" href="#e-закрытие-15-минут">E. Закрытие: 15 минут</a><a class="" href="#f-сразу-после-в-тот-же-вечер">F. Сразу после (в тот же вечер)</a><a class="" href="#g-через-1-день-и-через-30-дней">G. Через 1 день и через 30 дней</a><a class="" href="#h-красные-флаги-остановиться-немедленно">H. Красные флаги — остановиться немедленно</a></aside>
+</div></div>
+<footer><div class="foot-in">
+  <span>EX · ONEDOPEA · 2026 · протокол v1</span>
+  <nav>
+    <a href="../index.html">Лендинг</a>
+    <a href="../docs/index.html">Документы</a>
+    <a href="../docs/PITCH.html">Питч</a>
+    <a href="../join.html">Записаться</a>
+  </nav>
+</div></footer>
+</body>
+</html>

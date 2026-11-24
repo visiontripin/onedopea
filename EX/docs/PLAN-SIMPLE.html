@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ПЛАН ПРОСТЫМ ЯЗЫКОМ — EX</title>
+<meta name="description" content="EX — эксперимент о том, что делает с человеком количество людей, которых он знает лично.">
+<style>
+:root{
+  --ink:#121317;--ink-2:#45474d;--ink-3:#7c7f86;
+  --line:#e8e8ec;--line-2:#f0f0f3;--wash:#f7f7f9;
+  --sans:"Google Sans Flex","Google Sans",Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:88px}
+body{background:#fff;color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.65;
+  letter-spacing:-.006em;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--ink);color:#fff}
+.top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.86);
+  backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1080px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:14px}
+.brand{font-weight:600;font-size:16px;letter-spacing:-.03em;display:flex;gap:8px;align-items:center}
+.brand i{width:7px;height:7px;border-radius:50%;background:var(--ink);display:inline-block}
+.crumb{font-size:13px;color:var(--ink-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.top .sp{flex:1}
+.pill{display:inline-flex;align-items:center;gap:7px;font-size:13.5px;font-weight:500;
+  padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--wash);
+  transition:background .16s,border-color .16s;white-space:nowrap}
+.pill:hover{background:#f1f1f4;border-color:#dcdce2}
+.pill.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pill.dark:hover{background:#2a2c33}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+.layout{display:grid;grid-template-columns:1fr;gap:40px;padding:44px 0 96px}
+@media(min-width:960px){.layout{grid-template-columns:minmax(0,1fr) 240px;gap:56px;align-items:start}}
+article{max-width:76ch}
+article h1{font-size:clamp(29px,4.6vw,42px);font-weight:500;letter-spacing:-.035em;line-height:1.1;margin-bottom:22px}
+article h2{font-size:clamp(21px,2.8vw,27px);font-weight:500;letter-spacing:-.025em;margin:44px 0 14px;line-height:1.2}
+article h3{font-size:19px;font-weight:500;letter-spacing:-.015em;margin:32px 0 10px}
+article h4{font-size:16px;font-weight:600;margin:24px 0 8px}
+article p{color:var(--ink-2);margin:0 0 14px}
+article strong{color:var(--ink);font-weight:500}
+article em{font-style:normal;border-bottom:1px solid var(--ink-3)}
+article a{color:var(--ink);border-bottom:1px solid #c9cad1;transition:border-color .16s}
+article a:hover{border-bottom-color:var(--ink)}
+article ul,article ol{margin:0 0 16px;padding-left:22px;color:var(--ink-2)}
+article li{margin:0 0 7px}
+article li::marker{color:var(--ink-3)}
+article hr{border:0;border-top:1px solid var(--line-2);margin:32px 0}
+article blockquote{border-left:2px solid var(--ink);padding:2px 0 2px 18px;margin:20px 0;
+  color:var(--ink);font-size:17px}
+article blockquote p{margin:0 0 8px;color:var(--ink)}
+article blockquote p:last-child{margin:0}
+article code{font-family:var(--mono);font-size:.9em;background:var(--wash);
+  border:1px solid var(--line);border-radius:6px;padding:1px 5px}
+article pre{background:#0d0e11;color:#e9eaee;border-radius:14px;padding:16px 18px;
+  overflow-x:auto;margin:18px 0;font-size:13px;line-height:1.6}
+article pre code{background:none;border:0;padding:0;color:inherit;font-size:inherit}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:16px;margin:18px 0}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:460px}
+th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line-2);vertical-align:top}
+th{font-size:12.5px;font-weight:500;color:var(--ink-3);background:var(--wash);white-space:nowrap}
+td{color:var(--ink-2)}
+td:first-child{color:var(--ink)}
+tr:last-child td{border-bottom:0}
+aside.toc{position:sticky;top:84px;font-size:13.5px}
+aside.toc .t{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+aside.toc a{display:block;color:var(--ink-2);padding:5px 0;border-left:1px solid var(--line);
+  padding-left:12px;line-height:1.35}
+aside.toc a:hover{color:var(--ink);border-left-color:var(--ink)}
+aside.toc a.lvl3{padding-left:24px;font-size:12.5px;color:var(--ink-3)}
+.doc-meta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:26px;
+  font-size:13px;color:var(--ink-3)}
+.doc-meta .tag{background:var(--wash);border:1px solid var(--line);border-radius:999px;padding:4px 11px}
+footer{border-top:1px solid var(--line);padding:26px 0 48px;font-size:13.5px;color:var(--ink-3)}
+.foot-in{max-width:1080px;margin:0 auto;padding:0 24px;display:flex;flex-wrap:wrap;
+  gap:12px 24px;justify-content:space-between}
+.foot-in nav{display:flex;flex-wrap:wrap;gap:6px 16px}
+.foot-in a{color:var(--ink-2);border-bottom:1px solid transparent}
+.foot-in a:hover{border-bottom-color:var(--ink-3)}
+.cards{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-top:26px}
+.card{border:1px solid var(--line);border-radius:20px;padding:20px;transition:border-color .18s,transform .18s}
+.card:hover{border-color:#d5d5dc;transform:translateY(-1px)}
+.card h3{margin:0 0 6px;font-size:17px;font-weight:500;letter-spacing:-.01em}
+.card p{margin:0;font-size:14px;color:var(--ink-2);line-height:1.5}
+.card .k{font-size:12px;color:var(--ink-3);margin-bottom:8px;letter-spacing:.04em;text-transform:uppercase}
+@media print{
+  .top,aside.toc,footer{display:none}
+  body{font-size:11.5pt}
+  article{max-width:none}
+  a{border:0}
+}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <a class="brand" href="../index.html"><i></i>EX</a>
+  <span class="crumb">EX / docs</span>
+  <span class="sp"></span>
+  <a class="pill dark" href="../index.html">Лендинг</a><a class="pill" href="../docs/index.html">Документы</a><a class="pill" href="../deck.html">Презентация</a><a class="pill" href="../join.html">Заявка</a>
+</div></header>
+<div class="wrap"><div class="layout">
+  <article>
+    <div class="doc-meta"><span class="tag">EX/docs/PLAN-SIMPLE.md</span><a href="PLAN-SIMPLE.md" download>скачать .md</a></div>
+    <h1 id="top">EX — ПЛАН ПРОСТЫМ ЯЗЫКОМ</h1>
+<p>Короткая версия. Без терминов. Если что-то непонятно — это написано плохо, а не ты читаешь плохо.</p>
+<p><strong>Исходные данные на сегодня:</strong> бюджет 0 €. В день можно собрать 10–25 человек, просто чтобы узнать, кто они, чем занимаются и что им интересно.</p>
+<hr>
+<h2 id="1-что-мы-делаем">1. Что мы делаем</h2>
+<p>Один человек собирает незнакомых людей в комнате. Каждый вечер — 10–25 человек. Каждый рассказывает о себе две минуты, потом ты подходишь к каждому и говоришь лично. Всё снимается на телефон.</p>
+<p>Считаем: 100 человек. Потом 500. Потом 1 000.</p>
+<p>Смысл не в популярности. Смысл в том, чтобы понять, что происходит с человеком, когда у него становится очень много настоящих, а не виртуальных знакомств. Что остаётся в памяти. Что с настроением. Что с интересом к людям.</p>
+<p><strong>Идея в одной фразе:</strong> все говорят «привет, друзья» людям, которых не знают. Мы проверяем, что будет, если правда начать их знать.</p>
+<hr>
+<h2 id="2-хватает-ли-1025-человек-в-день">2. Хватает ли 10–25 человек в день</h2>
+<p><strong>Для начала — более чем.</strong> Смотри числа:</p>
+<div class="tw"><table><thead><tr><th>Цель</th><th>Сколько времени</th><th>Реально?</th></tr></thead><tbody>
+<tr><td>100 человек</td><td>2 недели</td><td>да</td></tr>
+<tr><td>500 человек</td><td>2 месяца</td><td>да</td></tr>
+<tr><td>1 000 человек</td><td>4 месяца</td><td>да</td></tr>
+<tr><td>1 500 человек</td><td>полгода</td><td>да, это потолок слабых связей</td></tr>
+<tr><td>10 000 человек</td><td>3 года</td><td>уже работа, а не хобби</td></tr>
+<tr><td>100 000 и больше</td><td>32 года</td><td>нужна сеть организаторов и эфир</td></tr>
+</tbody></table></div>
+<p>Расчёт: 3 вечера в неделю × 20 человек = <strong>60 человек в неделю</strong>, около 260 в месяц. Можно быстрее (5 вечеров — 100 в неделю, 1 000 за 2,5 месяца), можно медленнее (1 вечер в неделю — 1 000 за 11 месяцев). Обе скорости рабочие.</p>
+<p><strong>Одна честная поправка.</strong> В комнате на 20 человек ты узнаёшь «кто он, чем занимается, что любит» — но личного разговора у тебя на него 2–3 минуты, а не 45. Это не то же самое, что «узнал человека». Поэтому в данных такой контакт помечается отдельно: <code>круг, 3 минуты диалога</code>.</p>
+<p>И это не недостаток, а самое интересное место эксперимента: за вечер знакомишься с двадцатью, а через месяц помнишь шесть. Вот этот разрыв и есть суть проекта.</p>
+<hr>
+<h2 id="3-как-проходит-вечер">3. Как проходит вечер</h2>
+<p>Один вечер — 2 часа. Не больше 25 человек: после 25 ты уже не знакомишься, а ведёшь мероприятие.</p>
+<div class="tw"><table><thead><tr><th>Время</th><th>Что происходит</th></tr></thead><tbody>
+<tr><td>10 минут</td><td>вход, согласия на бумаге, правила: можно промолчать, можно уйти</td></tr>
+<tr><td>50 минут</td><td>круг: каждый по 2 минуты — имя, дело, интересы, ответ на вопрос дня</td></tr>
+<tr><td>45 минут</td><td>свободное общение: подходишь к каждому на 2–3 минуты лично</td></tr>
+<tr><td>10 минут</td><td>вопрос дня: все сравнивают ответы, ты показываешь, что предсказал</td></tr>
+<tr><td>5 минут</td><td>закрытие: «как вы сейчас», как отозвать согласие</td></tr>
+</tbody></table></div>
+<p><strong>Вопрос дня</strong> — один и тот же для всех, меняется раз в 100 человек. Первый: «10 000 € сейчас или 100 € в месяц десять лет?» До вечера ты записываешь свои предсказания по каждому. После — сверяешь. Это и научные данные, и лучший момент для видео: двадцать человек отвечают на один вопрос.</p>
+<hr>
+<h2 id="4-сколько-стоит">4. Сколько стоит</h2>
+<p><strong>Сейчас: 0 €.</strong> Всё, что нужно, уже есть:</p>
+<div class="tw"><table><thead><tr><th>Нужно</th><th>Бесплатная замена</th></tr></thead><tbody>
+<tr><td>камера</td><td>телефон</td></tr>
+<tr><td>вторая камера</td><td>второй телефон или обойтись одной</td></tr>
+<tr><td>штатив</td><td>стопка книг</td></tr>
+<tr><td>микрофон</td><td>диктофон телефона в центре стола</td></tr>
+<tr><td>свет</td><td>окно и две настольные лампы</td></tr>
+<tr><td>помещение</td><td>библиотека, коворкинг после 19:00, кофейня в непиковый час, аудитория вуза</td></tr>
+<tr><td>заявки</td><td>Google Forms или Tally</td></tr>
+<tr><td>монтаж</td><td>DaVinci Resolve, Audacity, ffmpeg</td></tr>
+<tr><td>сайт</td><td>GitHub Pages</td></tr>
+<tr><td>реестр встреч</td><td>файлы в этом репозитории</td></tr>
+</tbody></table></div>
+<p>Единственная «покупка» — распечатать согласия. Это копейки или бесплатно в библиотеке.</p>
+<p><strong>Деньги нужны позже.</strong> Первое, что стоит купить, когда счётчик покажет 1 000 человек: постоянное помещение (~150–400 € в месяц), второй человек в комнате, монтажёр. Полная смета до миллиона — около 7 млн € за 5 лет, и она вся в <code>MONEY.md</code>. Но это будущее. Сегодня это мешает только тем, что отвлекает.</p>
+<p><strong>Донаты нельзя принимать до появления юрлица.</strong> Ноль — это самый чистый режим: нечего объяснять, нечего скрывать, не с кем судиться.</p>
+<hr>
+<h2 id="5-что-делать-на-этой-неделе">5. Что делать на этой неделе</h2>
+<p>Пять дел. Всё бесплатно, всё без съёмок.</p>
+<ol>
+<li><strong>Замер «до».</strong> Пройти простые тесты (настроение, тревога — они бесплатные) и записать три минуты монолога на видео. Рассказать о себе так, как будешь рассказывать другим. Это точка отсчёта, её нельзя восстановить потом.</li>
+<li><strong>Написать 8 вопросов круга.</strong> Одинаковые для всех вечеров: имя · чем занимаешься · что тебе интересно · что умеешь лучше других · что делал вчера вечером · кто повлиял больше всех · зачем пришёл · что запомнишь через год. Плюс один вопрос дня.</li>
+<li><strong>Найти помещение на 3 даты.</strong> Обойти 5 мест, договориться об одном. Формулировка для разговора: «приведу 20 человек в понедельник в 19:00, мне нужен зал и стол, вам — гости и упоминание в видео».</li>
+<li><strong>Написать пяти людям про науку.</strong> Аспирантам и преподавателям, которые считают данные. Платить нечем — предлагать соавторство и датасет, которого ни у кого нет.</li>
+<li><strong>Сделать форму заявки и реестр.</strong> Форма на 5 полей, реестр — таблица или файл <code>ledger/encounters.ndjson</code> в этом репозитории.</li>
+</ol>
+<p>Если за неделю сделал только пункт 1 — неделя уже не зря.</p>
+<hr>
+<h2 id="6-где-взять-20-человек-это-тяжелее-съёмки">6. Где взять 20 человек (это тяжелее съёмки)</h2>
+<p>Честная конверсия для бесплатного события: <strong>20 мест = около 50 приглашений</strong>. Половина не дойдёт. Значит на каждый вечер — 50 касаний.</p>
+<ul>
+<li>Telegram-чаты города: личные сообщения, не спам-пост — 5–10 человек;</li>
+<li>анонс бесплатного события (Timepad, Meetup, афиши вузов) — 3–8;</li>
+<li>QR-код на доске в коворкинге, библиотеке, вузе — 2–5;</li>
+<li>знакомые знакомых (попросить привести двоих) — 5–10;</li>
+<li>тематические сообщества — 3–7;</li>
+<li>холодные приглашения в очереди или на лекции — 1–3, самый честный способ.</li>
+</ul>
+<p>Первые 2–3 вечера почти наверняка будут из «знакомых знакомых». Это нормально, но помечай таких участников в реестре отдельно — иначе потом нельзя будет отделить тёплую выборку от случайной, и весь сезон будет под подозрением.</p>
+<hr>
+<h2 id="7-кто-нужен-и-как-платить-когда-денег-нет">7. Кто нужен (и как платить, когда денег нет)</h2>
+<p>Подопытный <strong>не может быть продюсером</strong>. Кто проходит эксперимент — не решает, что снимать и как считать. Иначе данные — это не данные, а сценарий.</p>
+<div class="tw"><table><thead><tr><th>Роль</th><th>Зачем</th><th>Чем платить при нуле</th></tr></thead><tbody>
+<tr><td>Методолог</td><td>чтобы цифры были настоящими; право вето</td><td>соавторство в публикации + уникальный датасет</td></tr>
+<tr><td>Психолог</td><td>следит за состоянием людей; может остановить съёмку</td><td>кейс для статьи и практика</td></tr>
+<tr><td>Юрист</td><td>согласия, персональные данные, право на изображение</td><td>бесплатные консультации: юридические клиники вузов, НКО</td></tr>
+<tr><td>Второй человек в комнате</td><td>безопасность, «смотрит за комнатой»</td><td>помощь, практика, упоминание</td></tr>
+<tr><td>Монтажёр</td><td>4–6 эпизодов в месяц</td><td>портфолио и материал</td></tr>
+<tr><td>Помещение</td><td>стабильный свет и звук весь сезон</td><td>«приведу 20 человек» + упоминание</td></tr>
+</tbody></table></div>
+<p>Начать можно с одного: <strong>второй человек в комнате</strong>. Это не про науку, это про безопасность.</p>
+<hr>
+<h2 id="8-как-выглядит-первый-выпуск">8. Как выглядит первый выпуск</h2>
+<p>Первый вечер — 10–15 человек, можно знакомых. Снимаешь всё, даже если стыдно, и никому не показываешь.</p>
+<p>Первый выпуск — 12–15 минут: круг, три-четыре человека крупно, вопрос дня, и обязательно число в конце:</p>
+<blockquote><p>«За вечер — 20 человек. Помню по имени — 11. На следующий день — 6. Через месяц — 2. Предсказал ответ на вопрос дня — 9 раз из 20. Всего в счётчике: 40 из 1 000.»</p></blockquote>
+<p>Каждый выпуск заканчивается числом, а не эмоцией. Эмоции зритель придумает сам.</p>
+<hr>
+<h2 id="9-как-понять-что-получается-и-когда-останавливаться">9. Как понять, что получается (и когда останавливаться)</h2>
+<ul>
+<li><strong>Зелёный:</strong> люди приходят, вечер идёт по времени, ты помнишь имена на следующий день, монтаж выходит раз в неделю, расходы ноль.</li>
+<li><strong>Жёлтый:</strong> стал путать лица, раздражаться на людей, вечера стали «работой» — снижаем темп до одного вечера в неделю, но правила не меняем.</li>
+<li><strong>Красный:</strong> не спишь, появилась тревога, кто-то из участников пострадал, начал приукрашивать цифры — <strong>стоп</strong>. Разбираемся, потом продолжаем.</li>
+</ul>
+<p>Остановиться на 500 и честно сказать «вот что вышло» — это не провал. Провал — дотянуть до 10 000 и соврать в конце.</p>
+<hr>
+<h2 id="10-что-почти-наверняка-пойдёт-не-так">10. Что почти наверняка пойдёт не так</h2>
+<div class="tw"><table><thead><tr><th>Проблема</th><th>Что делаем</th></tr></thead><tbody>
+<tr><td>На вечер пришло 6 человек вместо 20</td><td>нормально, записываем как есть; в следующие разы — 50 приглашений</td></tr>
+<tr><td>Помещение отказало за день</td><td>запасное место: парк, коворкинг, аудитория; перенос — тоже данные</td></tr>
+<tr><td>Ты устал на 30-м вечере</td><td>один вечер в неделю, день без людей, отпуск раз в 2 месяца</td></tr>
+<tr><td>Сказали «это фейк»</td><td>показываем реестр, записи и цифры; ничего не прячем</td></tr>
+<tr><td>Участник почувствовал себя использованным</td><td>заранее проговариваем правила, после вечера спрашиваем «как вы»</td></tr>
+<tr><td>В комментариях «сделай его другом!»</td><td>объясняем: дружба не по заказу; модерация режет такие просьбы</td></tr>
+<tr><td>Стал узнаваемым и тебя ищут</td><td>не публикуем адреса и маршруты в реальном времени</td></tr>
+</tbody></table></div>
+<hr>
+<h2 id="11-календарь-одной-картинкой">11. Календарь одной картинкой</h2>
+<pre><code>неделя 1        неделя 2-3       месяц 2        месяц 4        полгода
+   |                |                |              |              |
+замер «до»      100 человек       500 человек    1 000          1 500
+8 вопросов      первые эпизоды    видно, что     сезон целиком   потолок
+найдено место   счётчик идёт      память не      и открытые      слабых связей
+                                  тянет          данные</code></pre>
+<p>Дальше — 10 000: это уже работа с командой и деньгами, года на три. И только после этого разговор про миллион, который живёт не в комнате, а в эфире.</p>
+<hr>
+<h2 id="12-пять-запретов">12. Пять запретов</h2>
+<ol>
+<li>Не называть подписчиков друзьями. Даже в шутку.</li>
+<li>Не покупать подписчиков и просмотры.</li>
+<li>Не менять правила по ходу и не приукрашивать цифры.</li>
+<li>Не показывать человека без письменного согласия. Даже на секунду.</li>
+<li>Не звать на вечер тех, кому меньше 18.</li>
+</ol>
+<hr>
+<h2 id="13-если-совсем-коротко">13. Если совсем коротко</h2>
+<blockquote><p>Собирать по 10–25 незнакомых людей вечером, слушать их по две минуты, говорить с каждым лично, снимать на телефон и записывать, кого запомнил.</p>
+<p>Ноль денег не мешает пройти первые 1 500 человек. Он мешает только масштабу.</p>
+<p>Первая неделя — замер «до», восемь вопросов и помещение. Не съёмки.</p></blockquote>
+  </article>
+  <aside class="toc"><div class="t">На этой странице</div><a class="" href="#1-что-мы-делаем">1. Что мы делаем</a><a class="" href="#2-хватает-ли-1025-человек-в-день">2. Хватает ли 10–25 человек в день</a><a class="" href="#3-как-проходит-вечер">3. Как проходит вечер</a><a class="" href="#4-сколько-стоит">4. Сколько стоит</a><a class="" href="#5-что-делать-на-этой-неделе">5. Что делать на этой неделе</a><a class="" href="#6-где-взять-20-человек-это-тяжелее-съёмки">6. Где взять 20 человек (это тяжелее съёмки)</a><a class="" href="#7-кто-нужен-и-как-платить-когда-денег-нет">7. Кто нужен (и как платить, когда денег нет)</a><a class="" href="#8-как-выглядит-первый-выпуск">8. Как выглядит первый выпуск</a><a class="" href="#9-как-понять-что-получается-и-когда-останавливаться">9. Как понять, что получается (и когда останавливаться)</a><a class="" href="#10-что-почти-наверняка-пойдёт-не-так">10. Что почти наверняка пойдёт не так</a><a class="" href="#11-календарь-одной-картинкой">11. Календарь одной картинкой</a><a class="" href="#12-пять-запретов">12. Пять запретов</a><a class="" href="#13-если-совсем-коротко">13. Если совсем коротко</a></aside>
+</div></div>
+<footer><div class="foot-in">
+  <span>EX · ONEDOPEA · 2026 · протокол v1</span>
+  <nav>
+    <a href="../index.html">Лендинг</a>
+    <a href="../docs/index.html">Документы</a>
+    <a href="../docs/PITCH.html">Питч</a>
+    <a href="../join.html">Записаться</a>
+  </nav>
+</div></footer>
+</body>
+</html>
