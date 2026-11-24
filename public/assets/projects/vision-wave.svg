@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" fill="none">
+  <defs>
+    <linearGradient id="vsWvBg" x1="20" y1="10" x2="880" y2="550" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF8F4"/>
+      <stop offset="1" stop-color="#F4E3D9"/>
+    </linearGradient>
+    <linearGradient id="vsWaveLine" x1="140" y1="260" x2="760" y2="260" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF5A1F"/>
+      <stop offset=".52" stop-color="#FF9F4A"/>
+      <stop offset="1" stop-color="#3ECF8E"/>
+    </linearGradient>
+    <filter id="vsWvSh" x="84" y="68" width="732" height="432" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#783017" flood-opacity=".14"/>
+    </filter>
+  </defs>
+  <rect width="900" height="560" rx="32" fill="url(#vsWvBg)"/>
+  <g filter="url(#vsWvSh)">
+    <rect x="102" y="84" width="696" height="392" rx="28" fill="#FFFDFB"/>
+  </g>
+  <text x="142" y="132" fill="#D94E1F" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10.5" font-weight="800" letter-spacing="1.6">АРХИТЕКТУРА И КЛИЕНТЫ VISION AUDIO</text>
+  <text x="142" y="164" fill="#1D222B" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" font-weight="800">Независимая музыка · Персональный эфир</text>
+
+  <!-- Wave stage -->
+  <rect x="142" y="186" width="616" height="148" rx="20" fill="#12161F"/>
+  <path d="M168 260C226 196 278 324 338 260C398 196 450 324 510 260C570 196 622 324 732 260" stroke="url(#vsWaveLine)" stroke-width="5" stroke-linecap="round"/>
+  <path d="M168 260C226 226 278 294 338 260C398 226 450 294 510 260C570 226 622 294 732 260" stroke="#FFB15C" stroke-opacity=".45" stroke-width="2.5" stroke-linecap="round"/>
+  <rect x="168" y="206" width="166" height="26" rx="13" fill="#232938"/>
+  <text x="251" y="223" text-anchor="middle" fill="#FFB15C" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10" font-weight="700">ЭФИР «МОЯ ВОЛНА» · v2</text>
+  <text x="732" y="314" text-anchor="end" fill="#8B96AA" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11">PostgreSQL + pgvector · права и модерация</text>
+
+  <!-- 4 Client / Contour Cards -->
+  <rect x="142" y="354" width="144" height="92" rx="16" fill="#FFF6F1" stroke="#F4D3C3"/>
+  <text x="160" y="382" fill="#C94114" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11" font-weight="800">ГОТОВО</text>
+  <text x="160" y="405" fill="#222834" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="14" font-weight="800">Web PWA</text>
+  <text x="160" y="425" fill="#6F7888" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11">IndexedDB офлайн</text>
+
+  <rect x="299" y="354" width="144" height="92" rx="16" fill="#FFF6F1" stroke="#F4D3C3"/>
+  <text x="317" y="382" fill="#C94114" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11" font-weight="800">API v1</text>
+  <text x="317" y="405" fill="#222834" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="14" font-weight="800">Node 22</text>
+  <text x="317" y="425" fill="#6F7888" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11">SQLite · FTS · Стрим</text>
+
+  <rect x="456" y="354" width="144" height="92" rx="16" fill="#F6FBF9" stroke="#C5E9DA"/>
+  <text x="474" y="382" fill="#187D53" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11" font-weight="800">МОБИЛЬНЫЙ</text>
+  <text x="474" y="405" fill="#222834" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="14" font-weight="800">Expo App</text>
+  <text x="474" y="425" fill="#6F7888" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11">Android и iOS</text>
+
+  <rect x="613" y="354" width="145" height="92" rx="16" fill="#F5F7FC" stroke="#D4DDF0"/>
+  <text x="631" y="382" fill="#465D91" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11" font-weight="800">НАСТОЛЬНЫЙ</text>
+  <text x="631" y="405" fill="#222834" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="14" font-weight="800">Tauri</text>
+  <text x="631" y="425" fill="#6F7888" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11">Windows · Linux</text>
+</svg>

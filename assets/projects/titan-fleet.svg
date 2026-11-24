@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" fill="none">
+  <defs>
+    <linearGradient id="ttFlBg" x1="20" y1="10" x2="880" y2="550" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FBF7EE"/>
+      <stop offset="1" stop-color="#EDE2CE"/>
+    </linearGradient>
+    <filter id="ttFlSh" x="78" y="64" width="744" height="444" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#5B451B" flood-opacity=".13"/>
+    </filter>
+  </defs>
+  <rect width="900" height="560" rx="32" fill="url(#ttFlBg)"/>
+  <g filter="url(#ttFlSh)">
+    <rect x="96" y="80" width="708" height="400" rx="26" fill="#FFFDF9"/>
+  </g>
+  <rect x="96" y="80" width="708" height="8" rx="4" fill="#FFB300"/>
+
+  <text x="132" y="128" fill="#8C6D2E" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10.5" font-weight="800" letter-spacing="1.6">АВТОПАРК TITAN · МОСКВА И ОБЛАСТЬ</text>
+  <text x="132" y="160" fill="#18202C" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="24" font-weight="800">Мобильные автокраны 14–500 тонн</text>
+
+  <!-- Load chart schematic -->
+  <rect x="132" y="184" width="380" height="196" rx="18" fill="#121822"/>
+  <path d="M162 346h320M162 198v148" stroke="#2D3A4F" stroke-width="1.5"/>
+  <path d="M162 346A210 210 0 0 1 372 206" stroke="#2E7BFF" stroke-width="1.6" stroke-dasharray="5 6"/>
+  <path d="M162 346A150 150 0 0 1 312 232" stroke="#FFB300" stroke-opacity=".45" stroke-width="1.4" stroke-dasharray="4 5"/>
+  <path d="M188 336L406 210" stroke="#FFB300" stroke-width="9" stroke-linecap="round"/>
+  <path d="M406 214v76" stroke="#60A5FA" stroke-width="3" stroke-linecap="round"/>
+  <rect x="392" y="290" width="28" height="20" rx="5" fill="#FFB300"/>
+  <rect x="170" y="324" width="66" height="22" rx="6" fill="#2A3649" stroke="#FFB300" stroke-width="2"/>
+  <text x="478" y="216" text-anchor="end" fill="#FFD166" font-family="monospace" font-size="11" font-weight="700">R = 14..56 м</text>
+  <text x="478" y="236" text-anchor="end" fill="#93C5FD" font-family="monospace" font-size="11">H = до 108 м</text>
+
+  <!-- Right fleet cards -->
+  <rect x="532" y="184" width="238" height="58" rx="14" fill="#FAF6ED" stroke="#E6DCC8"/>
+  <text x="550" y="209" fill="#1A212C" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="13.5" font-weight="800">25–32 т · Городские</text>
+  <text x="550" y="228" fill="#6E7887" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11">Стрела 28–31 м · тесные дворы</text>
+
+  <rect x="532" y="253" width="238" height="58" rx="14" fill="#FFF7E2" stroke="#F3C75F"/>
+  <text x="550" y="278" fill="#1A212C" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="13.5" font-weight="800">70–160 т · Монтажные</text>
+  <text x="550" y="297" fill="#7A5D1A" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11">Металлоконструкции · Чиллер · ЖБИ</text>
+
+  <rect x="532" y="322" width="238" height="58" rx="14" fill="#FAF6ED" stroke="#E6DCC8"/>
+  <text x="550" y="347" fill="#1A212C" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="13.5" font-weight="800">250–500 т · Тяжёлые</text>
+  <text x="550" y="366" fill="#6E7887" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11">Мосты · Промышленные агрегаты</text>
+
+  <!-- Bottom trust strip -->
+  <rect x="132" y="400" width="638" height="50" rx="14" fill="#F6F1E6"/>
+  <text x="451" y="430" text-anchor="middle" fill="#3B4351" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="12" font-weight="700">Фиксированная цена до выезда  ·  Замена при поломке за 1 час  ·  Ростехнадзор и ЭДО</text>
+</svg>

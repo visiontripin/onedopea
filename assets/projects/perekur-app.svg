@@ -9,21 +9,23 @@
   <g filter="url(#shadow)"><rect x="90" y="70" width="720" height="420" rx="24" fill="#FFFDF9"/></g>
   <path d="M114 70h672a24 24 0 0 1 24 24v54H90V94a24 24 0 0 1 24-24Z" fill="#FFF9F1"/>
   <circle cx="119" cy="110" r="5" fill="#F27B44"/><circle cx="138" cy="110" r="5" fill="#F7BE73"/><circle cx="157" cy="110" r="5" fill="#E8D0B9"/>
-  <rect x="185" y="99" width="147" height="22" rx="11" fill="#F5ECE2"/><text x="202" y="114" fill="#9A7C67" font-family="Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.8">PEREKUR.APP</text>
+  <rect x="185" y="99" width="186" height="22" rx="11" fill="#F5ECE2"/><text x="202" y="114" fill="#9A7C67" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.5">ПЕРЕКУР+ · PWA &amp; ФОН</text>
+  <rect x="602" y="96" width="178" height="28" rx="14" fill="#ECFDF5"/><circle cx="620" cy="110" r="4.5" fill="#22C55E"/><text x="632" y="114" fill="#166534" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10" font-weight="700">ЗАЩИТА ОТ СНА ВКЛ.</text>
   <rect x="90" y="148" width="720" height="1" fill="#F0E7DD"/>
-  <rect x="120" y="184" width="48" height="48" rx="16" fill="url(#accent)"/>
-  <path d="M135 202h18v5c0 6-3 10-8 10h-3c-4 0-7-4-7-10v-5Zm17 2h2c3 0 5 2 5 5s-2 5-5 5h-2m-12-15c-2-3 3-4 2-8m8 8c-2-2 2-4 1-7" stroke="#FFF7E8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-  <text x="184" y="204" fill="#3E3029" font-family="Arial,sans-serif" font-size="23" font-weight="700">Перекур</text><text x="184" y="224" fill="#A08C7C" font-family="Arial,sans-serif" font-size="12">Напоминание о перерывах</text>
-  <rect x="625" y="192" width="150" height="34" rx="17" fill="#FFF1E4"/><circle cx="644" cy="209" r="5" fill="#E87536"/><text x="657" y="213" fill="#A6532C" font-family="Arial,sans-serif" font-size="11" font-weight="700">НАПОМИНАНИЯ ВКЛ.</text>
-  <text x="120" y="276" fill="#8A7565" font-family="Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.4">ГОТОВЫЙ РЕЖИМ</text>
-  <rect x="120" y="291" width="315" height="70" rx="16" fill="#FFF9F3" stroke="#F2E4D6"/>
-  <circle cx="153" cy="326" r="17" fill="#FFE9D5"/><path d="M153 316v11l7 4" stroke="#E66A32" stroke-width="2.4" stroke-linecap="round"/><text x="182" y="321" fill="#4E3E32" font-family="Arial,sans-serif" font-size="13" font-weight="700">Каждый час в :55</text><text x="182" y="340" fill="#A18B79" font-family="Arial,sans-serif" font-size="11">08:00 — 17:00 · Пн–Пт</text>
-  <rect x="120" y="378" width="315" height="74" rx="16" fill="#FFF9F3" stroke="#F2E4D6"/>
-  <text x="140" y="401" fill="#8A7565" font-family="Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1">СЛЕДУЮЩИЙ ПЕРЕРЫВ</text><text x="140" y="433" fill="#3F3128" font-family="Arial,sans-serif" font-size="24" font-weight="700">через 12 минут</text>
-  <rect x="473" y="286" width="302" height="164" rx="18" fill="#FFF9F3" stroke="#F2E4D6"/>
-  <text x="497" y="312" fill="#8A7565" font-family="Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.2">НЕДЕЛЬНЫЙ РИТМ</text>
-  <path d="M505 402h237" stroke="#EADDCF" stroke-width="2" stroke-linecap="round"/>
-  <path d="M517 367v35m45-56v56m45-36v36m45-61v61m45-43v43m45-57v57" stroke="url(#accent)" stroke-width="12" stroke-linecap="round" opacity=".86"/>
-  <circle cx="517" cy="419" r="3" fill="#C4AA94"/><circle cx="562" cy="419" r="3" fill="#C4AA94"/><circle cx="607" cy="419" r="3" fill="#C4AA94"/><circle cx="652" cy="419" r="3" fill="#C4AA94"/><circle cx="697" cy="419" r="3" fill="#C4AA94"/><circle cx="742" cy="419" r="3" fill="#C4AA94"/>
-  <path d="M465 203h100" stroke="#E9D9C9" stroke-width="1"/><text x="465" y="226" fill="#A28B79" font-family="Arial,sans-serif" font-size="10">РАСПИСАНИЕ · ШАБЛОНЫ · ЗВУК</text>
+  <rect x="120" y="180" width="48" height="48" rx="16" fill="url(#accent)"/>
+  <path d="M135 198h18v5c0 6-3 10-8 10h-3c-4 0-7-4-7-10v-5Zm17 2h2c3 0 5 2 5 5s-2 5-5 5h-2m-12-15c-2-3 3-4 2-8m8 8c-2-2 2-4 1-7" stroke="#FFF7E8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="184" y="200" fill="#3E3029" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="23" font-weight="800">Перекур+</text><text x="184" y="220" fill="#A08C7C" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="12">Перерывы, обед, разминка и голосовые сигналы</text>
+  <text x="120" y="264" fill="#8A7565" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.4">ПРЕСЕТЫ И ШАБЛОНЫ</text>
+  <rect x="120" y="278" width="315" height="76" rx="16" fill="#FFF9F3" stroke="#F2E4D6"/>
+  <circle cx="153" cy="316" r="17" fill="#FFE9D5"/><path d="M153 306v11l7 4" stroke="#E66A32" stroke-width="2.4" stroke-linecap="round"/><text x="182" y="311" fill="#4E3E32" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="13.5" font-weight="700">☕ Перекур в :55 · 🍱 Обед 13:00</text><text x="182" y="331" fill="#A18B79" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11">🤸 Разминка / 45 мин · 👀 Глаза / 20 мин</text>
+  <rect x="120" y="368" width="315" height="84" rx="16" fill="#FFF9F3" stroke="#F2E4D6"/>
+  <text x="140" y="393" fill="#8A7565" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1">АНТИ-СОН ВКЛАДКИ И ГОЛОС</text><text x="140" y="418" fill="#3F3128" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="14" font-weight="700">Worker · Wake Lock · Аудио-поток</text><text x="140" y="438" fill="#A18B79" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11">5 женских голосовых профилей + догон пропущенных</text>
+  <rect x="468" y="268" width="308" height="184" rx="18" fill="#FFF9F3" stroke="#F2E4D6"/>
+  <text x="492" y="296" fill="#8A7565" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.2">ДО СЛЕДУЮЩЕГО СИГНАЛА</text>
+  <circle cx="556" cy="368" r="46" stroke="#F2E2D2" stroke-width="8"/><path d="M556 322a46 46 0 1 1-38 72" stroke="url(#accent)" stroke-width="8" stroke-linecap="round"/>
+  <text x="556" y="374" text-anchor="middle" fill="#3F3128" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="18" font-weight="800">12:40</text>
+  <text x="622" y="352" fill="#3F3128" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="14" font-weight="700">Шаблоны и лог</text>
+  <text x="622" y="374" fill="#9A8371" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11">Пн–Пт · 09:00–18:00</text>
+  <text x="622" y="396" fill="#9A8371" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="11">Фоновый эмбиент 1%</text>
+  <rect x="622" y="410" width="130" height="24" rx="12" fill="#FFF0E2"/><text x="687" y="426" text-anchor="middle" fill="#B85324" font-family="system-ui,-apple-system,Segoe UI,Arial,sans-serif" font-size="10" font-weight="700">⬇ Установить PWA</text>
 </svg>

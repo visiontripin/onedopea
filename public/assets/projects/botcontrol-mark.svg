@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" fill="none">
+  <defs>
+    <linearGradient id="bcBg" x1="64" y1="40" x2="536" y2="568" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1E3148"/>
+      <stop offset=".55" stop-color="#152334"/>
+      <stop offset="1" stop-color="#0E1722"/>
+    </linearGradient>
+    <linearGradient id="bcDisc" x1="140" y1="130" x2="452" y2="470" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5E98D4"/>
+      <stop offset="1" stop-color="#2B5682"/>
+    </linearGradient>
+    <radialGradient id="bcGlow" cx="0" cy="0" r="1" gradientTransform="matrix(0 240 -240 0 240 165)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8BC1FA" stop-opacity=".34"/>
+      <stop offset="1" stop-color="#8BC1FA" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="bcPlay" x1="404" y1="98" x2="500" y2="202" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFD452"/>
+      <stop offset="1" stop-color="#F59E0B"/>
+    </linearGradient>
+  </defs>
+  <rect x="22" y="22" width="556" height="556" rx="128" fill="url(#bcBg)"/>
+  <rect x="22" y="22" width="556" height="556" rx="128" fill="url(#bcGlow)"/>
+  <circle cx="300" cy="310" r="196" fill="url(#bcDisc)"/>
+  <circle cx="300" cy="310" r="196" stroke="#FFFFFF" stroke-opacity=".14" stroke-width="6"/>
+  <circle cx="300" cy="310" r="158" stroke="#CFE5FF" stroke-opacity=".18" stroke-width="2" stroke-dasharray="6 10"/>
+  <path d="M132 456C174 404 218 380 264 368" stroke="#FBBF24" stroke-width="15" stroke-linecap="round" stroke-dasharray="2 32"/>
+  <path d="M402 214L198 296c-8.5 3.4-7.8 15 1.1 17.8l46.8 14.4 20.4 61.6c2.7 8.1 13.3 9.5 18.4 2.4l24.6-33.4 40.5 30.2c7.5 5.5 18 1.4 20.1-7.5l42.2-154.8c2.1-8.2-4-15.4-10.1-12.7Z" fill="#F8FAFC"/>
+  <path d="M245.9 328.2L361.5 248.6 281.6 352.4 266.3 389.8Z" fill="#C9DCF0"/>
+  <circle cx="452" cy="152" r="58" fill="url(#bcPlay)" stroke="#132030" stroke-width="12"/>
+  <path d="M436 125l40 27-40 27v-54Z" fill="#132030" stroke="#132030" stroke-width="6" stroke-linejoin="round"/>
+</svg>

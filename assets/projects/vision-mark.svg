@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" fill="none">
+  <defs>
+    <linearGradient id="vsBg" x1="58" y1="42" x2="546" y2="566" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF7838"/>
+      <stop offset=".52" stop-color="#FF5A1F"/>
+      <stop offset="1" stop-color="#C9330A"/>
+    </linearGradient>
+    <radialGradient id="vsGlow" cx="0" cy="0" r="1" gradientTransform="matrix(0 250 -250 0 220 140)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFD09B" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#FFD09B" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="vsSh" x="120" y="130" width="376" height="356" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#5C1604" flood-opacity=".28"/>
+    </filter>
+  </defs>
+  <rect x="22" y="22" width="556" height="556" rx="128" fill="url(#vsBg)"/>
+  <rect x="22" y="22" width="556" height="556" rx="128" fill="url(#vsGlow)"/>
+  <circle cx="300" cy="300" r="214" stroke="#FFE7CE" stroke-opacity=".24" stroke-width="2" stroke-dasharray="10 12"/>
+  <circle cx="300" cy="300" r="172" stroke="#FFE7CE" stroke-opacity=".16" stroke-width="2"/>
+  <g filter="url(#vsSh)">
+    <path d="M168 378V222l102 78-102 78Z" fill="#0D1016"/>
+    <path d="M294 434V166l144 134-144 134Z" fill="#0D1016"/>
+    <path d="M318 386V214l92 86-92 86Z" fill="#FFF4E8" fill-opacity=".14"/>
+  </g>
+  <circle cx="468" cy="146" r="7" fill="#FFE8CF" opacity=".85"/>
+  <circle cx="136" cy="456" r="5" fill="#FFE8CF" opacity=".65"/>
+</svg>
