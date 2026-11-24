@@ -32,9 +32,6 @@ export default function V3Experience({ posts: initialPosts }) {
       if (!payload || payload.type !== 'onedopea:v3-choice') return;
       if (payload.mode === 'matrix') setMode('matrix');
       else if (payload.mode === 'dope') setMode('dope');
-      else if (payload.mode === 'hub') {
-        window.location.href = `${basePath}/`;
-      }
     }
     window.addEventListener('message', onMessage);
     return () => window.removeEventListener('message', onMessage);
@@ -87,23 +84,20 @@ export default function V3Experience({ posts: initialPosts }) {
       <div className="matrix-shell">
         <div className="matrix-back-group">
           <button type="button" className="matrix-back" onClick={() => setMode('capsules')}>
-            ↶ Капсулы v3
+            ↶ Капсулы
           </button>
           <button type="button" className="matrix-back" onClick={() => setMode('dope')}>
-            ✦ Лента Dope
+            ✦ Dope
           </button>
-          <a className="matrix-back" href={`${basePath}/`}>
-            Версии (v1–v3)
-          </a>
         </div>
-        <iframe title="ONEDOPEA v3 — One (7 каналов)" src={`${basePath}/matrix.html`} />
+        <iframe title="ONEDOPEA — One (7 каналов)" src={`${basePath}/matrix.html`} />
       </div>
     );
   }
 
   return (
     <div className="v3-capsule-shell">
-      <iframe title="ONEDOPEA v3 — 3D Red & Blue Capsules" src={`${basePath}/v3/capsules.html`} />
+      <iframe title="ONEDOPEA — Выбирай!" src={`${basePath}/capsules.html`} />
     </div>
   );
 }

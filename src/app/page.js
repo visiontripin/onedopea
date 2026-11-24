@@ -1,5 +1,6 @@
-import VersionHub from '@/components/VersionHub';
+import V3Experience from '@/components/V3Experience';
+import { demoPosts } from '@/data/posts';
 
 export default function HomePage() {
-  return <VersionHub />;
+  return <V3Experience posts={demoPosts} />;
 }
