@@ -41,11 +41,19 @@ export default function PostWrapper({ post, children }) {
     catch { window.prompt('Скопируйте ссылку на пост', url); }
   }
 
+  function scrollDopeTop(event) {
+    const stage = document.getElementById('page-dope');
+    if (stage) {
+      event.preventDefault();
+      stage.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
   return (
-    <article className="post-card" id={post.id} ref={articleRef} data-visible={isVisible ? 'true' : 'false'}>
+    <article className="post-card stage-item" id={post.id} ref={articleRef} data-frag="panel" data-visible={isVisible ? 'true' : 'false'}>
       <header className="post-head">
-        <a className="mini-avatar" href="#top" aria-label="Профиль ONEDOPEA">O</a>
-        <div className="post-author"><strong>{post.author}</strong><span>{post.date}</span></div>
+        <a className="mini-avatar" href="#top" onClick={scrollDopeTop} data-frag="dot" aria-label="Профиль ONEDOPEA">O</a>
+        <div className="post-author" data-frag="lines"><strong>{post.author}</strong><span>{post.date}</span></div>
         <button className="more-button" aria-label="Другие действия">•••</button>
       </header>
       <div className="post-media">{children}</div>
@@ -57,9 +65,9 @@ export default function PostWrapper({ post, children }) {
         <button className={saved ? 'social-action save-action active' : 'social-action save-action'} onClick={() => setSaved(!saved)} aria-label={saved ? 'Убрать из сохранённого' : 'Сохранить'}><Icon name="save" /></button>
       </div>
       <div className="post-copy">
-        <div className="post-caption"><strong>{post.author}</strong> {post.caption}</div>
+        <div className="post-caption" data-frag="lines"><strong>{post.author}</strong> {post.caption}</div>
         {post.tags?.length > 0 && <div className="post-tags">{post.tags.map((tag) => <a key={tag} href={`#tag-${tag}`}>#{tag}</a>)}</div>}
-        {(post.links || (post.href ? [{ label: post.action, url: post.href }] : [])).length > 0 && <div className="post-outlinks">{(post.links || [{ label: post.action, url: post.href }]).map((link) => <a className="post-outlink" href={resolveHref(link.url)} key={link.url} target="_blank" rel="noreferrer">{link.label} <span>↗</span></a>)}</div>}
+        {(post.links || (post.href ? [{ label: post.action, url: post.href }] : [])).length > 0 && <div className="post-outlinks">{(post.links || [{ label: post.action, url: post.href }]).map((link) => <a className="post-outlink" data-frag="chip" href={resolveHref(link.url)} key={link.url} target="_blank" rel="noreferrer">{link.label} <span>↗</span></a>)}</div>}
         {commentsAdded.map((text, index) => <p className="local-comment" key={`${post.id}-comment-${index}`}><strong>Вы</strong> {text}</p>)}
         {commentOpen && <form className="comment-form" onSubmit={(event) => { event.preventDefault(); if (comment.trim()) { setCommentsAdded((items) => [...items, comment.trim()]); setComment(''); setCommentOpen(false); } }}><input value={comment} onChange={(event) => setComment(event.target.value)} placeholder="Добавить комментарий…" aria-label="Комментарий" /><button type="submit" disabled={!comment.trim()}>Опубликовать</button></form>}
       </div>
