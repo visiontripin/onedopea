@@ -7,7 +7,7 @@ const output = path.join(root, 'out');
 const entries = await readdir(output, { withFileTypes: true });
 
 for (const entry of entries) {
-  if (entry.name === 'EX') continue;
+  if (entry.name === 'EX' || entry.name === 'old') continue;
   const target = path.join(root, entry.name);
   await rm(target, { recursive: true, force: true });
   await cp(path.join(output, entry.name), target, { recursive: true, force: true });

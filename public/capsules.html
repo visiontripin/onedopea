@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ONEDOPEA · v3 — Выбери свою капсулу</title>
+    <title>ONEDOPEA — Выбирай!</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
@@ -109,176 +109,25 @@
             height: 100%;
         }
 
-        /* ================= SUBTLE CONTROLS ================= */
-        #reset-btn {
-            position: fixed;
-            right: 20px;
-            bottom: 20px;
-            z-index: 30;
-            opacity: 0;
-            pointer-events: none;
-            transform: translateY(10px);
-            transition: opacity 0.35s ease, transform 0.35s ease, background-color 0.25s ease, color 0.25s ease;
-        }
-
-        #reset-btn.visible {
-            opacity: 1;
-            pointer-events: auto;
-            transform: translateY(0);
-        }
-
-        body.theme-red #reset-btn {
-            background: rgba(8, 30, 16, 0.86);
-            color: #6bff9c;
-            border-color: rgba(54, 255, 122, 0.35);
-        }
-
-        body.theme-blue #reset-btn {
-            background: rgba(255, 255, 255, 0.88);
-            color: #4f46e5;
-            border-color: rgba(129, 140, 248, 0.35);
-        }
-
-        #reset-btn {
-            padding: 9px 16px;
-            border-radius: 999px;
-            font-size: 12px;
-            font-weight: 600;
-            border: 1px solid rgba(203, 213, 225, 0.85);
-            background: rgba(255, 255, 255, 0.9);
-            color: #334155;
-            box-shadow: 0 8px 22px rgba(15, 23, 42, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            cursor: pointer;
-        }
-        #reset-btn:hover { transform: translateY(0) scale(1.04); }
-        #reset-btn:active { transform: translateY(0) scale(0.96); }
-
-        #v3-topbar {
-            position: fixed;
-            top: 20px;
-            left: clamp(18px, 4vw, 48px);
-            right: clamp(18px, 4vw, 48px);
-            z-index: 35;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            pointer-events: none;
-        }
-        .v3-brand {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 11px;
-            font-weight: 800;
-            letter-spacing: 0.16em;
-            color: #52627c;
-            text-decoration: none;
-            pointer-events: auto;
-            transition: color 0.5s ease;
-        }
-        .v3-orb {
-            display: grid;
-            place-items: center;
-            width: 34px;
-            height: 34px;
-            border-radius: 12px;
-            color: #fff;
-            background: linear-gradient(145deg, #7d98eb, #a287e8);
-            box-shadow: 0 7px 18px rgba(101, 126, 202, 0.24);
-            font-size: 13px;
-            letter-spacing: -0.06em;
-        }
-        .v3-versions-btn {
-            pointer-events: auto;
-            padding: 9px 14px;
-            border-radius: 999px;
-            border: 1px solid rgba(148, 163, 184, 0.35);
-            background: rgba(255, 255, 255, 0.84);
-            color: #475569;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            cursor: pointer;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            transition: all 0.35s ease;
-        }
-        .v3-versions-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08); }
-        body.theme-red .v3-brand { color: #7dfba4; }
-        body.theme-red .v3-orb { background: linear-gradient(145deg, #166534, #4ade80); color: #031208; }
-        body.theme-red .v3-versions-btn {
-            background: rgba(6, 22, 12, 0.82);
-            color: #7dfba4;
-            border-color: rgba(74, 222, 128, 0.35);
-        }
-
-        #v3-bottom {
+        /* ================= MINIMAL BOTTOM CAPTION ================= */
+        #choose-caption {
             position: fixed;
             left: 50%;
-            bottom: 24px;
+            bottom: 34px;
             transform: translateX(-50%);
             z-index: 35;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            text-align: center;
-            pointer-events: none;
-            width: min(92vw, 560px);
-        }
-        #v3-hint {
-            padding: 8px 16px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.78);
-            border: 1px solid rgba(203, 213, 225, 0.65);
-            color: #5b6b86;
-            font-size: 11px;
+            font-size: 16px;
             font-weight: 600;
-            letter-spacing: 0.04em;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            transition: all 0.45s ease;
+            letter-spacing: 0.06em;
+            color: #64748b;
+            pointer-events: none;
+            transition: color 0.6s ease, opacity 0.6s ease;
         }
-        #v3-hint b.red { color: #dc2626; }
-        #v3-hint b.blue { color: #4f46e5; }
-        body.theme-red #v3-hint {
-            background: rgba(6, 24, 13, 0.85);
-            border-color: rgba(74, 222, 128, 0.35);
-            color: #bbf7d0;
+        body.theme-red #choose-caption {
+            color: #7dfba4;
         }
-        body.theme-blue #v3-hint {
-            background: rgba(255, 255, 255, 0.9);
-            border-color: rgba(129, 140, 248, 0.38);
-            color: #3730a3;
-        }
-        #v3-enter-btn {
-            display: none;
-            pointer-events: auto;
-            padding: 11px 24px;
-            border-radius: 999px;
-            border: 1px solid transparent;
-            font-size: 12px;
-            font-weight: 800;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: transform 0.22s ease, box-shadow 0.22s ease;
-        }
-        #v3-enter-btn.visible { display: inline-flex; align-items: center; gap: 8px; }
-        #v3-enter-btn:hover { transform: translateY(-2px); }
-        body.theme-red #v3-enter-btn {
-            background: rgba(16, 56, 30, 0.92);
-            border-color: rgba(125, 251, 164, 0.65);
-            color: #eafff2;
-            box-shadow: 0 0 26px rgba(74, 222, 128, 0.35);
-            font-family: "JetBrains Mono", monospace;
-        }
-        body.theme-blue #v3-enter-btn {
-            background: linear-gradient(135deg, #6d88df, #9b7fe1);
-            color: #ffffff;
-            box-shadow: 0 10px 26px rgba(109, 136, 223, 0.36);
+        body.theme-blue #choose-caption {
+            color: #4f46e5;
         }
 
         #v3-fallback {
@@ -292,32 +141,26 @@
         #v3-fallback.show { display: grid; }
         .v3-fb-grid {
             display: flex;
-            gap: 24px;
+            gap: 36px;
             flex-wrap: wrap;
             justify-content: center;
         }
         .v3-fb-pill {
-            width: 220px;
-            padding: 26px 20px;
-            border-radius: 28px;
-            border: 1px solid rgba(203, 213, 225, 0.8);
-            background: rgba(255, 255, 255, 0.92);
-            box-shadow: 0 18px 42px rgba(15, 23, 42, 0.1);
+            padding: 18px 24px;
+            border: 0;
+            background: transparent;
             cursor: pointer;
-            text-align: center;
             transition: transform 0.25s ease;
         }
-        .v3-fb-pill:hover { transform: translateY(-4px); }
+        .v3-fb-pill:hover { transform: translateY(-4px) scale(1.04); }
         .v3-fb-cap {
             display: block;
-            width: 96px;
-            height: 40px;
-            margin: 0 auto 14px;
+            width: 112px;
+            height: 46px;
             border-radius: 999px;
         }
-        .v3-fb-cap.red { background: linear-gradient(90deg, #dc2626 50%, #fecaca 50%); box-shadow: 0 8px 20px rgba(220, 38, 38, 0.28); }
-        .v3-fb-cap.blue { background: linear-gradient(90deg, #3b82f6 50%, #dbeafe 50%); box-shadow: 0 8px 20px rgba(59, 130, 246, 0.28); }
-
+        .v3-fb-cap.red { background: linear-gradient(90deg, #dc2626 50%, #fecaca 50%); box-shadow: 0 12px 26px rgba(220, 38, 38, 0.3); }
+        .v3-fb-cap.blue { background: linear-gradient(90deg, #3b82f6 50%, #dbeafe 50%); box-shadow: 0 12px 26px rgba(59, 130, 246, 0.3); }
     </style>
 </head>
 <body>
@@ -334,40 +177,18 @@
     <!-- ================= 3D SCENE CONTAINER ================= -->
     <div id="webgl-container"></div>
 
-
-    <div id="v3-topbar">
-        <a class="v3-brand" href="../" id="v3-home-link" aria-label="ONEDOPEA v3">
-            <span class="v3-orb">O.</span>
-            <span>ONEDOPEA · V3</span>
-        </a>
-        <button type="button" class="v3-versions-btn" id="v3-hub-btn">↶ Выбор версии (v1–v3)</button>
-    </div>
-
     <div id="v3-fallback">
         <div class="v3-fb-grid">
-            <button type="button" class="v3-fb-pill" id="fb-red">
+            <button type="button" class="v3-fb-pill" id="fb-red" aria-label="Красная капсула">
                 <span class="v3-fb-cap red"></span>
-                <strong>One · Matrix</strong>
-                <div style="font-size:12px;color:#64748b;margin-top:6px">Красная капсула · 7 каналов</div>
             </button>
-            <button type="button" class="v3-fb-pill" id="fb-blue">
+            <button type="button" class="v3-fb-pill" id="fb-blue" aria-label="Синяя капсула">
                 <span class="v3-fb-cap blue"></span>
-                <strong>Dope · Лента</strong>
-                <div style="font-size:12px;color:#64748b;margin-top:6px">Синяя капсула · Светлое портфолио</div>
             </button>
         </div>
     </div>
 
-    <div id="v3-bottom">
-        <button type="button" id="v3-enter-btn">Войти →</button>
-        <div id="v3-hint">Нажми на капсулу: <b class="red">красная — One</b> · <b class="blue">синяя — Dope</b></div>
-    </div>
-
-    <!-- Кнопка возврата (появляется, когда одна из капсул активна) -->
-    <button id="reset-btn"
-            >
-        Собрать
-    </button>
+    <div id="choose-caption">Выбирай!</div>
 
     <script>
         (function () {
@@ -416,15 +237,7 @@
 
             // ================= УПРАВЛЕНИЕ ТЕМОЙ ФОНА =================
             let activeWorldTheme = 'default';
-            const resetBtn = document.getElementById('reset-btn');
-
-
             let enterTimer = null;
-            let pendingTarget = null;
-            const enterBtn = document.getElementById('v3-enter-btn');
-            const hintEl = document.getElementById('v3-hint');
-            const hubBtn = document.getElementById('v3-hub-btn');
-            const homeLink = document.getElementById('v3-home-link');
 
             function dispatchV3Target(target) {
                 if (enterTimer) { clearTimeout(enterTimer); enterTimer = null; }
@@ -432,19 +245,10 @@
                     window.parent.postMessage({ type: 'onedopea:v3-choice', mode: target }, '*');
                     return;
                 }
-                if (target === 'hub') { window.location.href = '../'; return; }
                 if (target === 'matrix') { window.location.href = './?style=matrix'; return; }
                 if (target === 'dope') { window.location.href = './?style=dope'; return; }
             }
 
-            hubBtn.addEventListener('click', function () { dispatchV3Target('hub'); });
-            homeLink.addEventListener('click', function (ev) {
-                ev.preventDefault();
-                dispatchV3Target('hub');
-            });
-            enterBtn.addEventListener('click', function () {
-                if (pendingTarget) dispatchV3Target(pendingTarget);
-            });
             document.getElementById('fb-red').addEventListener('click', function () { dispatchV3Target('matrix'); });
             document.getElementById('fb-blue').addEventListener('click', function () { dispatchV3Target('dope'); });
 
@@ -454,36 +258,14 @@
                 document.body.classList.remove('theme-red', 'theme-blue');
                 if (themeName === 'red') {
                     document.body.classList.add('theme-red');
-                    pendingTarget = 'matrix';
-                    enterBtn.textContent = 'Войти в One →';
-                    enterBtn.classList.add('visible');
-                    hintEl.textContent = 'Красная капсула открыта · Переход в режим One…';
                     enterTimer = setTimeout(function () { dispatchV3Target('matrix'); }, 1850);
                 } else if (themeName === 'blue') {
                     document.body.classList.add('theme-blue');
-                    pendingTarget = 'dope';
-                    enterBtn.textContent = 'Войти в Dope →';
-                    enterBtn.classList.add('visible');
-                    hintEl.textContent = 'Синяя капсула открыта · Переход в ленту Dope…';
                     enterTimer = setTimeout(function () { dispatchV3Target('dope'); }, 1850);
-                } else {
-                    pendingTarget = null;
-                    enterBtn.classList.remove('visible');
-                    hintEl.innerHTML = 'Нажми на капсулу: <b class="red">красная — One</b> · <b class="blue">синяя — Dope</b>';
                 }
-                updateResetButtonVisibility();
             }
 
-            function updateResetButtonVisibility() {
-                const anyActive =
-                    (redPill && redPill.state !== 'closed') ||
-                    (bluePill && bluePill.state !== 'closed');
-                if (anyActive) {
-                    resetBtn.classList.add('visible');
-                } else {
-                    resetBtn.classList.remove('visible');
-                }
-            }
+            function updateResetButtonVisibility() {}
 
             // ================= THREE.JS СЦЕНА =================
             const container = document.getElementById('webgl-container');
@@ -1774,10 +1556,7 @@
                 handlePillClick(e.clientX, e.clientY);
             });
 
-            resetBtn.addEventListener('click', () => {
-                resetPill(redPill, redAngles);
-                resetPill(bluePill, blueAngles);
-            });
+
 
             // Адаптивность при изменении размеров окна
             window.addEventListener('resize', () => {
