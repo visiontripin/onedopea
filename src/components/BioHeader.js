@@ -11,6 +11,14 @@ function pluralRu(n, one, few, many) {
   return many;
 }
 
+function scrollDopeTop(event) {
+  const stage = document.getElementById('page-dope');
+  if (stage) {
+    event.preventDefault();
+    stage.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
 export default function BioHeader({
   postsCount,
   projectsCount = 7,
@@ -18,32 +26,38 @@ export default function BioHeader({
   onChooseStyle,
 }) {
   return (
-    <header className="bio-header" id="top">
+    <header className="bio-header stage-item" id="top">
       <div className="bio-topline">
-        <a className="brand" href="#top">
+        <a className="brand" href="#top" onClick={scrollDopeTop} data-frag="chip">
           <span className="brand-orb">O.</span>
           <span>ONEDOPEA</span>
         </a>
         <div className="bio-actions">
-          <button className="quiet-button" onClick={onChooseStyle}>Капсулы</button>
-          <a className="admin-link" href={`${basePath}/admin/`}>Админ-панель</a>
-          <button className="matrix-link" onClick={onMatrix}><span>↶</span> One</button>
+          <button type="button" className="quiet-button" onClick={onChooseStyle} data-frag="chip">
+            Капсулы
+          </button>
+          <a className="admin-link" href={`${basePath}/admin/`} data-frag="chip">
+            Админ-панель
+          </a>
+          <button type="button" className="matrix-link" onClick={onMatrix} data-frag="chip">
+            <span>↶</span> One
+          </button>
         </div>
       </div>
 
       <div className="bio-main">
-        <div className="profile-orb"><span>O.</span><i /><b /></div>
+        <div className="profile-orb" data-frag="dot"><span>O.</span><i /><b /></div>
         <div className="bio-copy">
           <div className="bio-title-line">
-            <h1>onedopea</h1>
-            <span className="verified" title="ONEDOPEA">✦</span>
+            <h1 data-frag="lines">onedopea</h1>
+            <span className="verified" title="ONEDOPEA" data-frag="dot">✦</span>
           </div>
-          <div className="profile-stats">
+          <div className="profile-stats" data-frag="lines">
             <span><b>{postsCount}</b> {pluralRu(postsCount, 'публикация', 'публикации', 'публикаций')}</span>
             <span><b>{projectsCount}</b> {pluralRu(projectsCount, 'проект', 'проекта', 'проектов')}</span>
             <span><b>∞</b> идей</span>
           </div>
-          <p className="bio-description">
+          <p className="bio-description" data-frag="lines">
             <strong>Цифровые продукты, сервисы и эксперименты</strong><br />
             <a href="#botcontrol-project">BotControl</a> ·{' '}
             <a href="#titan">ТИТАН</a> ·{' '}
@@ -59,7 +73,7 @@ export default function BioHeader({
         </div>
       </div>
 
-      <div className="bio-divider"><span>ЛЕНТА ПРОЕКТОВ</span><i /></div>
+      <div className="bio-divider" data-frag="lines"><span>ЛЕНТА ПРОЕКТОВ</span><i /></div>
     </header>
   );
 }

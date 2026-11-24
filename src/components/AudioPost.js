@@ -357,7 +357,7 @@ export default function AudioPost({ post }) {
         />
       )}
 
-      <div className={resolvedCover ? 'audio-cover has-artwork' : 'audio-cover'}>
+      <div className={resolvedCover ? 'audio-cover has-artwork' : 'audio-cover'} data-frag="panel">
         {resolvedCover ? (
           <>
             <div
@@ -369,12 +369,13 @@ export default function AudioPost({ post }) {
               className="audio-cover-art"
               src={resolvedCover}
               alt={post.coverAlt || `${activeTrack.title} — обложка релиза`}
+              data-frag="panel"
               onError={() => setCoverFailed(true)}
             />
           </>
         ) : (
           <>
-            <div className="cover-orb" />
+            <div className="cover-orb" data-frag="dot" />
             <span className="cover-mark">O.</span>
           </>
         )}
@@ -387,13 +388,14 @@ export default function AudioPost({ post }) {
         <button
           type="button"
           className="play-button"
+          data-frag="dot"
           onClick={togglePlayback}
           disabled={usesSoundCloud && !widgetReady && !widgetError}
           aria-label={playing ? 'Пауза' : 'Воспроизвести'}
         >
           {playing ? 'Ⅱ' : '▶'}
         </button>
-        <div className="audio-details">
+        <div className="audio-details" data-frag="lines">
           <strong>{activeTrack.title}</strong>
           <span>
             {activeTrack.audioBy || post.audioBy || 'ONE DOPE'} · {usesSoundCloud ? 'SoundCloud' : 'MP3'}
@@ -428,6 +430,7 @@ export default function AudioPost({ post }) {
               <div
                 key={track.id || track.soundcloudUrl || idx}
                 role="listitem"
+                data-frag="chip"
                 className={isCurrent ? 'audio-track-row active' : 'audio-track-row'}
               >
                 <button
