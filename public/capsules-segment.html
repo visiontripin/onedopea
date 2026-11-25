@@ -1,0 +1,2979 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ONEDOPEA — Сегмент пилюль и появления страниц (One / Dope)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Локальный Three.js + автоматический CDN-фолбэк -->
+    <script src="./three.min.js"></script>
+    <script>
+        if (!window.THREE) {
+            document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>');
+        }
+    </script>
+
+    <style>
+        /* ==========================================================================
+           СЕКЦИЯ 1. БАЗОВАЯ СЦЕНА, ФОНЫ ТЕМ И 3D-КАПСУЛЫ
+           ========================================================================== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #ffffff;
+            font-family: 'DM Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            transition: background-color 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+            -webkit-font-smoothing: antialiased;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body.theme-red {
+            background-color: #020603;
+        }
+
+        body.theme-blue {
+            background-color: #eff3fb;
+        }
+
+        /* --- Фон Красной пилюли (Matrix / One) --- */
+        #theme-red-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+            background: radial-gradient(circle at 50% 45%, #071a0d 0%, #020603 70%, #000000 100%);
+            overflow: hidden;
+        }
+        body.theme-red #theme-red-layer {
+            opacity: 1;
+        }
+        #matrix-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.48;
+        }
+        .matrix-scanlines {
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                to bottom,
+                rgba(0, 255, 110, 0.03) 0px,
+                rgba(0, 255, 110, 0.03) 1px,
+                transparent 2px,
+                transparent 4px
+            );
+            pointer-events: none;
+        }
+
+        /* --- Фон Синей пилюли (Dope / Светлая лента) --- */
+        #theme-blue-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+            background-color: #eff3fb;
+            background-image:
+                radial-gradient(circle at 20% 18%, rgba(139, 152, 245, 0.16) 0%, transparent 45%),
+                radial-gradient(circle at 82% 75%, rgba(165, 180, 252, 0.18) 0%, transparent 48%),
+                linear-gradient(rgba(129, 140, 248, 0.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(129, 140, 248, 0.06) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+            overflow: hidden;
+        }
+        body.theme-blue #theme-blue-layer {
+            opacity: 1;
+        }
+
+        /* --- 3D WebGL холст с капсулами --- */
+        #webgl-container {
+            position: fixed;
+            inset: 0;
+            z-index: 30;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        #webgl-container.pills-hidden {
+            opacity: 0;
+        }
+        #webgl-container canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* --- Единственная надпись в окне с капсулами --- */
+        #choose-caption {
+            position: fixed;
+            left: 50%;
+            bottom: 34px;
+            transform: translateX(-50%);
+            z-index: 35;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            color: #64748b;
+            pointer-events: none;
+            user-select: none;
+            transition: opacity 0.55s ease, transform 0.55s ease, color 0.6s ease;
+        }
+        body.theme-red #choose-caption { color: #7dfba4; }
+        body.theme-blue #choose-caption { color: #4f46e5; }
+        #choose-caption.is-hidden {
+            opacity: 0;
+            transform: translateX(-50%) translateY(12px);
+        }
+
+        /* --- Фолбэк на случай отсутствия WebGL --- */
+        #v3-fallback {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 25;
+            place-items: center;
+            padding: 24px;
+            transition: opacity 0.4s ease;
+        }
+        #v3-fallback.show { display: grid; }
+        #v3-fallback.page-open { opacity: 0; pointer-events: none; }
+        .v3-fb-grid { display: flex; gap: 36px; flex-wrap: wrap; justify-content: center; }
+        .v3-fb-pill { padding: 18px 24px; border: 0; background: transparent; cursor: pointer; transition: transform 0.25s ease; }
+        .v3-fb-pill:hover { transform: translateY(-4px) scale(1.04); }
+        .v3-fb-cap { display: block; width: 112px; height: 46px; border-radius: 999px; }
+        .v3-fb-cap.red { background: linear-gradient(90deg, #dc2626 50%, #fecaca 50%); box-shadow: 0 12px 26px rgba(220, 38, 38, 0.3); }
+        .v3-fb-cap.blue { background: linear-gradient(90deg, #3b82f6 50%, #dbeafe 50%); box-shadow: 0 12px 26px rgba(59, 130, 246, 0.3); }
+
+        /* ==========================================================================
+           СЕКЦИЯ 2. АНИМАЦИЯ ПОЯВЛЕНИЯ СТРАНИЦ ПОСЛЕ КАПСУЛ (.page-stage)
+           ========================================================================== */
+        .page-stage {
+            position: fixed;
+            inset: 0;
+            z-index: 15;
+            overflow-y: auto;
+            overflow-x: hidden;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateY(24px) scale(0.985);
+            filter: blur(10px);
+            transition:
+                opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+                filter 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+                visibility 0s linear 0.9s;
+        }
+
+        .page-stage.is-visible {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+            transition:
+                opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+                filter 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+                visibility 0s linear 0s;
+        }
+
+        .page-stage .stage-item {
+            opacity: 0;
+            transform: translateY(18px);
+            transition:
+                opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .page-stage.is-visible .stage-item {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .page-stage.is-visible .stage-item:nth-child(1) { transition-delay: 0.08s; }
+        .page-stage.is-visible .stage-item:nth-child(2) { transition-delay: 0.18s; }
+        .page-stage.is-visible .stage-item:nth-child(3) { transition-delay: 0.28s; }
+        .page-stage.is-visible .stage-item:nth-child(4) { transition-delay: 0.38s; }
+
+        /* Режим измерения реальной раскладки перед полётом фрагментов */
+        .page-stage.is-measuring {
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            transform: none !important;
+            filter: none !important;
+            transition: none !important;
+        }
+        .page-stage.is-measuring .stage-item {
+            opacity: 0 !important;
+            transform: none !important;
+            transition: none !important;
+            animation: none !important;
+        }
+
+        /* Мини-иконка красно-синей капсулы для верхней кнопки «К пилюлям» */
+        .pills-mini-icon {
+            display: inline-block;
+            flex: 0 0 auto;
+            width: 16px;
+            height: 8px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, #ef4444 50%, #3b82f6 50%);
+            box-shadow: 0 1px 6px rgba(59, 130, 246, 0.32);
+        }
+
+        /* ==========================================================================
+           СЕКЦИЯ 3. СТРАНИЦА ONE (КРАСНАЯ ПИЛЮЛЯ -> MATRIX CRT БЕЗ ЗАСТАВКИ)
+           ========================================================================== */
+        #page-one {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100%;
+            padding: 76px 20px 48px;
+            color: #d9ffe6;
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+        }
+
+        .one-topbar {
+            position: fixed;
+            top: 12px;
+            left: 14px;
+            z-index: 40;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .one-nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 9px 14px;
+            border: 1px solid rgba(125, 251, 164, 0.36);
+            border-radius: 999px;
+            color: #eafff2;
+            background: rgba(3, 14, 8, 0.82);
+            font-family: 'JetBrains Mono', ui-monospace, monospace;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.22s ease;
+        }
+        .one-nav-btn:hover {
+            border-color: #7dfba4;
+            background: rgba(12, 42, 24, 0.94);
+            box-shadow: 0 0 18px rgba(74, 222, 128, 0.28);
+        }
+
+        .one-crt-card {
+            width: min(760px, 100%);
+            padding: clamp(22px, 4vw, 38px);
+            border: 1px solid rgba(74, 222, 128, 0.36);
+            border-radius: 22px;
+            background: rgba(4, 18, 10, 0.82);
+            box-shadow:
+                0 0 0 1px rgba(125, 251, 164, 0.08) inset,
+                0 24px 64px rgba(0, 0, 0, 0.65),
+                0 0 42px rgba(34, 197, 94, 0.14);
+            backdrop-filter: blur(12px);
+        }
+        .one-kicker {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            color: #7dfba4;
+            font-size: 11px;
+            letter-spacing: 0.16em;
+            margin-bottom: 16px;
+            opacity: 0.88;
+        }
+        .one-title {
+            font-size: clamp(26px, 4.6vw, 44px);
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            color: #ecfff4;
+            text-shadow: 0 0 22px rgba(74, 222, 128, 0.45);
+            margin-bottom: 12px;
+        }
+        .one-lead {
+            color: #a9e8c0;
+            font-size: 13px;
+            line-height: 1.72;
+            margin-bottom: 22px;
+        }
+        .one-channels {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 22px;
+        }
+        .one-ch-btn {
+            padding: 7px 12px;
+            border: 1px solid rgba(74, 222, 128, 0.28);
+            border-radius: 10px;
+            background: rgba(8, 32, 18, 0.72);
+            color: #9ef0bc;
+            font-family: inherit;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .one-ch-btn:hover,
+        .one-ch-btn.active {
+            background: rgba(34, 197, 94, 0.22);
+            border-color: #7dfba4;
+            color: #ffffff;
+            box-shadow: 0 0 16px rgba(74, 222, 128, 0.25);
+        }
+        .one-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .one-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 10px 16px;
+            border: 1px solid rgba(125, 251, 164, 0.52);
+            border-radius: 999px;
+            color: #04150b;
+            background: #7dfba4;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-decoration: none;
+            text-transform: uppercase;
+        }
+        .one-link.ghost {
+            color: #bfffd4;
+            background: transparent;
+        }
+
+        /* ==========================================================================
+           СЕКЦИЯ 4. СТРАНИЦА DOPE (СИНЯЯ ПИЛЮЛЯ -> СВЕТЛАЯ ЛЕНТА ONEDOPEA)
+           ========================================================================== */
+        #page-dope {
+            padding: 0 18px 64px;
+            color: #23324a;
+        }
+        .bio-header {
+            width: min(940px, 100%);
+            margin: 0 auto 22px;
+            padding: 18px 20px 0;
+        }
+        .bio-topline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 5px 0 20px;
+            border-bottom: 1px solid rgba(128, 147, 181, 0.16);
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            color: #485a79;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.15em;
+            text-decoration: none;
+        }
+        .brand-orb {
+            display: grid;
+            place-items: center;
+            width: 30px;
+            height: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            color: #fff;
+            background: linear-gradient(145deg, #7d98eb, #a287e8);
+            box-shadow: 0 7px 18px rgba(101, 126, 202, 0.22);
+            font-size: 12px;
+        }
+        .bio-actions {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+        .pills-back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            min-height: 34px;
+            padding: 0 13px;
+            border: 1px solid rgba(113, 143, 228, 0.34);
+            border-radius: 999px;
+            color: #3d518c;
+            background: linear-gradient(135deg, #fff, #eef3ff);
+            box-shadow: 0 4px 14px rgba(76, 102, 175, 0.1);
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s, box-shadow 0.2s, border-color 0.2s;
+        }
+        .pills-back-btn:hover {
+            transform: translateY(-2px);
+            border-color: rgba(113, 143, 228, 0.58);
+            background: #fff;
+            box-shadow: 0 8px 20px rgba(67, 88, 137, 0.14);
+        }
+        .matrix-link {
+            min-height: 34px;
+            padding: 0 13px;
+            border: 1px solid rgba(123, 146, 193, 0.22);
+            border-radius: 11px;
+            color: #566fba;
+            background: linear-gradient(135deg, #fff, #eef2fc);
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+        }
+        .matrix-link:hover {
+            transform: translateY(-2px);
+            background: #fff;
+            box-shadow: 0 7px 18px rgba(67, 88, 137, 0.1);
+        }
+        .dope-floating-pills-btn {
+            position: fixed;
+            top: 12px;
+            left: 14px;
+            z-index: 38;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            min-height: 34px;
+            padding: 0 14px;
+            border: 1px solid rgba(113, 143, 228, 0.38);
+            border-radius: 999px;
+            color: #384c85;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 26px rgba(58, 82, 148, 0.16);
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-10px);
+            transition: opacity 0.26s ease, transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s;
+        }
+        .dope-floating-pills-btn.is-shown {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+        .dope-floating-pills-btn:hover {
+            background: #fff;
+            box-shadow: 0 12px 30px rgba(58, 82, 148, 0.22);
+        }
+        .bio-main {
+            display: grid;
+            grid-template-columns: 170px 1fr;
+            align-items: center;
+            gap: 32px;
+            width: min(760px, 100%);
+            margin: 26px auto 22px;
+        }
+        @keyframes floatSoft {
+            0%, 100% { transform: translate3d(0, 0, 0); }
+            50% { transform: translate3d(0, -10px, 0); }
+        }
+        .profile-orb {
+            position: relative;
+            display: grid;
+            place-items: center;
+            width: 138px;
+            height: 138px;
+            margin: auto;
+            border: 1px solid #fff;
+            border-radius: 50%;
+            color: #6c82c5;
+            background: radial-gradient(circle at 31% 24%, #fff 0 7%, #e6edff 35%, #cad6f5 80%);
+            box-shadow:
+                inset -10px -13px 30px rgba(103, 128, 190, 0.13),
+                inset 8px 10px 25px #fff,
+                0 18px 42px rgba(94, 119, 185, 0.19);
+            animation: floatSoft 6s ease-in-out infinite;
+        }
+        .profile-orb span {
+            font-family: 'Manrope', sans-serif;
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: -0.08em;
+        }
+        .bio-title-line {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .bio-title-line h1 {
+            font-family: 'Manrope', sans-serif;
+            font-size: 23px;
+            font-weight: 700;
+            letter-spacing: -0.04em;
+        }
+        .verified {
+            display: grid;
+            place-items: center;
+            width: 17px;
+            height: 17px;
+            border-radius: 50%;
+            color: #fff;
+            background: linear-gradient(135deg, #7694e8, #a289e8);
+            font-size: 9px;
+        }
+        .profile-stats {
+            display: flex;
+            gap: 28px;
+            margin: 14px 0;
+            color: #6b7890;
+            font-size: 12px;
+        }
+        .profile-stats b { color: #34435b; }
+        .bio-description {
+            color: #69768c;
+            font-size: 12px;
+            line-height: 1.68;
+        }
+        .bio-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: min(680px, 100%);
+            margin: 0 auto;
+            color: #8390a5;
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.2em;
+        }
+        .bio-divider i {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(137, 160, 207, 0.28), transparent);
+        }
+
+        .feed-column {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            width: min(680px, 100%);
+            margin: 0 auto;
+        }
+        .post-card {
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.94);
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.88);
+            box-shadow: 0 14px 42px rgba(64, 82, 124, 0.08);
+            backdrop-filter: blur(12px);
+            padding: 18px 20px;
+        }
+        .post-card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 11px;
+            color: #7c8aa3;
+        }
+        .post-card-head strong {
+            color: #33435d;
+            font-size: 13px;
+        }
+        .demo-cover {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding: 16px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #1b2438, #2d3b5e);
+            color: #fff;
+            margin-bottom: 12px;
+        }
+        .demo-cover img {
+            width: 84px;
+            height: 84px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            flex-shrink: 0;
+        }
+        .demo-cover h3 {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+        .demo-cover p {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.76);
+            line-height: 1.5;
+        }
+        .post-card-copy {
+            font-size: 12.5px;
+            line-height: 1.65;
+            color: #5e6c84;
+        }
+
+        @media (max-width: 700px) {
+            .bio-main { grid-template-columns: 96px 1fr; gap: 16px; }
+            .profile-orb { width: 86px; height: 86px; }
+            .profile-orb span { font-size: 26px; }
+            .bio-actions { gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+            .pills-back-btn, .matrix-link { min-height: 31px; padding: 0 10px; font-size: 10px; }
+            .one-topbar { top: 10px; left: 10px; gap: 6px; }
+            .one-nav-btn { padding: 8px 12px; font-size: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== 1. ФОНОВЫЕ СЛОИ ТЕМ ==================== -->
+    <div id="theme-red-layer">
+        <canvas id="matrix-canvas"></canvas>
+        <div class="matrix-scanlines"></div>
+    </div>
+    <div id="theme-blue-layer"></div>
+
+    <!-- ==================== 2. СТРАНИЦА ONE (ПОЯВЛЯЕТСЯ ПОСЛЕ КРАСНОЙ ПИЛЮЛИ) ==================== -->
+    <section id="page-one" class="page-stage" aria-hidden="true">
+        <div class="one-topbar stage-item">
+            <button type="button" class="one-nav-btn" data-action="back-to-pills" data-frag="chip">
+                <i class="pills-mini-icon" aria-hidden="true"></i>
+                <span>К пилюлям</span>
+            </button>
+            <button type="button" class="one-nav-btn" data-action="switch-to-blue" data-frag="chip">✦ Dope</button>
+        </div>
+
+        <article class="one-crt-card stage-item" data-frag="panel">
+            <div class="one-kicker" data-frag="lines">
+                <span>ONEDOPEA // ONE</span>
+                <span id="one-ch-index">КАНАЛ 01 / 07</span>
+            </div>
+            <h2 class="one-title" id="one-ch-title" data-frag="lines">BOTCONTROL</h2>
+            <p class="one-lead" id="one-ch-lead" data-frag="lines">
+                Автономная среда сборки и круглосуточного запуска Telegram-ботов со смартфона или ПК без аренды VPS: шифрование ключей Android Keystore, визуальные сценарии, локальные модели LiteRT-LM и совместимость с Python.
+            </p>
+            <div class="one-channels" id="one-ch-list">
+                <button type="button" class="one-ch-btn active" data-ch="0" data-frag="chip">01 BotControl</button>
+                <button type="button" class="one-ch-btn" data-ch="1" data-frag="chip">02 ТИТАН</button>
+                <button type="button" class="one-ch-btn" data-ch="2" data-frag="chip">03 Vision Audio</button>
+                <button type="button" class="one-ch-btn" data-ch="3" data-frag="chip">04 Подработка.МСК</button>
+                <button type="button" class="one-ch-btn" data-ch="4" data-frag="chip">05 Лесное·Афиша</button>
+                <button type="button" class="one-ch-btn" data-ch="5" data-frag="chip">06 Перекур+</button>
+                <button type="button" class="one-ch-btn" data-ch="6" data-frag="chip">07 EX</button>
+            </div>
+            <div class="one-actions">
+                <a class="one-link" id="one-ch-url" data-frag="chip" href="https://visiontripin.github.io/Bot-Control/" target="_blank" rel="noreferrer">Открыть проект ↗</a>
+                <a class="one-link ghost" data-frag="chip" href="https://t.me/onedopea" target="_blank" rel="noreferrer">Telegram ↗</a>
+            </div>
+        </article>
+    </section>
+
+    <!-- ==================== 3. СТРАНИЦА DOPE (ПОЯВЛЯЕТСЯ ПОСЛЕ СИНЕЙ ПИЛЮЛИ) ==================== -->
+    <section id="page-dope" class="page-stage" aria-hidden="true">
+        <header class="bio-header stage-item">
+            <div class="bio-topline">
+                <a class="brand" href="#page-dope" data-frag="chip">
+                    <span class="brand-orb">O.</span>
+                    <span>ONEDOPEA</span>
+                </a>
+                <div class="bio-actions">
+                    <button type="button" class="pills-back-btn" data-action="back-to-pills" data-frag="chip">
+                        <i class="pills-mini-icon" aria-hidden="true"></i>
+                        <span>К пилюлям</span>
+                    </button>
+                    <button type="button" class="matrix-link" data-action="switch-to-red" data-frag="chip">↶ One</button>
+                </div>
+            </div>
+            <div class="bio-main">
+                <div class="profile-orb" data-frag="dot"><span>O.</span></div>
+                <div>
+                    <div class="bio-title-line">
+                        <h1 data-frag="lines">onedopea</h1>
+                        <span class="verified" data-frag="dot">✦</span>
+                    </div>
+                    <div class="profile-stats" data-frag="lines">
+                        <span><b>10</b> публикаций</span>
+                        <span><b>7</b> проектов</span>
+                        <span><b>∞</b> идей</span>
+                    </div>
+                    <p class="bio-description" data-frag="lines">
+                        <strong>Цифровые продукты, сервисы и эксперименты</strong><br />
+                        BotControl · ТИТАН · Vision Audio · Подработка.МСК · Лесное·Афиша · Перекур+ · EX
+                    </p>
+                </div>
+            </div>
+            <div class="bio-divider" data-frag="lines"><span>ЛЕНТА ПРОЕКТОВ</span><i></i></div>
+        </header>
+
+        <div class="feed-column">
+            <article class="post-card stage-item" data-frag="panel">
+                <div class="post-card-head" data-frag="lines">
+                    <strong>ONE DOPE · Аудиорелизы</strong>
+                    <span>SoundCloud · 2 трека</span>
+                </div>
+                <div class="demo-cover" data-frag="panel">
+                    <img src="https://i1.sndcdn.com/artworks-zY6ZlGoRfGMKTXpz-S3EGpA-t500x500.jpg" alt="Enough Z" data-frag="panel" />
+                    <div>
+                        <h3 data-frag="lines">01 · Enough Z &nbsp;/&nbsp; 02 · Amen</h3>
+                        <p data-frag="lines">Два авторских релиза ONE DOPE под общей обложкой Enough Z.</p>
+                    </div>
+                </div>
+                <p class="post-card-copy" data-frag="lines">
+                    Пример первой карточки ленты Dope для настройки тайминга, плавности проявления и скролла страницы после раскрытия синей капсулы.
+                </p>
+            </article>
+
+            <article class="post-card stage-item" data-frag="panel">
+                <div class="post-card-head" data-frag="lines">
+                    <strong>BOTCONTROL · Платформа</strong>
+                    <span>Android + Desktop</span>
+                </div>
+                <p class="post-card-copy" data-frag="lines">
+                    Автономная среда для сборки и круглосуточного запуска Telegram-ботов со смартфона или ПК без аренды VPS, с локальными моделями LiteRT-LM и поддержкой Python.
+                </p>
+            </article>
+
+            <article class="post-card stage-item" data-frag="panel">
+                <div class="post-card-head" data-frag="lines">
+                    <strong>EX · Документальный эксперимент</strong>
+                    <span>Круг 10–25 человек · 100 → 500 → 1 000</span>
+                </div>
+                <p class="post-card-copy" data-frag="lines">
+                    Вечерние круги незнакомых участников со стартом за 0 €, две минуты внимания каждому, проверка памяти через 24 часа и 30 дней и открытый реестр встреч.
+                </p>
+            </article>
+        </div>
+    </section>
+
+    <!-- Плавающая верхняя кнопка «К пилюлям» при прокрутке ленты Dope -->
+    <button type="button" class="dope-floating-pills-btn" id="dope-floating-pills" data-action="back-to-pills">
+        <i class="pills-mini-icon" aria-hidden="true"></i>
+        <span>К пилюлям</span>
+    </button>
+
+    <!-- ==================== 4. СЛОЙ 3D-КАПСУЛ И НАДПИСЬ «ВЫБИРАЙ!» ==================== -->
+    <div id="webgl-container"></div>
+
+    <div id="v3-fallback">
+        <div class="v3-fb-grid">
+            <button type="button" class="v3-fb-pill" id="fb-red" aria-label="Красная капсула">
+                <span class="v3-fb-cap red"></span>
+            </button>
+            <button type="button" class="v3-fb-pill" id="fb-blue" aria-label="Синяя капсула">
+                <span class="v3-fb-cap blue"></span>
+            </button>
+        </div>
+    </div>
+
+    <div id="choose-caption">Выбирай!</div>
+
+    <script>
+        (function () {
+            'use strict';
+
+            /* ==========================================================================
+               НАСТРОЙКИ СЕГМЕНТА ПЕРЕХОДА (УДОБНО МЕНЯТЬ ПРИ ДОРАБОТКЕ)
+               ========================================================================== */
+            // Прямое скачивание исходного HTML-файла при переходе по ссылке с ?download=1
+            if (typeof URLSearchParams !== 'undefined' && new URLSearchParams(window.location.search).get('download') === '1') {
+                fetch(window.location.pathname, { cache: 'no-store' })
+                    .then(function (r) { return r.blob(); })
+                    .then(function (blob) {
+                        var blobUrl = URL.createObjectURL(blob);
+                        var link = document.createElement('a');
+                        link.href = blobUrl;
+                        link.download = window.location.pathname.split('/').pop() || 'capsules-segment.html';
+                        document.body.appendChild(link);
+                        link.click();
+                        link.remove();
+                        setTimeout(function () { URL.revokeObjectURL(blobUrl); }, 3000);
+                    })
+                    .catch(function () {});
+            }
+
+            const SEGMENT_CONFIG = {
+                // Фолбэк-задержка (мс) до проявления страницы One / Dope,
+                // если проявление не вызвала механика сборки фрагментов
+                pageAppearDelayMs: 900,
+                // Доля долетевших до своих мест фрагментов (0..1), при которой проявляется настоящая страница
+                assembleRevealRatio: 0.55,
+                // Через сколько секунд после раскрытия (после высыпания содержимого) начинают растворяться обе капсулы
+                pourFadeDelaySec: 1.35,
+                // Скорость исчезновения оболочек обеих капсул после высыпания
+                shellFadeOutSpeed: 2.3,
+                // Скорость обратного проявления капсул по кнопке «К пилюлям»
+                shellFadeInSpeed: 3.0,
+                // Оставлять ли 3D-капсулы видимыми в углах экрана поверх страницы (false = обе исчезают)
+                keepCornerPillsVisible: false,
+                // Прятать ли надпись «Выбирай!» после открытия капсулы
+                hideCaptionWhenOpen: true
+            };
+
+            /* ==========================================================================
+               ПРОФИЛЬ КАЧЕСТВА (МОБИЛЬНЫЕ И АДАПТИВНЫЙ FPS)
+               ========================================================================== */
+            const QUALITY = {
+                mobile: (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) ||
+                    Math.min(window.innerWidth, window.innerHeight) < 720,
+                reducedMotion: Boolean(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+            };
+            const FRAG_BOX_COUNT = QUALITY.mobile ? 84 : 136;
+            const FRAG_DOT_COUNT = QUALITY.mobile ? 10 : 18;
+            const FRAG_Z_PLANE = 0.9;
+            const MOTION_SCALE = QUALITY.reducedMotion ? 0.35 : 1;
+            const MAX_PIXEL_RATIO = Math.min(window.devicePixelRatio || 1, QUALITY.mobile ? 1.75 : 2);
+            let pixelRatioCap = MAX_PIXEL_RATIO;
+
+            // Демо-каналы для карточки страницы One (сразу открыта без загрузочной заставки)
+            const ONE_CHANNELS = [
+                { title: 'BOTCONTROL', lead: 'Автономная среда сборки и круглосуточного запуска Telegram-ботов со смартфона или ПК без аренды VPS: шифрование ключей Android Keystore, визуальные сценарии и локальные нейросети LiteRT-LM.', url: 'https://visiontripin.github.io/Bot-Control/' },
+                { title: 'ТИТАН', lead: 'Круглосуточная аренда автокранов 14–500 тонн по Москве и области с инженерным онлайн-калькулятором вылета стрелы, грузоподъёмности и сметы смены.', url: 'https://visiontripin.github.io/titan/' },
+                { title: 'VISION AUDIO', lead: 'Независимая local-first музыкальная платформа и веб-плеер без рекламы: офлайн-фонотека в IndexedDB, живая волновая форма Web Audio и смарт-плейлисты.', url: 'https://visiontripin.github.io/Vision/' },
+                { title: 'ПОДРАБОТКА.МСК', lead: 'Платформа проверенных разовых смен в Москве и области: три контура в одном приложении (исполнитель, заказчик и модератор) и фильтр по метро/МЦД.', url: 'https://visiontripin.github.io/Podrabotka/docs/app.html' },
+                { title: 'ЛЕСНОЕ·АФИША', lead: 'Гиперлокальная платформа событий Пригорода Лесное с интерактивной векторной картой домов и площадок, кабинетами жителей и сценарием ЛесPay.', url: 'https://visiontripin.github.io/Afisha-PL/' },
+                { title: 'ПЕРЕКУР+', lead: 'PWA и настольная утилита ритма рабочего дня с защитой фоновой вкладки от засыпания и голосовыми напоминаниями на русском языке.', url: 'https://visiontripin.github.io/IIepekyp/' },
+                { title: 'EX // ЭКСПЕРИМЕНТ', lead: 'Документальный эксперимент о личных встречах 100 → 500 → 1 000: вечерние круги на 10–25 человек со стартом за 0 €, протокол памяти и открытый реестр.', url: './EX/index.html' }
+            ];
+
+            const pageOneEl = document.getElementById('page-one');
+            const pageDopeEl = document.getElementById('page-dope');
+            const captionEl = document.getElementById('choose-caption');
+            const webglWrapEl = document.getElementById('webgl-container');
+            const fallbackEl = document.getElementById('v3-fallback');
+            const dopeFloatingBtn = document.getElementById('dope-floating-pills');
+
+            let activeWorldTheme = 'default';
+            let pageRevealTimer = null;
+            let pillsAreHidden = false;
+
+            function setPillsHidden(nextHidden) {
+                if (pillsAreHidden === nextHidden) return;
+                pillsAreHidden = nextHidden;
+                webglWrapEl.classList.toggle('pills-hidden', !SEGMENT_CONFIG.keepCornerPillsVisible && nextHidden);
+            }
+
+            pageDopeEl.addEventListener('scroll', function () {
+                const showFloat = pageDopeEl.classList.contains('is-visible') && pageDopeEl.scrollTop > 120;
+                dopeFloatingBtn.classList.toggle('is-shown', showFloat);
+            }, { passive: true });
+
+            document.getElementById('one-ch-list').addEventListener('click', function (ev) {
+                const btn = ev.target.closest('[data-ch]');
+                if (!btn) return;
+                const idx = Number(btn.getAttribute('data-ch'));
+                const item = ONE_CHANNELS[idx];
+                if (!item) return;
+                document.querySelectorAll('.one-ch-btn').forEach(function (b) { b.classList.toggle('active', b === btn); });
+                document.getElementById('one-ch-index').textContent = 'КАНАЛ 0' + (idx + 1) + ' / 07';
+                document.getElementById('one-ch-title').textContent = item.title;
+                document.getElementById('one-ch-lead').textContent = item.lead;
+                document.getElementById('one-ch-url').href = item.url;
+            });
+
+            // ================= МАТРИЧНЫЙ ДОЖДЬ ДЛЯ ТЕМЫ КРАСНОЙ ТАБЛЕТКИ =================
+            const matrixCanvas = document.getElementById('matrix-canvas');
+            const matrixCtx = matrixCanvas.getContext('2d');
+            const matrixChars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF';
+            let matrixDrops = [];
+            let matrixCols = 0;
+
+            function resizeMatrixCanvas() {
+                matrixCanvas.width = window.innerWidth;
+                matrixCanvas.height = window.innerHeight;
+                const fontSize = 15;
+                matrixCols = Math.ceil(matrixCanvas.width / fontSize);
+                matrixDrops = new Array(matrixCols).fill(0).map(function () { return Math.random() * -40; });
+            }
+            resizeMatrixCanvas();
+
+            let matrixAccum = 0;
+            function updateMatrixRain(dt) {
+                if (activeWorldTheme !== 'red') return;
+                matrixAccum += dt;
+                if (matrixAccum < (QUALITY.mobile ? 0.085 : 0.05)) return;
+                matrixAccum = 0;
+
+                matrixCtx.fillStyle = 'rgba(2, 6, 3, 0.14)';
+                matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+
+                matrixCtx.font = '14px "JetBrains Mono", monospace';
+                for (let i = 0; i < matrixCols; i++) {
+                    const ch = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+                    const x = i * 15;
+                    const y = matrixDrops[i] * 15;
+                    matrixCtx.fillStyle = Math.random() > 0.92 ? '#a7f3c0' : '#22c55e';
+                    matrixCtx.fillText(ch, x, y);
+
+                    if (y > matrixCanvas.height && Math.random() > 0.975) {
+                        matrixDrops[i] = 0;
+                    }
+                    matrixDrops[i] += 0.85;
+                }
+            }
+
+            // ================= ПРОЯВЛЕНИЕ / СКРЫТИЕ СТРАНИЦ ONE И DOPE =================
+            function showPageStage(which) {
+                const showOne = which === 'red';
+                const showDope = which === 'blue';
+
+                pageOneEl.classList.toggle('is-visible', showOne);
+                pageOneEl.setAttribute('aria-hidden', String(!showOne));
+
+                pageDopeEl.classList.toggle('is-visible', showDope);
+                pageDopeEl.setAttribute('aria-hidden', String(!showDope));
+                if (showDope) pageDopeEl.scrollTop = 0;
+                if (!showDope) dopeFloatingBtn.classList.remove('is-shown');
+
+                fallbackEl.classList.toggle('page-open', showOne || showDope);
+            }
+
+            function applyWorldTheme(themeName, opts) {
+                const deferPageReveal = Boolean(opts && opts.deferPageReveal);
+                activeWorldTheme = themeName;
+                document.body.classList.remove('theme-red', 'theme-blue');
+                if (pageRevealTimer) {
+                    clearTimeout(pageRevealTimer);
+                    pageRevealTimer = null;
+                }
+
+                if (themeName === 'red') {
+                    document.body.classList.add('theme-red');
+                    if (SEGMENT_CONFIG.hideCaptionWhenOpen) captionEl.classList.add('is-hidden');
+                    if (!deferPageReveal) {
+                        pageRevealTimer = setTimeout(function () { showPageStage('red'); }, SEGMENT_CONFIG.pageAppearDelayMs);
+                    }
+                } else if (themeName === 'blue') {
+                    document.body.classList.add('theme-blue');
+                    if (SEGMENT_CONFIG.hideCaptionWhenOpen) captionEl.classList.add('is-hidden');
+                    if (!deferPageReveal) {
+                        pageRevealTimer = setTimeout(function () { showPageStage('blue'); }, SEGMENT_CONFIG.pageAppearDelayMs);
+                    }
+                } else {
+                    showPageStage('default');
+                    captionEl.classList.remove('is-hidden');
+                }
+            }
+
+            function updateResetButtonVisibility() {}
+
+            document.getElementById('fb-red').addEventListener('click', function () { applyWorldTheme('red'); });
+            document.getElementById('fb-blue').addEventListener('click', function () { applyWorldTheme('blue'); });
+
+            // Кнопки возврата «К пилюлям» и переключения между One / Dope
+            let redPillRef = null;
+            let bluePillRef = null;
+            let redAnglesRef = null;
+            let blueAnglesRef = null;
+            let resetPillFn = null;
+            let resetPillImmediateFn = null;
+            let openPillFn = null;
+
+            document.addEventListener('click', function (ev) {
+                const actionEl = ev.target.closest('[data-action]');
+                if (!actionEl) return;
+                const action = actionEl.getAttribute('data-action');
+
+                if (action === 'back-to-pills') {
+                    setPillsHidden(false);
+                    if (resetPillFn && redPillRef && bluePillRef) {
+                        resetPillFn(redPillRef, redAnglesRef);
+                        resetPillFn(bluePillRef, blueAnglesRef);
+                    }
+                    applyWorldTheme('default');
+                } else if (action === 'switch-to-red') {
+                    setPillsHidden(false);
+                    showPageStage('default');
+                    if (openPillFn && redPillRef && resetPillImmediateFn) {
+                        if (bluePillRef && bluePillRef.state === 'vanished') resetPillImmediateFn(bluePillRef);
+                        if (redPillRef.state !== 'closed') resetPillImmediateFn(redPillRef);
+                        openPillFn(redPillRef, redAnglesRef);
+                    } else {
+                        applyWorldTheme('red');
+                    }
+                } else if (action === 'switch-to-blue') {
+                    setPillsHidden(false);
+                    showPageStage('default');
+                    if (openPillFn && bluePillRef && resetPillImmediateFn) {
+                        if (redPillRef && redPillRef.state === 'vanished') resetPillImmediateFn(redPillRef);
+                        if (bluePillRef.state !== 'closed') resetPillImmediateFn(bluePillRef);
+                        openPillFn(bluePillRef, blueAnglesRef);
+                    } else {
+                        applyWorldTheme('blue');
+                    }
+                }
+            });
+
+            // ================= THREE.JS СЦЕНА =================
+            const container = document.getElementById('webgl-container');
+            const scene = new THREE.Scene();
+
+            const camera = new THREE.PerspectiveCamera(
+                36,
+                window.innerWidth / window.innerHeight,
+                0.1,
+                100
+            );
+            camera.position.set(0, 0.45, 7.6);
+            camera.lookAt(0, 0, 0);
+
+            let renderer;
+            try {
+                if (typeof THREE === 'undefined') throw new Error('THREE unavailable');
+                renderer = new THREE.WebGLRenderer({
+                    antialias: true,
+                    alpha: true,
+                    powerPreference: 'high-performance'
+                });
+            } catch (err) {
+                fallbackEl.classList.add('show');
+                return;
+            }
+            renderer.setPixelRatio(pixelRatioCap);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x000000, 0);
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1.18;
+            renderer.outputEncoding = THREE.sRGBEncoding;
+            container.appendChild(renderer.domElement);
+
+            // Процедурная студийная карта окружения для реалистичных глянцевых бликов на капсулах
+            function createStudioEnvMap() {
+                const envCanvas = document.createElement('canvas');
+                envCanvas.width = 512;
+                envCanvas.height = 256;
+                const ctx = envCanvas.getContext('2d');
+
+                const grad = ctx.createLinearGradient(0, 0, 0, 256);
+                grad.addColorStop(0.0, '#ffffff');
+                grad.addColorStop(0.32, '#f4f7ff');
+                grad.addColorStop(0.55, '#d8e0ec');
+                grad.addColorStop(0.75, '#eef2f7');
+                grad.addColorStop(1.0, '#ffffff');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, 512, 256);
+
+                // Яркие студийные софтбоксы
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(45, 22, 165, 52);
+                ctx.fillRect(285, 26, 175, 48);
+                ctx.fillStyle = 'rgba(255,255,255,0.85)';
+                ctx.fillRect(110, 145, 290, 26);
+
+                const tex = new THREE.CanvasTexture(envCanvas);
+                tex.mapping = THREE.EquirectangularReflectionMapping;
+                tex.encoding = THREE.sRGBEncoding;
+
+                const pmrem = new THREE.PMREMGenerator(renderer);
+                pmrem.compileEquirectangularShader();
+                const envRT = pmrem.fromEquirectangular(tex);
+                tex.dispose();
+                pmrem.dispose();
+                return envRT.texture;
+            }
+
+            scene.environment = createStudioEnvMap();
+
+            // Студийное освещение
+            const hemiLight = new THREE.HemisphereLight(0xffffff, 0xe8eef8, 1.05);
+            scene.add(hemiLight);
+
+            const keyLight = new THREE.DirectionalLight(0xffffff, 1.45);
+            keyLight.position.set(3.5, 6.5, 5.5);
+            scene.add(keyLight);
+
+            const fillLight = new THREE.DirectionalLight(0xf0f6ff, 0.75);
+            fillLight.position.set(-4.5, 2.5, 4.0);
+            scene.add(fillLight);
+
+            const rimLight = new THREE.DirectionalLight(0xffffff, 0.9);
+            rimLight.position.set(0, -3.5, -4.5);
+            scene.add(rimLight);
+
+            // Деликатная каустическая тень под капсулой
+            function createCausticShadowTexture(coreColor, midColor, outerColor) {
+                const c = document.createElement('canvas');
+                c.width = 256;
+                c.height = 128;
+                const ctx = c.getContext('2d');
+
+                const g = ctx.createRadialGradient(128, 64, 12, 128, 64, 118);
+                g.addColorStop(0.0, coreColor);
+                g.addColorStop(0.45, midColor);
+                g.addColorStop(0.8, outerColor);
+                g.addColorStop(1.0, 'rgba(255,255,255,0)');
+
+                ctx.fillStyle = g;
+                ctx.fillRect(0, 0, 256, 128);
+
+                const tex = new THREE.CanvasTexture(c);
+                tex.needsUpdate = true;
+                return tex;
+            }
+
+            // Построение одной половинки капсулы (открытый цилиндр + полусфера + ободок)
+            function createCapsuleHalfMesh(side, radius, halfCylLen, outerMat, innerMat, seamDotMat) {
+                const halfGroup = new THREE.Group();
+
+                // Внешний цилиндр половинки
+                const cylGeo = new THREE.CylinderGeometry(radius, radius, halfCylLen, 42, 1, true);
+                cylGeo.rotateZ(Math.PI / 2);
+                cylGeo.translate(side * (halfCylLen * 0.5), 0, 0);
+                const cylMesh = new THREE.Mesh(cylGeo, outerMat);
+                cylMesh.renderOrder = 3;
+                halfGroup.add(cylMesh);
+
+                // Внешняя полусфера на торце
+                const domeGeo = new THREE.SphereGeometry(
+                    radius,
+                    42,
+                    24,
+                    0,
+                    Math.PI * 2,
+                    0,
+                    Math.PI * 0.5
+                );
+                domeGeo.rotateZ(side === 1 ? -Math.PI / 2 : Math.PI / 2);
+                domeGeo.translate(side * halfCylLen, 0, 0);
+                const domeMesh = new THREE.Mesh(domeGeo, outerMat);
+                domeMesh.renderOrder = 3;
+                halfGroup.add(domeMesh);
+
+                // Внутренняя стенка полости (придаёт толщину желатиновой оболочке)
+                const innerR = radius - 0.045;
+                const innerCylGeo = new THREE.CylinderGeometry(innerR, innerR, halfCylLen, 32, 1, true);
+                innerCylGeo.rotateZ(Math.PI / 2);
+                innerCylGeo.translate(side * (halfCylLen * 0.5), 0, 0);
+                const innerCylMesh = new THREE.Mesh(innerCylGeo, innerMat);
+                innerCylMesh.renderOrder = 2;
+                halfGroup.add(innerCylMesh);
+
+                // Глянцевый ободок на срезе (хорошо виден при раскрытии и закручивании)
+                const rimGeo = new THREE.TorusGeometry(radius - 0.022, 0.022, 14, 42);
+                rimGeo.rotateY(Math.PI / 2);
+                const rimMesh = new THREE.Mesh(rimGeo, outerMat);
+                rimMesh.renderOrder = 4;
+                halfGroup.add(rimMesh);
+
+                // Лёгкая продольная насечка на ободке, чтобы было заметно закручивание при закрытии
+                const seamDotGeo = new THREE.BoxGeometry(0.08, 0.035, 0.035);
+                const seamDot = new THREE.Mesh(seamDotGeo, seamDotMat);
+                seamDot.position.set(side * 0.05, radius - 0.015, 0);
+                seamDot.renderOrder = 4;
+                halfGroup.add(seamDot);
+
+                return halfGroup;
+            }
+
+            // Сборка полной капсулы с сыпучим содержимым и тенью
+            function buildGelCapsule(options) {
+                const radius = 0.52;
+                const halfCylLen = 0.66;
+
+                const group = new THREE.Group();
+                group.position.set(options.baseX, options.baseY, options.baseZ);
+                scene.add(group);
+
+                // Насыщенный глянцевый полупрозрачный желатин (без transmission, чтобы чётко видеть внутренние гранулы)
+                const shellMat = new THREE.MeshPhysicalMaterial({
+                    color: options.shellColor,
+                    emissive: options.emissiveColor,
+                    emissiveIntensity: 0.24,
+                    roughness: 0.07,
+                    metalness: 0.02,
+                    clearcoat: 1.0,
+                    clearcoatRoughness: 0.04,
+                    reflectivity: 1.0,
+                    transparent: true,
+                    opacity: 0.58,
+                    depthWrite: false,
+                    side: THREE.FrontSide
+                });
+
+                const innerWallMat = new THREE.MeshPhysicalMaterial({
+                    color: options.innerWallColor,
+                    emissive: options.emissiveColor,
+                    emissiveIntensity: 0.15,
+                    roughness: 0.18,
+                    metalness: 0.0,
+                    transparent: true,
+                    opacity: 0.22,
+                    depthWrite: false,
+                    side: THREE.BackSide
+                });
+
+                const seamDotMat = new THREE.MeshStandardMaterial({
+                    color: 0xffffff,
+                    roughness: 0.15,
+                    metalness: 0.1,
+                    transparent: true,
+                    opacity: 0.55
+                });
+
+                const leftHalf = createCapsuleHalfMesh(-1, radius, halfCylLen, shellMat, innerWallMat, seamDotMat);
+                const rightHalf = createCapsuleHalfMesh(1, radius, halfCylLen, shellMat, innerWallMat, seamDotMat);
+                group.add(leftHalf);
+                group.add(rightHalf);
+
+                // Невидимая сфера-хитбокс для удобного клика/тапа по капсуле (в том числе в уменьшенном виде в углу)
+                const hitGeo = new THREE.BoxGeometry(2.5, 1.35, 1.35);
+                const hitMat = new THREE.MeshBasicMaterial({ visible: false });
+                const hitMesh = new THREE.Mesh(hitGeo, hitMat);
+                group.add(hitMesh);
+
+                // ===== Сыпучее содержимое: фрагменты будущей страницы =====
+                // Вместо абстрактных гранул — мелкие «кусочки интерфейса» (панели,
+                // строки текста, чипы и точки): при раскрытии они высыпаются,
+                // долетают до своих мест в раскладке страницы и складываются в неё.
+                const fragMat = new THREE.MeshStandardMaterial({
+                    color: 0xffffff,
+                    emissive: options.innerEmissive,
+                    emissiveIntensity: 0.35,
+                    roughness: 0.3,
+                    metalness: 0.06
+                });
+
+                const fragBoxGeo = new THREE.BoxGeometry(1, 1, 1);
+                const fragDotGeo = new THREE.SphereGeometry(1, QUALITY.mobile ? 8 : 10, QUALITY.mobile ? 6 : 8);
+
+                const fragBoxes = new THREE.InstancedMesh(fragBoxGeo, fragMat, FRAG_BOX_COUNT);
+                fragBoxes.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+                fragBoxes.frustumCulled = false;
+                fragBoxes.renderOrder = 1;
+                scene.add(fragBoxes);
+
+                const fragDots = new THREE.InstancedMesh(fragDotGeo, fragMat, FRAG_DOT_COUNT);
+                fragDots.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+                fragDots.frustumCulled = false;
+                fragDots.renderOrder = 1;
+                scene.add(fragDots);
+
+                const boxFrags = [];
+                const dotFrags = [];
+                const dummy = new THREE.Object3D();
+
+                // Одна «крошка» содержимого капсулы
+                function spawnFrag(kind) {
+                    const isDot = kind === 'dot';
+                    const lx = (Math.random() * 2 - 1) * (halfCylLen + 0.24);
+                    const maxR = Math.max(0.06, radius - 0.11);
+                    const ang = Math.random() * Math.PI * 2;
+                    const dist = Math.sqrt(Math.random()) * maxR;
+                    const ly = Math.sin(ang) * dist - 0.06;
+                    const lz = Math.cos(ang) * dist;
+
+                    const origColor = new THREE.Color(options.innerColor);
+                    const hsl = {};
+                    origColor.getHSL(hsl);
+                    origColor.setHSL(
+                        hsl.h + (Math.random() - 0.5) * 0.025,
+                        Math.min(1, hsl.s * (0.94 + Math.random() * 0.12)),
+                        THREE.MathUtils.clamp(hsl.l * (0.86 + Math.random() * 0.24), 0.18, 0.78)
+                    );
+
+                    const themeColor = new THREE.Color(options.themeGrainColor);
+                    const thsl = {};
+                    themeColor.getHSL(thsl);
+                    themeColor.setHSL(
+                        thsl.h + (Math.random() - 0.5) * 0.02,
+                        Math.min(1, thsl.s * (0.92 + Math.random() * 0.14)),
+                        THREE.MathUtils.clamp(thsl.l * (0.86 + Math.random() * 0.26), 0.25, 0.88)
+                    );
+
+                    const baseScale = isDot
+                        ? new THREE.Vector3(0.05, 0.05, 0.05)
+                        : new THREE.Vector3(0.08 + Math.random() * 0.1, 0.035 + Math.random() * 0.045, 0.032);
+
+                    return {
+                        kind: kind,
+                        radius: isDot ? 0.05 : 0.06,
+                        pos: new THREE.Vector3(lx, ly, lz),
+                        vel: new THREE.Vector3(),
+                        worldPos: new THREE.Vector3(options.baseX + lx, options.baseY + ly, options.baseZ + lz),
+                        worldVel: new THREE.Vector3(),
+                        rot: new THREE.Vector3(Math.random() * 6.28, Math.random() * 6.28, Math.random() * 6.28),
+                        rotVel: new THREE.Vector3(),
+                        rotFrom: new THREE.Vector3(),
+                        flatRot: new THREE.Vector3(),
+                        halfSide: lx < 0 ? -1 : 1,
+                        spilled: false,
+                        pourDelay: 0,
+                        collectDelay: 0,
+                        assembleDelay: 0,
+                        assembleDur: 0.9,
+                        assembleP: 0,
+                        assembleFrom: new THREE.Vector3(),
+                        arcAmp: 0.2,
+                        arrived: false,
+                        hidden: false,
+                        fadeP: 0,
+                        fadeDelay: 0,
+                        fadeFromScale: new THREE.Vector3(0.1, 0.05, 0.03),
+                        swirlPhase: Math.random() * Math.PI * 2,
+                        slotIdx: 0,
+                        origColor: origColor,
+                        targetColor: themeColor,
+                        colorMix: 0,
+                        baseScale: baseScale,
+                        curScale: baseScale.clone(),
+                        targetPos: new THREE.Vector3(),
+                        targetScale: baseScale.clone()
+                    };
+                }
+
+                for (let i = 0; i < FRAG_BOX_COUNT; i++) {
+                    const f = spawnFrag('chip');
+                    boxFrags.push(f);
+                    dummy.position.copy(f.worldPos);
+                    dummy.rotation.set(f.rot.x, f.rot.y, f.rot.z);
+                    dummy.scale.set(f.baseScale.x, f.baseScale.y, f.baseScale.z);
+                    dummy.updateMatrix();
+                    fragBoxes.setMatrixAt(i, dummy.matrix);
+                    fragBoxes.setColorAt(i, f.origColor);
+                }
+                for (let i = 0; i < FRAG_DOT_COUNT; i++) {
+                    const f = spawnFrag('dot');
+                    dotFrags.push(f);
+                    dummy.position.copy(f.worldPos);
+                    dummy.rotation.set(0, 0, 0);
+                    dummy.scale.set(f.baseScale.x, f.baseScale.y, f.baseScale.z);
+                    dummy.updateMatrix();
+                    fragDots.setMatrixAt(i, dummy.matrix);
+                    fragDots.setColorAt(i, f.origColor);
+                }
+
+                fragBoxes.instanceMatrix.needsUpdate = true;
+                fragDots.instanceMatrix.needsUpdate = true;
+                if (fragBoxes.instanceColor) fragBoxes.instanceColor.needsUpdate = true;
+                if (fragDots.instanceColor) fragDots.instanceColor.needsUpdate = true;
+
+                // Мягкая каустическая тень на «полу» под капсулой
+                const shadowTex = createCausticShadowTexture(
+                    options.shadowCore,
+                    options.shadowMid,
+                    options.shadowOuter
+                );
+                const shadowGeo = new THREE.PlaneGeometry(3.15, 1.55);
+                const shadowMat = new THREE.MeshBasicMaterial({
+                    map: shadowTex,
+                    transparent: true,
+                    opacity: 0.42,
+                    depthWrite: false
+                });
+                const shadowMesh = new THREE.Mesh(shadowGeo, shadowMat);
+                shadowMesh.rotation.x = -Math.PI / 2;
+                shadowMesh.position.set(options.baseX, -1.22, options.baseZ);
+                scene.add(shadowMesh);
+
+                return {
+                    id: options.id,
+                    group,
+                    leftHalf,
+                    rightHalf,
+                    shellMat,
+                    innerWallMat,
+                    seamDotMat,
+                    hitMesh,
+                    fragBoxes,
+                    fragDots,
+                    boxFrags,
+                    dotFrags,
+                    fragMat,
+                    shadowMesh,
+                    radius,
+                    halfCylLen,
+                    baseX: options.baseX,
+                    baseY: options.baseY,
+                    baseZ: options.baseZ,
+                    innerEmissive: options.innerEmissive,
+                    themeGrainEmissive: options.themeGrainEmissive,
+                    state: 'closed', // 'closed' | 'open' | 'vanished' | 'dock_closing' | 'docked' | 'undocking' | 'collecting' | 'closing'
+                    shellFade: 1,
+                    openProgress: 0,
+                    pageRevealed: false,
+                    revealTimer: 0,
+                    openTimer: 0,
+                    dockTimer: 0,
+                    undockTimer: 0,
+                    collectTimer: 0,
+                    closingProgress: 0,
+                    suctionSide: -1,
+                    curScale: 1,
+                    collectInPlace: false,
+                    collectAnchor: new THREE.Vector3(),
+                    collectScale: 1,
+                    themeTriggered: false,
+                    prevOuterPos: new THREE.Vector3(options.baseX, options.baseY, options.baseZ),
+                    outerVel: new THREE.Vector3(0, 0, 0),
+                    angularVelImpulse: new THREE.Vector3(0, 0, 0),
+                    clickImpulse: new THREE.Vector3(0, 0, 0)
+                };
+            }
+
+            // Красная капсула с синим сыпучим содержимым (при высыпании -> зелёная Матрица BOTCONTROL)
+            const redPill = buildGelCapsule({
+                id: 'red',
+                baseX: -1.72,
+                baseY: 0.08,
+                baseZ: 0,
+                shellColor: 0xff0514,
+                emissiveColor: 0x7a0008,
+                innerWallColor: 0xd90010,
+                innerColor: 0x0044ff,
+                innerEmissive: 0x001a88,
+                themeGrainColor: 0x36ff7a,
+                themeGrainEmissive: 0x16a34a,
+                shadowCore: 'rgba(255, 65, 55, 0.34)',
+                shadowMid: 'rgba(240, 20, 30, 0.16)',
+                shadowOuter: 'rgba(220, 0, 20, 0.04)'
+            });
+
+            // Синяя капсула с красным сыпучим содержимым (при высыпании -> лавандовый ONEDOPEA)
+            const bluePill = buildGelCapsule({
+                id: 'blue',
+                baseX: 1.72,
+                baseY: 0.08,
+                baseZ: 0,
+                shellColor: 0x0038ff,
+                emissiveColor: 0x00157a,
+                innerWallColor: 0x0028d6,
+                innerColor: 0xff0818,
+                innerEmissive: 0x80000a,
+                themeGrainColor: 0x9aa8f8,
+                themeGrainEmissive: 0x5c6bc0,
+                shadowCore: 'rgba(55, 110, 255, 0.34)',
+                shadowMid: 'rgba(20, 65, 245, 0.16)',
+                shadowOuter: 'rgba(0, 40, 220, 0.04)'
+            });
+
+            // Несинхронизированные гармоники для хаотичного вращения по всем осям и дрейфа на 5–30 пикселей
+            const motionProfiles = {
+                red: {
+                    rotX: { baseSpeed: 0.34, f1: 0.61, a1: 0.55, f2: 1.37, a2: 0.32, f3: 2.11, a3: 0.16, phase: 0.4 },
+                    rotY: { baseSpeed: -0.46, f1: 0.73, a1: 0.62, f2: 1.19, a2: 0.28, f3: 1.87, a3: 0.18, phase: 1.7 },
+                    rotZ: { baseSpeed: 0.27, f1: 0.53, a1: 0.48, f2: 1.49, a2: 0.26, f3: 2.33, a3: 0.14, phase: 2.9 },
+                    driftX: { f1: 0.71, f2: 1.29, ampPx: 22, phase: 0.2 },
+                    driftY: { f1: 0.89, f2: 1.51, ampPx: 26, phase: 1.3 },
+                    driftZ: { f1: 0.63, f2: 1.13, ampPx: 14, phase: 2.5 }
+                },
+                blue: {
+                    rotX: { baseSpeed: -0.39, f1: 0.67, a1: 0.58, f2: 1.27, a2: 0.30, f3: 1.99, a3: 0.17, phase: 2.1 },
+                    rotY: { baseSpeed: 0.42, f1: 0.59, a1: 0.64, f2: 1.43, a2: 0.31, f3: 2.23, a3: 0.15, phase: 0.8 },
+                    rotZ: { baseSpeed: -0.31, f1: 0.79, a1: 0.50, f2: 1.31, a2: 0.24, f3: 1.73, a3: 0.16, phase: 3.6 },
+                    driftX: { f1: 0.83, f2: 1.41, ampPx: 24, phase: 1.9 },
+                    driftY: { f1: 0.67, f2: 1.37, ampPx: 20, phase: 0.6 },
+                    driftZ: { f1: 0.77, f2: 1.21, ampPx: 16, phase: 3.1 }
+                }
+            };
+
+            const redAngles = { x: 0.2, y: 0.4, z: -0.15 };
+            const blueAngles = { x: -0.25, y: -0.35, z: 0.18 };
+
+            // Вспомогательные переиспользуемые векторы и матрицы
+            const _invQuat = new THREE.Quaternion();
+            const _gravityLocal = new THREE.Vector3();
+            const _accelWorld = new THREE.Vector3();
+            const _accelLocal = new THREE.Vector3();
+            const _targetWorldPos = new THREE.Vector3();
+            const _leftWorldCenter = new THREE.Vector3();
+            const _rightWorldCenter = new THREE.Vector3();
+            const _rimWorldPos = new THREE.Vector3();
+            const _grainDummy = new THREE.Object3D();
+            const _tempColor = new THREE.Color();
+            const _origEmissive = new THREE.Color();
+            const _themeEmissive = new THREE.Color();
+            const _worldVec = new THREE.Vector3();
+
+            function pixelsToWorldUnits(px) {
+                const dist = camera.position.z;
+                const vFovRad = THREE.MathUtils.degToRad(camera.fov);
+                const visibleHeight = 2 * Math.tan(vFovRad / 2) * dist;
+                return (px / Math.max(window.innerHeight, 1)) * visibleHeight;
+            }
+
+            // Целевые координаты левого нижнего угла и масштаб (~200px ширины)
+            function getCornerDockTransform() {
+                const dist = camera.position.z;
+                const vFovRad = THREE.MathUtils.degToRad(camera.fov);
+                const visibleHeight = 2 * Math.tan(vFovRad / 2) * dist;
+                const visibleWidth = visibleHeight * camera.aspect;
+                const pxPerUnit = window.innerWidth / visibleWidth;
+
+                const targetPixelWidth = Math.min(200, window.innerWidth * 0.34);
+                const capsuleWorldWidth = 2.36;
+                const scale = THREE.MathUtils.clamp(targetPixelWidth / (capsuleWorldWidth * pxPerUnit), 0.24, 0.56);
+
+                const marginX = pixelsToWorldUnits(Math.min(130, window.innerWidth * 0.17));
+                const marginY = pixelsToWorldUnits(Math.min(86, window.innerHeight * 0.13));
+
+                return {
+                    x: -visibleWidth * 0.5 + marginX,
+                    y: -visibleHeight * 0.5 + marginY,
+                    z: 0.45,
+                    scale
+                };
+            }
+
+            // Целевые координаты правого верхнего угла для второй капсулы (отступ от верха 50px)
+            function getTopRightDockTransform() {
+                const dist = camera.position.z;
+                const vFovRad = THREE.MathUtils.degToRad(camera.fov);
+                const visibleHeight = 2 * Math.tan(vFovRad / 2) * dist;
+                const visibleWidth = visibleHeight * camera.aspect;
+                const pxPerUnit = window.innerWidth / visibleWidth;
+
+                const targetPixelWidth = Math.min(200, window.innerWidth * 0.34);
+                const capsuleWorldWidth = 2.36;
+                const scale = THREE.MathUtils.clamp(targetPixelWidth / (capsuleWorldWidth * pxPerUnit), 0.24, 0.56);
+
+                const halfHeightPx = (1.04 * scale * pxPerUnit) * 0.5;
+                const halfWidthPx = (capsuleWorldWidth * scale * pxPerUnit) * 0.5;
+                const marginTop = pixelsToWorldUnits(50 + halfHeightPx);
+                const marginRight = pixelsToWorldUnits(32 + halfWidthPx);
+
+                return {
+                    x: visibleWidth * 0.5 - marginRight,
+                    y: visibleHeight * 0.5 - marginTop,
+                    z: 0.45,
+                    scale
+                };
+            }
+
+            function getOffscreenBottomY() {
+                const dist = camera.position.z;
+                const vFovRad = THREE.MathUtils.degToRad(camera.fov);
+                const visibleHeight = 2 * Math.tan(vFovRad / 2) * dist;
+                return -visibleHeight * 0.5 - 0.9;
+            }
+
+            // Адаптивное базовое расположение капсул для мобильных и десктопов
+            function updateResponsiveBasePositions() {
+                const isNarrow = window.innerWidth < 680;
+                if (isNarrow) {
+                    redPill.baseX = 0;
+                    redPill.baseY = 0.88;
+                    bluePill.baseX = 0;
+                    bluePill.baseY = -0.78;
+                    camera.position.z = 9.4;
+                } else {
+                    redPill.baseX = -1.72;
+                    redPill.baseY = 0.08;
+                    bluePill.baseX = 1.72;
+                    bluePill.baseY = 0.08;
+                    camera.position.z = 7.6;
+                }
+            }
+            updateResponsiveBasePositions();
+
+            /* ==========================================================================
+               СБОРКА СТРАНИЦЫ ИЗ ФРАГМЕНТОВ (РОЛЬ «UI-ИНЖЕНЕР ИНТЕГРАЦИИ»)
+               Снимаем реальную раскладку страницы One / Dope (getBoundingClientRect +
+               computed-стили) и раздаём фрагментам координаты, размеры и цвета —
+               поэтому высыпающееся содержимое складывается в копию страницы.
+               ========================================================================== */
+
+            function forEachFrag(pillObj, fn) {
+                for (let i = 0; i < pillObj.boxFrags.length; i++) fn(pillObj.boxFrags[i]);
+                for (let i = 0; i < pillObj.dotFrags.length; i++) fn(pillObj.dotFrags[i]);
+            }
+
+            function writeFragInstance(mesh, i, f, pillScale) {
+                _grainDummy.position.copy(f.worldPos);
+                _grainDummy.rotation.set(f.rot.x, f.rot.y, f.rot.z);
+                _grainDummy.scale.set(
+                    Math.max(0.0001, f.curScale.x * pillScale),
+                    Math.max(0.0001, f.curScale.y * pillScale),
+                    Math.max(0.0001, f.curScale.z * pillScale)
+                );
+                _grainDummy.updateMatrix();
+                mesh.setMatrixAt(i, _grainDummy.matrix);
+            }
+
+            function writeFragColor(mesh, i, f) {
+                _tempColor.copy(f.origColor).lerp(f.targetColor, f.colorMix);
+                mesh.setColorAt(i, _tempColor);
+            }
+
+            function cssColorToRgb(str) {
+                const m = /rgba?\(([^)]+)\)/.exec(str || '');
+                if (!m) return null;
+                const parts = m[1].split(',').map(function (s) { return parseFloat(s); });
+                if (parts.length < 3 || parts.slice(0, 3).some(function (v) { return !isFinite(v); })) return null;
+                return {
+                    r: parts[0] / 255,
+                    g: parts[1] / 255,
+                    b: parts[2] / 255,
+                    a: parts.length > 3 && isFinite(parts[3]) ? parts[3] : 1
+                };
+            }
+
+            function makePxSlot(kind, left, top, w, h, color, z) {
+                return {
+                    kind: kind,
+                    pxLeft: left,
+                    pxTop: top,
+                    wPx: w,
+                    hPx: h,
+                    cx: left + w / 2,
+                    cy: top + h / 2,
+                    z: z,
+                    color: new THREE.Color(
+                        THREE.MathUtils.clamp(color.r, 0, 1),
+                        THREE.MathUtils.clamp(color.g, 0, 1),
+                        THREE.MathUtils.clamp(color.b, 0, 1)
+                    ),
+                    index: 0,
+                    pos: new THREE.Vector3(),
+                    scale: new THREE.Vector3()
+                };
+            }
+
+            // Перевод экранных пикселей в мировые координаты на плоскости сборки страницы
+            function projectSlotToWorld(slot) {
+                const dist = Math.max(0.5, camera.position.z - slot.z);
+                const visH = 2 * Math.tan(THREE.MathUtils.degToRad(camera.fov) * 0.5) * dist;
+                const visW = visH * camera.aspect;
+                slot.pos.set(
+                    (slot.cx / window.innerWidth - 0.5) * visW,
+                    (0.5 - slot.cy / window.innerHeight) * visH,
+                    slot.z
+                );
+                const w = (slot.wPx / window.innerHeight) * visH;
+                const h = (slot.hPx / window.innerHeight) * visH;
+                if (slot.kind === 'dot') {
+                    const d = Math.max(0.02, Math.min(w, h)) * 0.5;
+                    slot.scale.set(d, d, d * 0.34);
+                } else {
+                    slot.scale.set(
+                        Math.max(0.02, w),
+                        Math.max(0.013, h),
+                        slot.kind === 'panel' ? 0.05 : 0.034
+                    );
+                }
+            }
+
+            // Съём реальной раскладки страницы: каждый элемент с data-frag становится слотом
+            function computePageSlots(which) {
+                const pageEl = which === 'red' ? pageOneEl : pageDopeEl;
+                const isRed = which === 'red';
+                const slots = [];
+
+                pageEl.classList.add('is-measuring');
+                if (which === 'blue') pageEl.scrollTop = 0;
+
+                const vw = window.innerWidth;
+                const vh = window.innerHeight;
+                const els = pageEl.querySelectorAll('[data-frag]');
+
+                for (let q = 0; q < els.length; q++) {
+                    const el = els[q];
+                    const kind = el.getAttribute('data-frag');
+                    const r = el.getBoundingClientRect();
+                    if (r.width < 5 || r.height < 5) continue;
+                    if (r.bottom < -30 || r.top > vh + 30) continue;
+
+                    const cs = getComputedStyle(el);
+                    const bg = cssColorToRgb(cs.backgroundColor);
+                    const fg = cssColorToRgb(cs.color);
+
+                    const rect = {
+                        left: Math.max(0, Math.min(r.left, vw)),
+                        top: Math.max(0, Math.min(r.top, vh)),
+                        width: Math.min(r.width, vw),
+                        height: Math.min(r.height, vh)
+                    };
+
+                    if (kind === 'panel') {
+                        const col = (bg && bg.a > 0.15)
+                            ? bg
+                            : (isRed ? { r: 0.04, g: 0.14, b: 0.08, a: 1 } : { r: 1, g: 1, b: 1, a: 1 });
+                        // Крупные панели режем на плитки, чтобы карточка собиралась из кусков
+                        const cols = THREE.MathUtils.clamp(Math.round(rect.width / 240), 1, 3);
+                        const rows = THREE.MathUtils.clamp(Math.round(rect.height / 190), 1, 3);
+                        const gap = 3;
+                        for (let ty = 0; ty < rows; ty++) {
+                            for (let tx = 0; tx < cols; tx++) {
+                                const w = rect.width / cols;
+                                const h = rect.height / rows;
+                                slots.push(makePxSlot('panel',
+                                    rect.left + tx * w + gap * 0.5,
+                                    rect.top + ty * h + gap * 0.5,
+                                    w - gap, h - gap, col, FRAG_Z_PLANE - 0.04));
+                            }
+                        }
+                    } else if (kind === 'chip') {
+                        const col = (bg && bg.a > 0.2)
+                            ? bg
+                            : (fg && fg.a > 0.2)
+                                ? fg
+                                : (isRed ? { r: 0.29, g: 0.86, b: 0.5, a: 1 } : { r: 0.55, g: 0.6, b: 0.95, a: 1 });
+                        slots.push(makePxSlot('chip',
+                            rect.left, rect.top + rect.height * 0.08,
+                            rect.width, rect.height * 0.84, col, FRAG_Z_PLANE));
+                    } else if (kind === 'dot') {
+                        const size = Math.min(rect.width, rect.height);
+                        const col = (bg && bg.a > 0.15)
+                            ? bg
+                            : (isRed ? { r: 0.49, g: 0.98, b: 0.64, a: 1 } : { r: 0.49, g: 0.6, b: 0.92, a: 1 });
+                        slots.push(makePxSlot('dot',
+                            rect.left + (rect.width - size) / 2,
+                            rect.top + (rect.height - size) / 2,
+                            size, size, col, FRAG_Z_PLANE + 0.04));
+                    } else {
+                        // Строки текста: делим высоту блока на строчки и кладём «плашки строк»
+                        const col = (fg && fg.a > 0.2)
+                            ? fg
+                            : (isRed ? { r: 0.62, g: 0.95, b: 0.72, a: 1 } : { r: 0.4, g: 0.46, b: 0.6, a: 1 });
+                        const lhCss = parseFloat(cs.lineHeight);
+                        const fsCss = parseFloat(cs.fontSize) || 13;
+                        const lineH = isFinite(lhCss) && lhCss > 2 ? lhCss : fsCss * 1.5;
+                        const n = THREE.MathUtils.clamp(Math.round(rect.height / lineH), 1, 6);
+                        const align = cs.textAlign;
+                        for (let li = 0; li < n; li++) {
+                            const isLast = li === n - 1 && n > 1;
+                            const wFrac = isLast ? 0.45 + Math.random() * 0.35 : 0.82 + Math.random() * 0.16;
+                            const wPx = rect.width * Math.min(1, wFrac);
+                            let lx = rect.left;
+                            if (align === 'center') lx = rect.left + (rect.width - wPx) / 2;
+                            else if (align === 'right' || align === 'end') lx = rect.left + rect.width - wPx;
+                            const rowH = rect.height / n;
+                            const hPx = Math.min(lineH * 0.32, rowH * 0.62);
+                            slots.push(makePxSlot('line',
+                                lx, rect.top + (li + 0.5) * rowH - hPx / 2,
+                                wPx, hPx, col, FRAG_Z_PLANE + 0.02));
+                        }
+                    }
+                }
+
+                pageEl.classList.remove('is-measuring');
+
+                // Сборка сверху вниз: сначала «проявляется» шапка, затем контент
+                slots.sort(function (a, b) { return (a.pxTop - b.pxTop) || (a.pxLeft - b.pxLeft); });
+                for (let i = 0; i < slots.length; i++) {
+                    slots[i].index = i;
+                    projectSlotToWorld(slots[i]);
+                }
+                return slots;
+            }
+
+            // Запасной макет, если разметку страницы измерить не удалось
+            function fallbackPageSlots(which, isDot) {
+                const isRed = which === 'red';
+                const slots = [];
+                const cx = window.innerWidth / 2;
+                if (isDot) {
+                    slots.push(makePxSlot('dot', cx - 40, 110, 80, 80,
+                        isRed ? { r: 0.49, g: 0.98, b: 0.64, a: 1 } : { r: 0.49, g: 0.6, b: 0.92, a: 1 },
+                        FRAG_Z_PLANE + 0.04));
+                } else {
+                    const colW = Math.min(560, window.innerWidth * 0.86);
+                    const x = cx - colW / 2;
+                    let y = window.innerHeight * 0.2;
+                    const surf = isRed ? { r: 0.04, g: 0.14, b: 0.08, a: 1 } : { r: 1, g: 1, b: 1, a: 1 };
+                    const txt = isRed ? { r: 0.62, g: 0.95, b: 0.72, a: 1 } : { r: 0.4, g: 0.46, b: 0.6, a: 1 };
+                    for (let k = 0; k < 3; k++) {
+                        const h = 92 + k * 12;
+                        slots.push(makePxSlot('panel', x, y, colW, h, surf, FRAG_Z_PLANE - 0.04));
+                        slots.push(makePxSlot('line', x + 22, y + 24, colW * 0.58, 9, txt, FRAG_Z_PLANE + 0.02));
+                        slots.push(makePxSlot('line', x + 22, y + 44, colW * 0.4, 9, txt, FRAG_Z_PLANE + 0.02));
+                        y += h + 26;
+                    }
+                }
+                for (let i = 0; i < slots.length; i++) {
+                    slots[i].index = i;
+                    projectSlotToWorld(slots[i]);
+                }
+                return slots;
+            }
+
+            function assignFragSet(set, slots) {
+                for (let i = 0; i < set.length; i++) {
+                    const f = set[i];
+                    const slot = slots[i % slots.length];
+                    const dup = Math.floor(i / slots.length);
+                    f.slotIdx = slot.index;
+                    f.targetColor.copy(slot.color);
+                    if (dup === 0) {
+                        // Первый проход — точные куски страницы в натуральную величину
+                        f.targetPos.copy(slot.pos);
+                        f.targetScale.copy(slot.scale);
+                    } else {
+                        // Повторные проходы — мелкие осколки внутри того же блока
+                        f.targetPos.set(
+                            slot.pos.x + (Math.random() - 0.5) * slot.scale.x * 0.72,
+                            slot.pos.y + (Math.random() - 0.5) * slot.scale.y * 0.72,
+                            slot.pos.z + 0.012 * dup
+                        );
+                        const shard = 0.22 + Math.random() * 0.26;
+                        f.targetScale.set(
+                            Math.max(0.02, slot.scale.x * shard),
+                            Math.max(0.012, slot.scale.y * shard * (0.8 + Math.random() * 0.6)),
+                            slot.scale.z
+                        );
+                    }
+                    f.assembleDelay = f.pourDelay + 0.5 + Math.random() * 0.5 + slot.index * 0.006 + dup * 0.1;
+                    f.assembleDur = 0.68 + Math.random() * 0.42;
+                    f.fadeDelay = slot.index * 0.004 + Math.random() * 0.14;
+                }
+            }
+
+            function assignFragmentsToPage(pillObj) {
+                const slots = computePageSlots(pillObj.id);
+                const boxSlots = [];
+                const dotSlots = [];
+                for (let i = 0; i < slots.length; i++) {
+                    (slots[i].kind === 'dot' ? dotSlots : boxSlots).push(slots[i]);
+                }
+                assignFragSet(pillObj.boxFrags, boxSlots.length ? boxSlots : fallbackPageSlots(pillObj.id, false));
+                assignFragSet(pillObj.dotFrags, dotSlots.length ? dotSlots : fallbackPageSlots(pillObj.id, true));
+            }
+
+            // Проявление настоящей страницы, когда фрагменты заняли свои места
+            function revealPageForPill(pillObj) {
+                if (pillObj.pageRevealed) return;
+                pillObj.pageRevealed = true;
+                pillObj.revealTimer = 0;
+                if (activeWorldTheme === pillObj.id) {
+                    if (pageRevealTimer) {
+                        clearTimeout(pageRevealTimer);
+                        pageRevealTimer = null;
+                    }
+                    showPageStage(pillObj.id);
+                }
+            }
+
+            // Удержание гранулы внутри закрытой капсулы
+            function constrainGrainInsideCapsule(g, maxRadius, halfCylLen) {
+                const rLimit = Math.max(0.04, maxRadius - g.radius);
+                const absX = Math.abs(g.pos.x);
+
+                if (absX <= halfCylLen) {
+                    const radial = Math.hypot(g.pos.y, g.pos.z);
+                    if (radial > rLimit) {
+                        const scale = rLimit / radial;
+                        g.pos.y *= scale;
+                        g.pos.z *= scale;
+                        const ny = g.pos.y / rLimit;
+                        const nz = g.pos.z / rLimit;
+                        const vn = g.vel.y * ny + g.vel.z * nz;
+                        if (vn > 0) {
+                            g.vel.y -= 1.15 * vn * ny;
+                            g.vel.z -= 1.15 * vn * nz;
+                        }
+                    }
+                } else {
+                    const signX = Math.sign(g.pos.x);
+                    const dx = g.pos.x - signX * halfCylLen;
+                    const distFromSphereCenter = Math.hypot(dx, g.pos.y, g.pos.z);
+                    if (distFromSphereCenter > rLimit) {
+                        const nx = dx / distFromSphereCenter;
+                        const ny = g.pos.y / distFromSphereCenter;
+                        const nz = g.pos.z / distFromSphereCenter;
+
+                        g.pos.x = signX * halfCylLen + nx * rLimit;
+                        g.pos.y = ny * rLimit;
+                        g.pos.z = nz * rLimit;
+
+                        const vn = g.vel.x * nx + g.vel.y * ny + g.vel.z * nz;
+                        if (vn > 0) {
+                            g.vel.x -= 1.15 * vn * nx;
+                            g.vel.y -= 1.15 * vn * ny;
+                            g.vel.z -= 1.15 * vn * nz;
+                        }
+                    }
+                }
+            }
+
+            // ================= СЦЕНАРИИ СОСТОЯНИЙ =================
+
+            // 1. Клик по закрытой капсуле -> перемещение в центр, раскрытие, высыпание и исчезновение обеих капсул
+            function applyPillShellAlpha(pillObj) {
+                const a = THREE.MathUtils.clamp(pillObj.shellFade, 0, 1);
+                pillObj.shellMat.opacity = 0.58 * a;
+                pillObj.innerWallMat.opacity = 0.22 * a;
+                pillObj.seamDotMat.opacity = 0.55 * a;
+                pillObj.group.visible = a > 0.004;
+            }
+
+            function resetPillImmediate(pillObj) {
+                pillObj.state = 'closed';
+                pillObj.shellFade = 1;
+                pillObj.openProgress = 0;
+                pillObj.pageRevealed = false;
+                pillObj.themeTriggered = false;
+                pillObj.collectInPlace = false;
+                pillObj.curScale = 1;
+                pillObj.group.position.set(pillObj.baseX, pillObj.baseY, pillObj.baseZ);
+                pillObj.group.scale.setScalar(1);
+                pillObj.leftHalf.position.set(0, 0, 0);
+                pillObj.leftHalf.rotation.set(0, 0, 0);
+                pillObj.rightHalf.position.set(0, 0, 0);
+                pillObj.rightHalf.rotation.set(0, 0, 0);
+                pillObj.group.updateMatrixWorld(true);
+                applyPillShellAlpha(pillObj);
+                pillObj.fragBoxes.visible = true;
+                pillObj.fragDots.visible = true;
+                for (let s = 0; s < 2; s++) {
+                    const set = s === 0 ? pillObj.boxFrags : pillObj.dotFrags;
+                    const mesh = s === 0 ? pillObj.fragBoxes : pillObj.fragDots;
+                    for (let i = 0; i < set.length; i++) {
+                        const f = set[i];
+                        f.spilled = false;
+                        f.hidden = false;
+                        f.arrived = false;
+                        f.assembleP = 0;
+                        f.fadeP = 0;
+                        f.colorMix = 0;
+                        f.vel.set(0, 0, 0);
+                        f.curScale.copy(f.baseScale);
+                        f.worldPos.copy(f.pos).applyMatrix4(pillObj.group.matrixWorld);
+                        writeFragInstance(mesh, i, f, 1);
+                        mesh.setColorAt(i, f.origColor);
+                    }
+                    mesh.instanceMatrix.needsUpdate = true;
+                    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+                }
+            }
+
+            function openPill(pillObj, angles) {
+                if (pillObj.state !== 'closed') return;
+                setPillsHidden(false);
+
+                // Если другая капсула активна или исчезла — возвращаем или сбрасываем её
+                const otherPill = pillObj === redPill ? bluePill : redPill;
+                const otherAngles = pillObj === redPill ? blueAngles : redAngles;
+                if (otherPill.state === 'vanished') {
+                    resetPillImmediate(otherPill);
+                } else if (otherPill.state === 'open') {
+                    const dockInfo = getCornerDockTransform();
+                    const distToCenter = Math.hypot(otherPill.group.position.x, otherPill.group.position.y - 0.32);
+                    if (distToCenter < 1.9) {
+                        otherPill.collectAnchor.set(dockInfo.x, dockInfo.y, dockInfo.z);
+                        otherPill.collectScale = dockInfo.scale;
+                    } else {
+                        otherPill.collectAnchor.copy(otherPill.group.position);
+                        otherPill.collectScale = otherPill.curScale;
+                    }
+                    startCollectingPill(otherPill, otherAngles, true);
+                } else if (otherPill.state === 'dock_closing' || otherPill.state === 'docked') {
+                    const dockInfo = getCornerDockTransform();
+                    const distToCenter = Math.hypot(otherPill.group.position.x, otherPill.group.position.y - 0.32);
+                    if (distToCenter < 1.9) {
+                        otherPill.collectAnchor.set(dockInfo.x, dockInfo.y, dockInfo.z);
+                        otherPill.collectScale = dockInfo.scale;
+                    } else {
+                        otherPill.collectAnchor.copy(otherPill.group.position);
+                        otherPill.collectScale = otherPill.curScale;
+                    }
+                    startUndockPill(otherPill, otherAngles, true);
+                }
+
+                pillObj.collectInPlace = false;
+                pillObj.state = 'open';
+                pillObj.shellFade = 1;
+                applyPillShellAlpha(pillObj);
+                pillObj.fragBoxes.visible = true;
+                pillObj.fragDots.visible = true;
+                otherPill.fragBoxes.visible = true;
+                otherPill.fragDots.visible = true;
+                pillObj.openTimer = 0;
+                pillObj.themeTriggered = false;
+
+                angles.x = Math.atan2(Math.sin(angles.x), Math.cos(angles.x));
+                angles.y = Math.atan2(Math.sin(angles.y), Math.cos(angles.y));
+                angles.z = Math.atan2(Math.sin(angles.z), Math.cos(angles.z));
+
+                forEachFrag(pillObj, function (f) {
+                    f.halfSide = f.pos.x < 0 ? -1 : 1;
+                    f.spilled = false;
+                    f.hidden = false;
+                    f.arrived = false;
+                    f.assembleP = 0;
+                    f.fadeP = 0;
+                    f.colorMix = 0;
+                    f.curScale.copy(f.baseScale);
+                    // Поэтапное сползание в 4 волны: ближние к срезу высыпаются первыми
+                    const depth = Math.min(1, Math.abs(f.pos.x) / 0.85);
+                    const stage = Math.floor(depth * 3.6);
+                    f.pourDelay = stage * 0.34 + Math.random() * 0.22;
+                });
+                pillObj.pageRevealed = false;
+                pillObj.revealTimer = 0;
+                // Раздаём фрагментам адреса на странице: куда лететь и чем стать
+                assignFragmentsToPage(pillObj);
+                updateResetButtonVisibility();
+            }
+
+            // 2. Повторный клик по капсуле в левом нижнем углу -> возврат в центр (или раскрытие на месте при переключении)
+            function startUndockPill(pillObj, angles, inPlace = false) {
+                if (pillObj.state !== 'docked' && pillObj.state !== 'dock_closing') return;
+
+                if (activeWorldTheme === pillObj.id) {
+                    applyWorldTheme('default');
+                }
+
+                pillObj.collectInPlace = inPlace;
+                pillObj.state = 'undocking';
+                pillObj.undockTimer = 0;
+
+                angles.x = Math.atan2(Math.sin(angles.x), Math.cos(angles.x));
+                angles.y = Math.atan2(Math.sin(angles.y), Math.cos(angles.y));
+                angles.z = Math.atan2(Math.sin(angles.z), Math.cos(angles.z));
+                updateResetButtonVisibility();
+            }
+
+            // 3. Засасывание содержимого нижней половинкой капсулы в несколько этапов
+            function startCollectingPill(pillObj, angles, inPlace = false) {
+                if (pillObj.state !== 'open' && pillObj.state !== 'undocking') return;
+                pillObj.group.updateMatrixWorld(true);
+
+                if (activeWorldTheme === pillObj.id) {
+                    applyWorldTheme('default');
+                }
+
+                pillObj.collectInPlace = inPlace;
+
+                // Определяем половинку, которая ближе к низу экрана
+                _leftWorldCenter.set(-0.45, 0, 0).applyMatrix4(pillObj.leftHalf.matrixWorld);
+                _rightWorldCenter.set(0.45, 0, 0).applyMatrix4(pillObj.rightHalf.matrixWorld);
+                pillObj.suctionSide = (_leftWorldCenter.y <= _rightWorldCenter.y) ? -1 : 1;
+
+                pillObj.state = 'collecting';
+                pillObj.collectTimer = 0;
+                pillObj.closingProgress = 0;
+
+                angles.x = Math.atan2(Math.sin(angles.x), Math.cos(angles.x));
+                angles.y = Math.atan2(Math.sin(angles.y), Math.cos(angles.y));
+                angles.z = Math.atan2(Math.sin(angles.z), Math.cos(angles.z));
+
+                const offscreenY = getOffscreenBottomY();
+                const sSide = pillObj.suctionSide;
+                const wasRevealed = pillObj.pageRevealed;
+
+                forEachFrag(pillObj, function (f) {
+                    const depthFrac = Math.random();
+                    const lx = sSide * (0.06 + depthFrac * 0.78);
+                    const maxR = Math.max(0.05, 0.35 - f.radius);
+                    const ang = Math.random() * Math.PI * 2;
+                    const dist = Math.sqrt(Math.random()) * maxR;
+
+                    f.halfSide = sSide;
+                    f.pos.set(lx, Math.sin(ang) * dist, Math.cos(ang) * dist);
+                    f.vel.set(0, 0, 0);
+
+                    // 4 последовательные волны обратного засасывания
+                    const wave = 3 - Math.floor(depthFrac * 3.4);
+                    f.collectDelay = wave * 0.32 + Math.random() * 0.2;
+                    f.rotVel.set((Math.random() - 0.5) * 4, (Math.random() - 0.5) * 4, (Math.random() - 0.5) * 4);
+
+                    if (f.spilled || f.hidden) {
+                        if (f.hidden && wasRevealed) {
+                            // Фрагмент «отклеивается» от страницы со своего собранного места —
+                            // страница как будто рассыпается обратно в капсулу
+                            f.worldPos.copy(f.targetPos);
+                            f.curScale.copy(f.targetScale).multiplyScalar(0.9);
+                        } else if (f.hidden || f.worldPos.y < offscreenY - 0.8 || inPlace) {
+                            const spreadX = inPlace ? 0.55 : 1.1;
+                            const spreadZ = inPlace ? 0.4 : 0.7;
+                            f.worldPos.y = offscreenY - 0.2 - wave * 0.6 - Math.random() * 0.8;
+                            f.worldPos.x = pillObj.group.position.x + (Math.random() - 0.5) * spreadX;
+                            f.worldPos.z = pillObj.group.position.z + (Math.random() - 0.5) * spreadZ;
+                            f.curScale.copy(f.baseScale);
+                        }
+                        f.spilled = true;
+                        f.hidden = false;
+                        f.fadeP = 0;
+                        f.assembleP = 0;
+                        f.arrived = false;
+                        f.worldVel.set(0, 0, 0);
+                    }
+                });
+                pillObj.pageRevealed = false;
+                pillObj.revealTimer = 0;
+                updateResetButtonVisibility();
+            }
+
+            function resetPill(pillObj, angles) {
+                setPillsHidden(false);
+                if (pillObj.state === 'vanished') {
+                    pillObj.state = 'open';
+                    pillObj.pageRevealed = true;
+                    pillObj.openProgress = 1;
+                    pillObj.curScale = 1;
+                    pillObj.group.position.set(0, 0.32, 0.35);
+                    pillObj.group.scale.setScalar(1);
+                    pillObj.leftHalf.position.set(-0.62, -0.08, 0);
+                    pillObj.leftHalf.rotation.set(0.08, 0.14, -0.98);
+                    pillObj.rightHalf.position.set(0.62, -0.08, 0);
+                    pillObj.rightHalf.rotation.set(-0.08, -0.14, 0.98);
+                    pillObj.fragBoxes.visible = true;
+                    pillObj.fragDots.visible = true;
+                    startCollectingPill(pillObj, angles);
+                } else if (pillObj.state === 'open') {
+                    pillObj.fragBoxes.visible = true;
+                    pillObj.fragDots.visible = true;
+                    startCollectingPill(pillObj, angles);
+                } else if (pillObj.state === 'dock_closing' || pillObj.state === 'docked') {
+                    startUndockPill(pillObj, angles);
+                } else {
+                    pillObj.fragBoxes.visible = true;
+                    pillObj.fragDots.visible = true;
+                }
+            }
+
+            // ================= ОСНОВНОЙ ШАГ ФИЗИКИ И АНИМАЦИИ КАПСУЛЫ =================
+            function stepPillAnimation(pillObj, motion, angles, dt, t) {
+                const smoothLerp = 1 - Math.exp(-5.5 * dt);
+
+                pillObj.angularVelImpulse.multiplyScalar(Math.exp(-2.8 * dt));
+                pillObj.clickImpulse.multiplyScalar(Math.exp(-3.5 * dt));
+
+                let omegaX = 0;
+                let omegaY = 0;
+                let omegaZ = 0;
+                let targetScale = 1.0;
+
+                // Небольшие хаотичные сдвиги 5–30 пикселей
+                const driftX = pixelsToWorldUnits(
+                    Math.sin(t * motion.driftX.f1 + motion.driftX.phase) * motion.driftX.ampPx * 0.65 +
+                    Math.cos(t * motion.driftX.f2 + motion.driftX.phase * 1.3) * motion.driftX.ampPx * 0.35
+                ) * MOTION_SCALE;
+                const driftY = pixelsToWorldUnits(
+                    Math.cos(t * motion.driftY.f1 + motion.driftY.phase) * motion.driftY.ampPx * 0.65 +
+                    Math.sin(t * motion.driftY.f2 + motion.driftY.phase * 0.9) * motion.driftY.ampPx * 0.35
+                ) * MOTION_SCALE;
+                const driftZ = pixelsToWorldUnits(
+                    Math.sin(t * motion.driftZ.f1 + motion.driftZ.phase) * motion.driftZ.ampPx
+                ) * MOTION_SCALE;
+
+                // Определяем целевую позицию капсулы в зависимости от состояния
+                let targetPosX = pillObj.baseX + driftX;
+                let targetPosY = pillObj.baseY + driftY;
+                let targetPosZ = pillObj.baseZ + driftZ;
+
+                if (pillObj.state === 'open') {
+                    // В центре экрана (чуть выше центра для удобного высыпания вниз)
+                    targetPosX = driftX * 0.25;
+                    targetPosY = 0.32 + driftY * 0.25;
+                    targetPosZ = 0.35;
+                } else if (pillObj.state === 'undocking' || pillObj.state === 'collecting' || pillObj.state === 'closing') {
+                    if (pillObj.collectInPlace) {
+                        // Засасывание и закрытие на текущей позиции без перелёта в центр
+                        targetPosX = pillObj.collectAnchor.x + driftX * 0.16;
+                        targetPosY = pillObj.collectAnchor.y + driftY * 0.16;
+                        targetPosZ = pillObj.collectAnchor.z;
+                        targetScale = pillObj.collectScale;
+                    } else {
+                        targetPosX = driftX * 0.25;
+                        targetPosY = 0.32 + driftY * 0.25;
+                        targetPosZ = 0.35;
+                    }
+                } else if (pillObj.state === 'dock_closing' || pillObj.state === 'docked') {
+                    const dockInfo = getCornerDockTransform();
+                    targetPosX = dockInfo.x + driftX * 0.16;
+                    targetPosY = dockInfo.y + driftY * 0.16;
+                    targetPosZ = dockInfo.z;
+                    targetScale = dockInfo.scale;
+                }
+
+                // Если включено удержание угловых капсул — вторая капсула паркуется в правый верхний угол;
+                // иначе она остаётся на месте и плавно исчезает вместе с первой после высыпания содержимого
+                const otherPill = pillObj === redPill ? bluePill : redPill;
+                const isParkedTopRight = SEGMENT_CONFIG.keepCornerPillsVisible && pillObj.state === 'closed' && otherPill.state !== 'closed';
+                if (isParkedTopRight) {
+                    const topRightInfo = getTopRightDockTransform();
+                    targetPosX = topRightInfo.x + driftX * 0.16;
+                    targetPosY = topRightInfo.y + driftY * 0.16;
+                    targetPosZ = topRightInfo.z;
+                    targetScale = topRightInfo.scale;
+
+                    // Если капсула перелетает из левого нижнего угла в правый верхний, огибаем центр по верхней дуге
+                    const otherInCenter = otherPill.state === 'open' ||
+                        ((otherPill.state === 'undocking' || otherPill.state === 'collecting' || otherPill.state === 'closing') && !otherPill.collectInPlace);
+                    if (otherInCenter && pillObj.group.position.x < 0.6 && pillObj.group.position.y < topRightInfo.y - 0.65) {
+                        targetPosX = Math.min(pillObj.group.position.x, -1.6);
+                    }
+                }
+
+                // Плавное движение позиции капсулы
+                const posLerp = 1 - Math.exp(-4.6 * dt);
+                pillObj.group.position.x += (targetPosX - pillObj.group.position.x) * posLerp;
+                pillObj.group.position.y += (targetPosY - pillObj.group.position.y) * posLerp;
+                pillObj.group.position.z += (targetPosZ - pillObj.group.position.z) * posLerp;
+
+                // Вычисляем ускорение внешней оболочки для инерции сыпучего содержимого
+                _accelWorld.subVectors(pillObj.group.position, pillObj.prevOuterPos).divideScalar(Math.max(dt, 0.001));
+                const instantAccX = (_accelWorld.x - pillObj.outerVel.x) / Math.max(dt, 0.001);
+                const instantAccY = (_accelWorld.y - pillObj.outerVel.y) / Math.max(dt, 0.001);
+                const instantAccZ = (_accelWorld.z - pillObj.outerVel.z) / Math.max(dt, 0.001);
+                pillObj.outerVel.copy(_accelWorld);
+                pillObj.prevOuterPos.copy(pillObj.group.position);
+                _accelWorld.set(
+                    THREE.MathUtils.clamp(instantAccX, -18, 18),
+                    THREE.MathUtils.clamp(instantAccY, -18, 18),
+                    THREE.MathUtils.clamp(instantAccZ, -18, 18)
+                );
+
+                // Логика половинок и углов по состояниям
+                if (pillObj.state === 'closed') {
+                    pillObj.openProgress += (0 - pillObj.openProgress) * (1 - Math.exp(-4.5 * dt));
+
+                    pillObj.leftHalf.position.lerp(_targetWorldPos.set(0, 0, 0), smoothLerp);
+                    pillObj.leftHalf.rotation.set(
+                        pillObj.leftHalf.rotation.x * (1 - smoothLerp),
+                        pillObj.leftHalf.rotation.y * (1 - smoothLerp),
+                        pillObj.leftHalf.rotation.z * (1 - smoothLerp)
+                    );
+                    pillObj.rightHalf.position.lerp(_targetWorldPos.set(0, 0, 0), smoothLerp);
+                    pillObj.rightHalf.rotation.set(
+                        pillObj.rightHalf.rotation.x * (1 - smoothLerp),
+                        pillObj.rightHalf.rotation.y * (1 - smoothLerp),
+                        pillObj.rightHalf.rotation.z * (1 - smoothLerp)
+                    );
+
+                    omegaX = (motion.rotX.baseSpeed +
+                        Math.sin(t * motion.rotX.f1 + motion.rotX.phase) * motion.rotX.a1 +
+                        Math.cos(t * motion.rotX.f2 + motion.rotX.phase * 1.4) * motion.rotX.a2 +
+                        Math.sin(t * motion.rotX.f3) * motion.rotX.a3) +
+                        pillObj.angularVelImpulse.x;
+
+                    omegaY = (motion.rotY.baseSpeed +
+                        Math.cos(t * motion.rotY.f1 + motion.rotY.phase) * motion.rotY.a1 +
+                        Math.sin(t * motion.rotY.f2 + motion.rotY.phase * 0.8) * motion.rotY.a2 +
+                        Math.cos(t * motion.rotY.f3) * motion.rotY.a3) +
+                        pillObj.angularVelImpulse.y;
+
+                    omegaZ = (motion.rotZ.baseSpeed +
+                        Math.sin(t * motion.rotZ.f1 + motion.rotZ.phase) * motion.rotZ.a1 +
+                        Math.cos(t * motion.rotZ.f2 + motion.rotZ.phase * 1.7) * motion.rotZ.a2 +
+                        Math.sin(t * motion.rotZ.f3) * motion.rotZ.a3) +
+                        pillObj.angularVelImpulse.z;
+
+                    if (MOTION_SCALE !== 1) {
+                        omegaX *= 0.55;
+                        omegaY *= 0.55;
+                        omegaZ *= 0.55;
+                    }
+
+                    angles.x += omegaX * dt;
+                    angles.y += omegaY * dt;
+                    angles.z += omegaZ * dt;
+
+                } else if (pillObj.state === 'open') {
+                    pillObj.openTimer += dt;
+                    // Медленное раскрытие и наклон открытыми краями вниз
+                    pillObj.openProgress += (1 - pillObj.openProgress) * (1 - Math.exp(-2.2 * dt));
+                    const op = pillObj.openProgress;
+
+                    // Лёгкая дрожь половинок во время высыпания — «физичность» тряски
+                    const wobble = Math.sin(pillObj.openTimer * 5.4) * 0.022 * op * (1 - op * 0.55);
+
+                    pillObj.leftHalf.position.set(-0.62 * op, -0.08 * op, 0);
+                    pillObj.leftHalf.rotation.set(0.08 * op + wobble, 0.14 * op, -0.98 * op - wobble * 2);
+
+                    pillObj.rightHalf.position.set(0.62 * op, -0.08 * op, 0);
+                    pillObj.rightHalf.rotation.set(-0.08 * op - wobble, -0.14 * op, 0.98 * op + wobble * 2);
+
+                    const orientBlend = 1 - Math.exp(-3.4 * dt);
+                    const targetX = 0.16 + Math.sin(t * 0.9 + motion.rotX.phase) * 0.06;
+                    const targetY = Math.sin(t * 0.65 + motion.rotY.phase) * 0.18;
+                    const targetZ = Math.sin(t * 0.8 + motion.rotZ.phase) * 0.08;
+
+                    angles.x += (targetX - angles.x) * orientBlend;
+                    angles.y += (targetY - angles.y) * orientBlend;
+                    angles.z += (targetZ - angles.z) * orientBlend;
+
+                } else if (pillObj.state === 'dock_closing') {
+                    pillObj.dockTimer += dt;
+                    pillObj.openProgress += (0 - pillObj.openProgress) * (1 - Math.exp(-4.6 * dt));
+                    const op = pillObj.openProgress;
+
+                    pillObj.leftHalf.position.set(-0.62 * op, -0.08 * op, 0);
+                    pillObj.leftHalf.rotation.set(0.08 * op, 0.14 * op, -0.98 * op);
+                    pillObj.rightHalf.position.set(0.62 * op, -0.08 * op, 0);
+                    pillObj.rightHalf.rotation.set(-0.08 * op, -0.14 * op, 0.98 * op);
+
+                    const dockInfo = getCornerDockTransform();
+                    targetScale = dockInfo.scale;
+
+                    const orientBlend = 1 - Math.exp(-4.2 * dt);
+                    angles.x += (0.14 - angles.x) * orientBlend;
+                    angles.y += (0.18 - angles.y) * orientBlend;
+                    angles.z += (-0.12 - angles.z) * orientBlend;
+
+                    if (pillObj.dockTimer > 1.2 && Math.abs(pillObj.curScale - dockInfo.scale) < 0.03) {
+                        pillObj.state = 'docked';
+                    }
+
+                } else if (pillObj.state === 'docked') {
+                    pillObj.openProgress = 0;
+                    pillObj.leftHalf.position.set(0, 0, 0);
+                    pillObj.leftHalf.rotation.set(0, 0, 0);
+                    pillObj.rightHalf.position.set(0, 0, 0);
+                    pillObj.rightHalf.rotation.set(0, 0, 0);
+
+                    const dockInfo = getCornerDockTransform();
+                    targetScale = dockInfo.scale;
+
+                    const orientBlend = 1 - Math.exp(-4.0 * dt);
+                    angles.x += (0.16 + Math.sin(t * 1.1 + motion.rotX.phase) * 0.08 - angles.x) * orientBlend;
+                    angles.y += (0.22 + Math.cos(t * 0.85 + motion.rotY.phase) * 0.14 - angles.y) * orientBlend;
+                    angles.z += (-0.10 + Math.sin(t * 0.95 + motion.rotZ.phase) * 0.08 - angles.z) * orientBlend;
+
+                } else if (pillObj.state === 'undocking') {
+                    pillObj.undockTimer += dt;
+                    targetScale = pillObj.collectInPlace ? pillObj.collectScale : 1.0;
+
+                    const openTrigger = pillObj.collectInPlace
+                        ? THREE.MathUtils.clamp(pillObj.undockTimer / 0.45, 0, 1)
+                        : THREE.MathUtils.clamp((pillObj.undockTimer - 0.35) / 0.65, 0, 1);
+                    pillObj.openProgress += (openTrigger - pillObj.openProgress) * (1 - Math.exp(-4.5 * dt));
+                    const op = pillObj.openProgress;
+
+                    pillObj.leftHalf.position.set(-0.62 * op, -0.08 * op, 0);
+                    pillObj.leftHalf.rotation.set(0.08 * op, 0.14 * op, -0.98 * op);
+                    pillObj.rightHalf.position.set(0.62 * op, -0.08 * op, 0);
+                    pillObj.rightHalf.rotation.set(-0.08 * op, -0.14 * op, 0.98 * op);
+
+                    const orientBlend = 1 - Math.exp(-4.8 * dt);
+                    angles.x += (0.16 - angles.x) * orientBlend;
+                    angles.y += (0 - angles.y) * orientBlend;
+                    angles.z += (0 - angles.z) * orientBlend;
+
+                    const scaleReady = pillObj.collectInPlace ? true : (pillObj.curScale > 0.92);
+                    const undockDoneTime = pillObj.collectInPlace ? 0.55 : 1.0;
+                    if (pillObj.undockTimer >= undockDoneTime && scaleReady) {
+                        startCollectingPill(pillObj, angles, pillObj.collectInPlace);
+                    }
+
+                } else if (pillObj.state === 'collecting') {
+                    pillObj.collectTimer += dt;
+                    pillObj.openProgress += (1 - pillObj.openProgress) * (1 - Math.exp(-4.0 * dt));
+                    const op = pillObj.openProgress;
+                    const sSide = pillObj.suctionSide;
+
+                    if (sSide === -1) {
+                        // Левая (нижняя) половинка смотрит открытым срезом строго вниз и засасывает гранулы
+                        pillObj.leftHalf.position.set(-0.22 * op, -0.10 * op, 0);
+                        pillObj.leftHalf.rotation.set(0.05 * op, 0, -Math.PI * 0.5 * op);
+                        // Правая половинка ждёт в стороне
+                        pillObj.rightHalf.position.set(0.88 * op, 0.34 * op, 0);
+                        pillObj.rightHalf.rotation.set(-0.12 * op, 0.18 * op, 0.42 * op);
+                    } else {
+                        // Правая (нижняя) половинка смотрит открытым срезом строго вниз и засасывает гранулы
+                        pillObj.rightHalf.position.set(0.22 * op, -0.10 * op, 0);
+                        pillObj.rightHalf.rotation.set(0.05 * op, 0, Math.PI * 0.5 * op);
+                        // Левая половинка ждёт в стороне
+                        pillObj.leftHalf.position.set(-0.88 * op, 0.34 * op, 0);
+                        pillObj.leftHalf.rotation.set(-0.12 * op, -0.18 * op, -0.42 * op);
+                    }
+
+                    const orientBlend = 1 - Math.exp(-4.2 * dt);
+                    angles.x += (0.12 - angles.x) * orientBlend;
+                    angles.y += (0 - angles.y) * orientBlend;
+                    angles.z += (0 - angles.z) * orientBlend;
+
+                } else if (pillObj.state === 'closing') {
+                    // Вторая половинка подлетает соосно, надевается и закручивается на 2 оборота
+                    pillObj.closingProgress += dt * 0.72;
+                    const c = Math.min(1, pillObj.closingProgress);
+                    const ease = c < 0.5 ? 2 * c * c : 1 - Math.pow(-2 * c + 2, 2) / 2;
+                    const op = 1 - ease;
+                    pillObj.openProgress = op;
+                    const sSide = pillObj.suctionSide;
+
+                    const twist = (1 - ease) * Math.PI * 4.0;
+                    const axialSlide = op * 0.78;
+
+                    if (sSide === -1) {
+                        pillObj.leftHalf.position.set(-0.22 * op, -0.10 * op, 0);
+                        pillObj.leftHalf.rotation.set(0.05 * op, 0, -Math.PI * 0.5 * op);
+
+                        pillObj.rightHalf.position.set(axialSlide, 0.18 * op, 0);
+                        pillObj.rightHalf.rotation.set(twist, 0, 0.16 * op);
+                    } else {
+                        pillObj.rightHalf.position.set(0.22 * op, -0.10 * op, 0);
+                        pillObj.rightHalf.rotation.set(0.05 * op, 0, Math.PI * 0.5 * op);
+
+                        pillObj.leftHalf.position.set(-axialSlide, 0.18 * op, 0);
+                        pillObj.leftHalf.rotation.set(twist, 0, -0.16 * op);
+                    }
+
+                    const orientBlend = 1 - Math.exp(-3.6 * dt);
+                    angles.x += (0.14 - angles.x) * orientBlend;
+                    angles.y += (0 - angles.y) * orientBlend;
+                    angles.z += (0 - angles.z) * orientBlend;
+
+                    if (c >= 1) {
+                        pillObj.state = 'closed';
+                        pillObj.collectInPlace = false;
+                        pillObj.openProgress = 0;
+                        pillObj.leftHalf.position.set(0, 0, 0);
+                        pillObj.leftHalf.rotation.set(0, 0, 0);
+                        pillObj.rightHalf.position.set(0, 0, 0);
+                        pillObj.rightHalf.rotation.set(0, 0, 0);
+                        updateResetButtonVisibility();
+                    }
+                }
+
+                // Масштабирование капсулы
+                const scaleLerp = 1 - Math.exp(-4.5 * dt);
+                pillObj.curScale += (targetScale - pillObj.curScale) * scaleLerp;
+                pillObj.group.scale.setScalar(pillObj.curScale);
+
+                pillObj.group.rotation.set(angles.x, angles.y, angles.z);
+                pillObj.group.updateMatrixWorld(true);
+
+                // ================= ФИЗИКА ФРАГМЕНТОВ СТРАНИЦЫ =================
+                const boxFrags = pillObj.boxFrags;
+                const dotFrags = pillObj.dotFrags;
+                const totalFrags = boxFrags.length + dotFrags.length;
+                const innerMaxR = pillObj.radius - 0.085;
+                const innerHalfCyl = pillObj.halfCylLen - 0.03;
+                const offscreenY = getOffscreenBottomY();
+                let boxesDirty = false;
+                let dotsDirty = false;
+
+                if (pillObj.state === 'closed') {
+                    // Внутри закрытой капсулы фрагменты пересыпаются как крупный песок
+                    _invQuat.copy(pillObj.group.quaternion).invert();
+                    _gravityLocal.set(0, -13.5, 0).applyQuaternion(_invQuat);
+                    _accelLocal.copy(_accelWorld).multiplyScalar(-0.75).applyQuaternion(_invQuat);
+
+                    const subSteps = QUALITY.mobile ? 1 : 2;
+                    const subDt = dt / subSteps;
+
+                    for (let step = 0; step < subSteps; step++) {
+                        for (let s = 0; s < 2; s++) {
+                            const set = s === 0 ? boxFrags : dotFrags;
+                            for (let i = 0; i < set.length; i++) {
+                                const f = set[i];
+                                f.vel.x += (_gravityLocal.x + _accelLocal.x) * subDt;
+                                f.vel.y += (_gravityLocal.y + _accelLocal.y) * subDt;
+                                f.vel.z += (_gravityLocal.z + _accelLocal.z) * subDt;
+
+                                // Сухое трение и вязкое затухание
+                                const damp = Math.exp(-3.4 * subDt);
+                                f.vel.multiplyScalar(damp);
+
+                                f.pos.addScaledVector(f.vel, subDt);
+                                constrainGrainInsideCapsule(f, innerMaxR, innerHalfCyl);
+                            }
+                        }
+
+                        // Лёгкое взаимное расталкивание соседей (только десктоп — экономим CPU на мобильных)
+                        if (!QUALITY.mobile) {
+                            for (let i = 0; i < boxFrags.length; i++) {
+                                const a = boxFrags[i];
+                                for (let j = i + 1; j < Math.min(boxFrags.length, i + 10); j++) {
+                                    const b = boxFrags[j];
+                                    const dx = b.pos.x - a.pos.x;
+                                    const dy = b.pos.y - a.pos.y;
+                                    const dz = b.pos.z - a.pos.z;
+                                    const minDist = (a.radius + b.radius) * 0.96;
+                                    const d2 = dx * dx + dy * dy + dz * dz;
+                                    if (d2 > 0.00001 && d2 < minDist * minDist) {
+                                        const d = Math.sqrt(d2);
+                                        const push = (minDist - d) * 0.42 / d;
+                                        a.pos.x -= dx * push;
+                                        a.pos.y -= dy * push;
+                                        a.pos.z -= dz * push;
+                                        b.pos.x += dx * push;
+                                        b.pos.y += dy * push;
+                                        b.pos.z += dz * push;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // Плавное возвращение свечения фрагментов к исходному
+                    _origEmissive.setHex(pillObj.innerEmissive);
+                    pillObj.fragMat.emissive.lerp(_origEmissive, 1 - Math.exp(-5 * dt));
+
+                    const closedFadeScale = SEGMENT_CONFIG.keepCornerPillsVisible
+                        ? 1
+                        : Math.pow(Math.max(0, pillObj.shellFade), 0.7);
+                    pillObj.fragBoxes.visible = closedFadeScale > 0.008;
+                    pillObj.fragDots.visible = closedFadeScale > 0.008;
+
+                    for (let s = 0; s < 2; s++) {
+                        const set = s === 0 ? boxFrags : dotFrags;
+                        const mesh = s === 0 ? pillObj.fragBoxes : pillObj.fragDots;
+                        for (let i = 0; i < set.length; i++) {
+                            const f = set[i];
+                            f.worldPos.copy(f.pos).applyMatrix4(pillObj.group.matrixWorld);
+                            f.curScale.copy(f.baseScale).multiplyScalar(closedFadeScale);
+                            writeFragInstance(mesh, i, f, pillObj.curScale);
+
+                            if (f.colorMix > 0.001) {
+                                f.colorMix = Math.max(0, f.colorMix - dt * 2.5);
+                                writeFragColor(mesh, i, f);
+                                if (s === 0) boxesDirty = true; else dotsDirty = true;
+                            }
+                        }
+                    }
+
+                } else if (pillObj.state === 'open') {
+                    // Фазы жизни фрагмента: сползание к срезу -> высыпание с кувырканием ->
+                    // полёт на своё место в раскладке страницы -> растворение в настоящем контенте
+                    let spilledCount = 0;
+                    let assembledCount = 0;
+                    let fadedCount = 0;
+
+                    _themeEmissive.setHex(pillObj.themeGrainEmissive);
+                    pillObj.fragMat.emissive.lerp(_themeEmissive, 1 - Math.exp(-2.2 * dt));
+
+                    if (pillObj.pageRevealed) pillObj.revealTimer += dt;
+
+                    for (let s = 0; s < 2; s++) {
+                        const set = s === 0 ? boxFrags : dotFrags;
+                        const mesh = s === 0 ? pillObj.fragBoxes : pillObj.fragDots;
+
+                        for (let i = 0; i < set.length; i++) {
+                            const f = set[i];
+                            const halfObj = f.halfSide === -1 ? pillObj.leftHalf : pillObj.rightHalf;
+
+                            if (!f.spilled) {
+                                if (pillObj.openTimer >= f.pourDelay && pillObj.openProgress > 0.25) {
+                                    // Фрагмент скользит по внутренней стенке своей половинки к открытому срезу (x -> 0)
+                                    const slideSpeed = 1.65 + (pillObj.openTimer - f.pourDelay) * 1.4;
+                                    f.pos.x -= Math.sign(f.pos.x || f.halfSide) * slideSpeed * dt;
+                                    f.pos.y *= Math.exp(-1.5 * dt);
+                                    f.pos.z *= Math.exp(-1.5 * dt);
+
+                                    // Достигнув открытого ободка — высыпается наружу в мировые координаты
+                                    if (Math.abs(f.pos.x) <= 0.05) {
+                                        f.spilled = true;
+                                        f.worldPos.copy(f.pos).applyMatrix4(halfObj.matrixWorld);
+                                        f.worldVel.set(
+                                            (Math.random() - 0.5) * 0.9,
+                                            -0.55 - Math.random() * 0.7,
+                                            (Math.random() - 0.5) * 0.7
+                                        );
+                                        f.rotVel.set(
+                                            (Math.random() - 0.5) * 7,
+                                            (Math.random() - 0.5) * 7,
+                                            (Math.random() - 0.5) * 7
+                                        );
+                                    }
+                                }
+                                if (!f.spilled) {
+                                    f.worldPos.copy(f.pos).applyMatrix4(halfObj.matrixWorld);
+                                }
+                            }
+
+                            if (f.spilled) {
+                                spilledCount++;
+
+                                if (f.assembleP <= 0 && pillObj.openTimer < f.assembleDelay) {
+                                    // Свободное падение с кувырканием сразу после высыпания
+                                    f.worldVel.y -= 9.8 * dt;
+                                    f.worldVel.multiplyScalar(Math.exp(-0.35 * dt));
+                                    f.worldPos.addScaledVector(f.worldVel, dt);
+                                    f.rot.x += f.rotVel.x * dt;
+                                    f.rot.y += f.rotVel.y * dt;
+                                    f.rot.z += f.rotVel.z * dt;
+                                } else if (f.assembleP < 1) {
+                                    // Полёт к своему месту на странице по дуге
+                                    if (f.assembleP <= 0) {
+                                        f.assembleFrom.copy(f.worldPos);
+                                        f.rotFrom.copy(f.rot);
+                                        f.flatRot.set(
+                                            Math.round(f.rot.x / (Math.PI * 2)) * Math.PI * 2,
+                                            Math.round(f.rot.y / (Math.PI * 2)) * Math.PI * 2,
+                                            Math.round(f.rot.z / (Math.PI * 2)) * Math.PI * 2
+                                        );
+                                        f.arcAmp = THREE.MathUtils.clamp(f.assembleFrom.distanceTo(f.targetPos) * 0.13, 0.05, 0.4);
+                                    }
+                                    f.assembleP = Math.min(1, f.assembleP + dt / f.assembleDur);
+                                    const e = 1 - Math.pow(1 - f.assembleP, 3);
+                                    f.worldPos.lerpVectors(f.assembleFrom, f.targetPos, e);
+                                    f.worldPos.y += Math.sin(e * Math.PI) * f.arcAmp;
+                                    const jitter = (1 - e) * 0.045;
+                                    f.worldPos.x += Math.sin(t * 6.3 + f.swirlPhase) * jitter;
+                                    f.worldPos.z += Math.cos(t * 5.1 + f.swirlPhase * 1.7) * jitter;
+                                    f.rot.x = f.rotFrom.x + (f.flatRot.x - f.rotFrom.x) * e;
+                                    f.rot.y = f.rotFrom.y + (f.flatRot.y - f.rotFrom.y) * e;
+                                    f.rot.z = f.rotFrom.z + (f.flatRot.z - f.rotFrom.z) * e;
+                                    f.curScale.lerpVectors(f.baseScale, f.targetScale, e);
+                                    if (f.assembleP >= 1) {
+                                        f.arrived = true;
+                                        f.rot.copy(f.flatRot);
+                                        f.curScale.copy(f.targetScale);
+                                    }
+                                } else {
+                                    assembledCount++;
+                                }
+
+                                // Окрашивание в цвет целевого блока страницы
+                                if (f.colorMix < 1) {
+                                    f.colorMix = Math.min(1, f.colorMix + dt * 2.1);
+                                    writeFragColor(mesh, i, f);
+                                    if (s === 0) boxesDirty = true; else dotsDirty = true;
+                                }
+
+                                // После проявления настоящей страницы фрагмент тает с лёгким «попом»
+                                if (pillObj.pageRevealed && pillObj.revealTimer > f.fadeDelay) {
+                                    if (f.fadeP <= 0) f.fadeFromScale.copy(f.curScale);
+                                    if (f.fadeP < 1) {
+                                        f.fadeP = Math.min(1, f.fadeP + dt / 0.5);
+                                        const fp = f.fadeP;
+                                        const pop = 1 + Math.sin(Math.min(fp * 1.7, 1) * Math.PI) * 0.14;
+                                        const shrink = Math.max(0.0001, (1 - fp) * pop);
+                                        f.curScale.copy(f.fadeFromScale).multiplyScalar(shrink);
+                                        if (f.fadeP >= 1) f.hidden = true;
+                                    } else {
+                                        f.hidden = true;
+                                    }
+                                }
+                                if (f.hidden) fadedCount++;
+                            }
+
+                            writeFragInstance(mesh, i, f, pillObj.curScale);
+                        }
+                    }
+
+                    // Фон темы включается почти сразу после начала высыпания,
+                    // но страницу проявит сама сборка фрагментов (revealPageForPill)
+                    if (!pillObj.themeTriggered && spilledCount > totalFrags * 0.1) {
+                        pillObj.themeTriggered = true;
+                        applyWorldTheme(pillObj.id, { deferPageReveal: true });
+                    }
+
+                    // Проявляем настоящую страницу, когда большинство фрагментов заняли свои места
+                    if (!pillObj.pageRevealed) {
+                        const ready = totalFrags > 0 ? (assembledCount + fadedCount) / totalFrags : 1;
+                        if (ready > SEGMENT_CONFIG.assembleRevealRatio || pillObj.openTimer > 5.0) {
+                            revealPageForPill(pillObj);
+                        }
+                    }
+
+                    // После высыпания содержимого обе оболочки капсул плавно исчезают
+                    if (!SEGMENT_CONFIG.keepCornerPillsVisible && (spilledCount >= totalFrags * 0.85 || pillObj.openTimer > SEGMENT_CONFIG.pourFadeDelaySec || pillObj.pageRevealed)) {
+                        pillObj.shellFade = Math.max(0, pillObj.shellFade - dt * SEGMENT_CONFIG.shellFadeOutSpeed);
+                    }
+
+                    // Все фрагменты растворились в странице — прячем обе капсулы полностью
+                    if (fadedCount >= totalFrags * 0.98 || pillObj.openTimer > 7.2) {
+                        if (SEGMENT_CONFIG.keepCornerPillsVisible) {
+                            pillObj.state = 'dock_closing';
+                            pillObj.dockTimer = 0;
+                        } else {
+                            pillObj.state = 'vanished';
+                            pillObj.shellFade = 0;
+                            pillObj.fragBoxes.visible = false;
+                            pillObj.fragDots.visible = false;
+                            setPillsHidden(true);
+                        }
+                    }
+
+                } else if (pillObj.state === 'vanished') {
+                    pillObj.shellFade = 0;
+                    pillObj.fragBoxes.visible = false;
+                    pillObj.fragDots.visible = false;
+
+                } else if (pillObj.state === 'dock_closing' || pillObj.state === 'docked' || pillObj.state === 'undocking') {
+                    // Фрагменты уже растворились в странице — прячем их до возврата
+                    for (let s = 0; s < 2; s++) {
+                        const set = s === 0 ? boxFrags : dotFrags;
+                        const mesh = s === 0 ? pillObj.fragBoxes : pillObj.fragDots;
+                        for (let i = 0; i < set.length; i++) {
+                            const f = set[i];
+                            f.curScale.set(0.0001, 0.0001, 0.0001);
+                            writeFragInstance(mesh, i, f, 1);
+                        }
+                    }
+
+                } else if (pillObj.state === 'collecting') {
+                    // Поэтапное вихревое засасывание фрагментов обратно в нижнюю половинку
+                    const suctionHalf = pillObj.suctionSide === -1 ? pillObj.leftHalf : pillObj.rightHalf;
+                    _rimWorldPos.set(0, 0, 0).applyMatrix4(suctionHalf.matrixWorld);
+
+                    _origEmissive.setHex(pillObj.innerEmissive);
+                    pillObj.fragMat.emissive.lerp(_origEmissive, 1 - Math.exp(-2.8 * dt));
+
+                    let returnedCount = 0;
+
+                    for (let s = 0; s < 2; s++) {
+                        const set = s === 0 ? boxFrags : dotFrags;
+                        const mesh = s === 0 ? pillObj.fragBoxes : pillObj.fragDots;
+
+                        for (let i = 0; i < set.length; i++) {
+                            const f = set[i];
+                            _targetWorldPos.copy(f.pos).applyMatrix4(suctionHalf.matrixWorld);
+
+                            if (!f.spilled) {
+                                f.worldPos.copy(_targetWorldPos);
+                                returnedCount++;
+                            } else if (pillObj.collectTimer >= f.collectDelay) {
+                                // Сначала тянем к открытому ободку, затем внутрь дна половинки
+                                const toRimX = _rimWorldPos.x - f.worldPos.x;
+                                const toRimY = _rimWorldPos.y - f.worldPos.y;
+                                const toRimZ = _rimWorldPos.z - f.worldPos.z;
+                                const distToRim = Math.hypot(toRimX, toRimY, toRimZ);
+
+                                const rimThresh = 0.32 * Math.max(0.4, pillObj.curScale);
+                                const arriveThresh = 0.09 * Math.max(0.5, pillObj.curScale);
+                                const aimPos = distToRim > rimThresh ? _rimWorldPos : _targetWorldPos;
+                                const dx = aimPos.x - f.worldPos.x;
+                                const dy = aimPos.y - f.worldPos.y;
+                                const dz = aimPos.z - f.worldPos.z;
+                                const dist = Math.hypot(dx, dy, dz);
+
+                                if (dist < arriveThresh && aimPos === _targetWorldPos) {
+                                    f.spilled = false;
+                                    f.worldPos.copy(_targetWorldPos);
+                                    f.curScale.copy(f.baseScale);
+                                    returnedCount++;
+                                } else {
+                                    const pullSpeed = 4.8 + Math.min(5.5, (pillObj.collectTimer - f.collectDelay) * 3.8);
+                                    const swirl = Math.min(0.45, dist * 0.25);
+                                    const ang = t * 7.5 + f.swirlPhase;
+
+                                    f.worldPos.x += (dx / Math.max(dist, 0.001)) * pullSpeed * dt + Math.cos(ang) * swirl * dt;
+                                    f.worldPos.y += (dy / Math.max(dist, 0.001)) * pullSpeed * dt;
+                                    f.worldPos.z += (dz / Math.max(dist, 0.001)) * pullSpeed * dt + Math.sin(ang) * swirl * dt;
+
+                                    // На лету фрагмент сжимается до «крошки», чтобы пройти в ободок
+                                    f.curScale.lerp(f.baseScale, 1 - Math.exp(-5 * dt));
+                                    f.rot.x += f.rotVel.x * dt;
+                                    f.rot.y += f.rotVel.y * dt;
+                                    f.rot.z += f.rotVel.z * dt;
+                                }
+
+                                // Возвращаем исходный контрастный цвет по мере втягивания
+                                if (f.colorMix > 0) {
+                                    f.colorMix = Math.max(0, f.colorMix - dt * 2.2);
+                                    writeFragColor(mesh, i, f);
+                                    if (s === 0) boxesDirty = true; else dotsDirty = true;
+                                }
+                            }
+
+                            writeFragInstance(mesh, i, f, pillObj.curScale);
+                        }
+                    }
+
+                    // Когда все волны затянуты внутрь — надеваем и закручиваем вторую половинку
+                    if (returnedCount >= totalFrags * 0.96 || pillObj.collectTimer > 3.4) {
+                        for (let s = 0; s < 2; s++) {
+                            const set = s === 0 ? boxFrags : dotFrags;
+                            const mesh = s === 0 ? pillObj.fragBoxes : pillObj.fragDots;
+                            for (let i = 0; i < set.length; i++) {
+                                const f = set[i];
+                                f.spilled = false;
+                                f.hidden = false;
+                                f.fadeP = 0;
+                                f.assembleP = 0;
+                                f.arrived = false;
+                                f.colorMix = 0;
+                                f.curScale.copy(f.baseScale);
+                                mesh.setColorAt(i, f.origColor);
+                            }
+                        }
+                        boxesDirty = true;
+                        dotsDirty = true;
+                        pillObj.state = 'closing';
+                        pillObj.closingProgress = 0;
+                    }
+
+                } else if (pillObj.state === 'closing') {
+                    // Фрагменты едут внутри наполненной половинки, пока вторая закручивается сверху
+                    const suctionHalf = pillObj.suctionSide === -1 ? pillObj.leftHalf : pillObj.rightHalf;
+                    for (let s = 0; s < 2; s++) {
+                        const set = s === 0 ? boxFrags : dotFrags;
+                        const mesh = s === 0 ? pillObj.fragBoxes : pillObj.fragDots;
+                        for (let i = 0; i < set.length; i++) {
+                            const f = set[i];
+                            f.worldPos.copy(f.pos).applyMatrix4(suctionHalf.matrixWorld);
+                            writeFragInstance(mesh, i, f, pillObj.curScale);
+                        }
+                    }
+                }
+
+                pillObj.fragBoxes.instanceMatrix.needsUpdate = true;
+                pillObj.fragDots.instanceMatrix.needsUpdate = true;
+                if (boxesDirty && pillObj.fragBoxes.instanceColor) {
+                    pillObj.fragBoxes.instanceColor.needsUpdate = true;
+                }
+                if (dotsDirty && pillObj.fragDots.instanceColor) {
+                    pillObj.fragDots.instanceColor.needsUpdate = true;
+                }
+
+                // Управление исчезновением / проявлением оболочки обеих капсул
+                if (!SEGMENT_CONFIG.keepCornerPillsVisible) {
+                    const otherVanishing =
+                        (otherPill.state === 'open' && (otherPill.openTimer > SEGMENT_CONFIG.pourFadeDelaySec || otherPill.pageRevealed)) ||
+                        otherPill.state === 'vanished';
+                    if (pillObj.state === 'closed' && otherVanishing) {
+                        pillObj.shellFade = Math.max(0, pillObj.shellFade - dt * SEGMENT_CONFIG.shellFadeOutSpeed);
+                    } else if (
+                        pillObj.state === 'collecting' ||
+                        pillObj.state === 'closing' ||
+                        (pillObj.state === 'closed' && !otherVanishing)
+                    ) {
+                        pillObj.shellFade = Math.min(1, pillObj.shellFade + dt * SEGMENT_CONFIG.shellFadeInSpeed);
+                    }
+                } else {
+                    pillObj.shellFade = 1;
+                }
+                applyPillShellAlpha(pillObj);
+
+                // Обновление деликатной тени под капсулой
+                const isDarkBg = activeWorldTheme === 'red';
+                const shadowVisibility =
+                    (pillObj.state === 'docked' || pillObj.state === 'dock_closing' || pillObj.state === 'vanished' || isParkedTopRight || isDarkBg)
+                        ? 0.0
+                        : 0.42 * pillObj.shellFade;
+
+                pillObj.shadowMesh.material.opacity += (shadowVisibility - pillObj.shadowMesh.material.opacity) * (1 - Math.exp(-4 * dt));
+                pillObj.shadowMesh.position.x = pillObj.group.position.x;
+                pillObj.shadowMesh.position.z = pillObj.group.position.z;
+
+                const heightFactor = THREE.MathUtils.clamp(1.15 - (pillObj.group.position.y + 0.3) * 0.25, 0.72, 1.25);
+                const yawCos = Math.abs(Math.cos(angles.y));
+                pillObj.shadowMesh.scale.set(
+                    (0.75 + 0.32 * yawCos) * heightFactor * pillObj.curScale,
+                    heightFactor * pillObj.curScale,
+                    1
+                );
+                pillObj.shadowMesh.rotation.z = -angles.y * 0.45;
+            }
+
+
+
+
+
+
+            // Привязываем ссылки для кнопок управления страницами
+            redPillRef = redPill;
+            bluePillRef = bluePill;
+            redAnglesRef = redAngles;
+            blueAnglesRef = blueAngles;
+            resetPillFn = resetPill;
+            resetPillImmediateFn = resetPillImmediate;
+            openPillFn = openPill;
+
+            // ================= ОБРАБОТКА КЛИКОВ И НАВЕДЕНИЯ =================
+            const raycaster = new THREE.Raycaster();
+            const pointer = new THREE.Vector2();
+
+            function isInteractivePageTarget(target) {
+                if (!target || !target.closest) return false;
+                return Boolean(target.closest('button, a, input, textarea, select, .one-crt-card, .post-card, .bio-topline'));
+            }
+
+            function getIntersectedPill(clientX, clientY) {
+                if (pillsAreHidden) return null;
+                if (!SEGMENT_CONFIG.keepCornerPillsVisible && (activeWorldTheme !== 'default' || redPill.state === 'open' || bluePill.state === 'open')) return null;
+                const rect = renderer.domElement.getBoundingClientRect();
+                if (!rect.width || !rect.height) return null;
+                pointer.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+                pointer.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+                raycaster.setFromCamera(pointer, camera);
+
+                const hits = raycaster.intersectObjects([redPill.hitMesh, bluePill.hitMesh], false);
+                if (!hits.length) return null;
+                const hitPill = hits[0].object === redPill.hitMesh ? redPill : bluePill;
+                if (hitPill.shellFade < 0.25 || hitPill.state === 'vanished') return null;
+                return hitPill;
+            }
+
+            window.addEventListener('pointermove', function (e) {
+                if (isInteractivePageTarget(e.target)) {
+                    document.body.style.cursor = '';
+                    return;
+                }
+                const hovered = getIntersectedPill(e.clientX, e.clientY);
+                document.body.style.cursor = hovered ? 'pointer' : '';
+            });
+
+            window.addEventListener('click', function (e) {
+                if (isInteractivePageTarget(e.target)) return;
+                const pill = getIntersectedPill(e.clientX, e.clientY);
+                if (!pill) return;
+                const angles = pill === redPill ? redAngles : blueAngles;
+
+                if (pill.state === 'closed') {
+                    openPill(pill, angles);
+                } else if (pill.state === 'open') {
+                    startCollectingPill(pill, angles);
+                } else if (pill.state === 'docked' || pill.state === 'dock_closing') {
+                    startUndockPill(pill, angles);
+                }
+            });
+
+            // ================= ЦИКЛ АНИМАЦИИ =================
+            let lastTime = performance.now();
+            let elapsed = 0;
+            let perfAccum = 0;
+            let perfFrames = 0;
+
+            function animate(now) {
+                requestAnimationFrame(animate);
+                const dt = Math.min((now - lastTime) / 1000, 0.05);
+                lastTime = now;
+                elapsed += dt;
+
+                // Автоподстройка разрешения под фактический FPS
+                perfAccum += dt;
+                perfFrames++;
+                if (perfAccum >= 1.5) {
+                    const avg = perfAccum / perfFrames;
+                    if (avg > 0.024 && pixelRatioCap > 1.0) {
+                        pixelRatioCap = Math.max(1.0, pixelRatioCap - 0.25);
+                        renderer.setPixelRatio(pixelRatioCap);
+                        renderer.setSize(window.innerWidth, window.innerHeight);
+                    } else if (avg < 0.013 && pixelRatioCap < MAX_PIXEL_RATIO) {
+                        pixelRatioCap = Math.min(MAX_PIXEL_RATIO, pixelRatioCap + 0.25);
+                        renderer.setPixelRatio(pixelRatioCap);
+                        renderer.setSize(window.innerWidth, window.innerHeight);
+                    }
+                    perfAccum = 0;
+                    perfFrames = 0;
+                }
+
+                updateMatrixRain(dt);
+                stepPillAnimation(redPill, motionProfiles.red, redAngles, dt, elapsed);
+                stepPillAnimation(bluePill, motionProfiles.blue, blueAngles, dt, elapsed);
+
+                renderer.render(scene, camera);
+            }
+
+            requestAnimationFrame(animate);
+
+            window.addEventListener('resize', function () {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                updateResponsiveBasePositions();
+                resizeMatrixCanvas();
+                [redPill, bluePill].forEach(function (p) {
+                    if (p.state === 'open' && p.themeTriggered) assignFragmentsToPage(p);
+                });
+            });
+        })();
+    </script>
+</body>
+</html>
