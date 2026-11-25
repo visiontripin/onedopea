@@ -104,6 +104,29 @@
                 dom.floatBtn.classList.toggle('is-shown', show);
             }, { passive: true });
 
+            // Скачивание автономного концепта одним файлом (все ассеты уже внутри)
+            const downloadBtn = $('download-concept');
+            if (downloadBtn) {
+                downloadBtn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    const name = 'onedopea-capsules-v2.html';
+                    const fileName = (window.location.pathname || '').split('/').pop() || name;
+                    fetch(window.location.href, { cache: 'no-store' })
+                        .then(function (r) { if (!r.ok) throw new Error('fetch'); return r.blob(); })
+                        .then(function (blob) {
+                            const href = URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = href;
+                            a.download = fileName || name;
+                            document.body.appendChild(a);
+                            a.click();
+                            a.remove();
+                            setTimeout(function () { URL.revokeObjectURL(href); }, 4000);
+                        })
+                        .catch(function () { window.open(window.location.href, '_blank'); });
+                });
+            }
+
             // Фолбэк-кнопки
             $('fb-red').addEventListener('click', function () { resetAll(); openPill(redPill); });
             $('fb-blue').addEventListener('click', function () { resetAll(); openPill(bluePill); });

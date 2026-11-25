@@ -10,6 +10,14 @@
 | `src-app-a.js` … `src-app-d.js` | Скрипт концепта по частям: конфиг + матрица/глифы · 3D-капсулы и кот · хореография · ввод и цикл. |
 | `cat-mark-ink.png` | Векторно-чистый силуэт кота с альфой (без кольца логотипа), 512×512. |
 
+## Ссылки
+
+- **Посмотреть вживую:** <https://visiontripin.github.io/onedopea/docs/capsules-v2-concept.html>
+- **Скачать одним файлом:** кнопка «Скачать концепт» в правом нижнем углу страницы
+  или <https://github.com/visiontripin/onedopea/raw/main/docs/capsules-v2-concept.html>
+  (ПКМ → «Сохранить ссылку как…», файл автономный — открывается двойным кликом)
+- **Раскадровка PNG:** <https://github.com/visiontripin/onedopea/raw/main/docs/capsules-v2-storyboard.png>
+
 Быстрые команды:
 
 ```
