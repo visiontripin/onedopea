@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ONEDOPEA — Анимация логотипа-кота (HTML / Inline SVG)</title>
+<style>
+  :root {
+    --bg-main: #f4f6fb;
+    --bg-stage: #ffffff;
+    --bg-stage-silhouette: #e7edf9;
+    --ink-dark: #1a1a18;
+    --ink-blue: #2a3984;
+    --ink-blue-deep: #1b2868;
+    --fill-paper: #fefefe;
+    --accent: #3649b8;
+    --accent-soft: rgba(54, 73, 184, 0.12);
+    --border-soft: rgba(30, 41, 59, 0.12);
+    --text-main: #151b2b;
+    --text-muted: #5a647d;
+    --shelf-top: #263147;
+    --shelf-front: #3b4968;
+    --floor-line: #cbd4e6;
+    --stage-hole-bg: #ffffff;
+  }
+
+  body.style-silhouette {
+    --bg-stage: #e7edf9;
+    --stage-hole-bg: #e7edf9;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html, body {
+    width: 100%;
+    min-height: 100%;
+    background: var(--bg-main);
+    color: var(--text-main);
+    font-family: 'DM Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .app-shell {
+    max-width: 1380px;
+    margin: 0 auto;
+    padding: 18px 22px 42px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* --- Top Header Bar --- */
+  .topbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 18px;
+    background: rgba(255, 255, 255, 0.88);
+    border: 1px solid var(--border-soft);
+    border-radius: 18px;
+    box-shadow: 0 8px 24px rgba(31, 45, 90, 0.06);
+    backdrop-filter: blur(12px);
+  }
+
+  .brand-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .brand-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+    background: var(--ink-blue);
+    color: #fff;
+    font-weight: 800;
+    font-size: 15px;
+    letter-spacing: 0.04em;
+    box-shadow: 0 4px 12px rgba(42, 57, 132, 0.28);
+  }
+
+  .brand-title h1 {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .brand-title p {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .toolbar-groups {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .seg-group {
+    display: inline-flex;
+    align-items: center;
+    background: #eef1f8;
+    padding: 3px;
+    border-radius: 11px;
+    border: 1px solid rgba(30, 41, 59, 0.08);
+    gap: 2px;
+  }
+
+  .seg-btn {
+    appearance: none;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 11px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.16s ease;
+    white-space: nowrap;
+  }
+
+  .seg-btn:hover {
+    color: var(--text-main);
+  }
+
+  .seg-btn.is-active {
+    background: #ffffff;
+    color: var(--ink-blue);
+    box-shadow: 0 2px 6px rgba(20, 30, 60, 0.1);
+  }
+
+  .action-btn {
+    appearance: none;
+    border: 1px solid rgba(54, 73, 184, 0.28);
+    background: #ffffff;
+    color: var(--ink-blue);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 7px 13px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.16s ease;
+  }
+
+  .action-btn:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+  }
+
+  .action-btn.primary {
+    background: var(--ink-blue);
+    color: #ffffff;
+    border-color: var(--ink-blue);
+  }
+
+  .action-btn.primary:hover {
+    background: var(--ink-blue-deep);
+  }
+
+  /* --- Main Stage Card --- */
+  .stage-card {
+    position: relative;
+    background: var(--bg-stage);
+    border: 1px solid var(--border-soft);
+    border-radius: 24px;
+    box-shadow: 0 18px 46px rgba(25, 38, 78, 0.08);
+    overflow: hidden;
+    transition: background-color 0.28s ease;
+  }
+
+  .stage-hud-top {
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    pointer-events: none;
+    z-index: 4;
+  }
+
+  .phase-pill-live {
+    pointer-events: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid var(--border-soft);
+    box-shadow: 0 6px 18px rgba(20, 30, 60, 0.07);
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--text-main);
+    backdrop-filter: blur(8px);
+  }
+
+  .phase-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.18);
+  }
+
+  .pose-accuracy-badge {
+    pointer-events: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(26, 26, 24, 0.06);
+    border: 1px solid rgba(26, 26, 24, 0.12);
+    font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+    font-size: 11px;
+    color: var(--text-main);
+  }
+
+  .pose-accuracy-badge.is-locked {
+    background: rgba(16, 185, 129, 0.12);
+    border-color: rgba(16, 185, 129, 0.35);
+    color: #065f46;
+    font-weight: 700;
+  }
+
+  #scene-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 64vh;
+    min-height: 390px;
+    user-select: none;
+  }
+
+  /* --- Timeline & Phase Stepper Bar --- */
+  .controls-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 14px 20px 16px;
+    background: rgba(255, 255, 255, 0.92);
+    border-top: 1px solid var(--border-soft);
+  }
+
+  .timeline-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .time-readout {
+    font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    min-width: 96px;
+    text-align: right;
+  }
+
+  .scrubber-wrap {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  #timeline-scrubber {
+    width: 100%;
+    accent-color: var(--ink-blue);
+    height: 6px;
+    cursor: pointer;
+  }
+
+  .phase-buttons-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .phase-steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .phase-step-btn {
+    appearance: none;
+    border: 1px solid var(--border-soft);
+    background: #f8f9fc;
+    color: var(--text-muted);
+    font-family: inherit;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 6px 11px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .phase-step-btn:hover {
+    border-color: var(--accent);
+    color: var(--text-main);
+  }
+
+  .phase-step-btn.is-active {
+    background: var(--ink-blue);
+    border-color: var(--ink-blue);
+    color: #ffffff;
+    box-shadow: 0 3px 10px rgba(42, 57, 132, 0.24);
+  }
+
+  /* --- Info Panels: Roles & Embed Snippet --- */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 980px) {
+    .info-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .info-card {
+    background: #ffffff;
+    border: 1px solid var(--border-soft);
+    border-radius: 20px;
+    padding: 18px 20px;
+    box-shadow: 0 8px 24px rgba(31, 45, 90, 0.04);
+  }
+
+  .info-card h2 {
+    font-size: 14.5px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .roles-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 10px;
+  }
+
+  .role-item {
+    padding: 11px 13px;
+    border-radius: 13px;
+    background: #f7f9fd;
+    border: 1px solid rgba(30, 41, 59, 0.07);
+  }
+
+  .role-item .role-tag {
+    display: inline-block;
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--ink-blue);
+    margin-bottom: 4px;
+  }
+
+  .role-item h3 {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .role-item p {
+    font-size: 11.5px;
+    line-height: 1.45;
+    color: var(--text-muted);
+  }
+
+  .code-box {
+    background: #121726;
+    color: #d7e2ff;
+    border-radius: 13px;
+    padding: 12px 14px;
+    font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+    font-size: 11px;
+    line-height: 1.5;
+    overflow-x: auto;
+    max-height: 215px;
+    white-space: pre;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .reduced-motion-banner {
+    display: none;
+    padding: 10px 16px;
+    border-radius: 12px;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    color: #92400e;
+    font-size: 12.5px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .reduced-motion-banner.is-visible {
+    display: flex;
+  }
+
+  #download-concept {
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    z-index: 36;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    border: 1px solid rgba(129, 140, 248, 0.4);
+    border-radius: 999px;
+    color: #3f4fa8;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 10px 26px rgba(58, 82, 148, 0.14);
+    backdrop-filter: blur(12px);
+    font-family: inherit;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  #download-concept:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(58, 82, 148, 0.22);
+  }
+</style>
+</head>
+<body class="style-outline">
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-title">
+        <span class="brand-badge">O</span>
+        <div>
+          <h1>Анимация логотипа-кота ONEDOPEA</h1>
+          <p>Чистый инлайн HTML + SVG + JS · 100% геометрия исходного PDF · Возврат в позу 1:1</p>
+        </div>
+      </div>
+
+      <div class="toolbar-groups">
+        <div class="seg-group" role="group" aria-label="Стиль отрисовки кота">
+          <button type="button" class="seg-btn is-active" data-style="outline">Контур PDF</button>
+          <button type="button" class="seg-btn" data-style="silhouette">Синий силуэт</button>
+          <button type="button" class="seg-btn" data-style="both">Оба рядом</button>
+        </div>
+
+        <div class="seg-group" role="group" aria-label="Режим камеры">
+          <button type="button" class="seg-btn is-active" data-cam="stage">Сцена с полкой</button>
+          <button type="button" class="seg-btn" data-cam="closeup">Крупно логотип</button>
+        </div>
+
+        <div class="seg-group" role="group" aria-label="Скорость">
+          <button type="button" class="seg-btn" data-speed="0.35">×0.35</button>
+          <button type="button" class="seg-btn is-active" data-speed="1">×1.0</button>
+          <button type="button" class="seg-btn" data-speed="1.4">×1.4</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Direct Download Bar (works directly inside Arena Live Preview & offline) -->
+    <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px;background:#eef2ff;border:1px solid rgba(54,73,184,0.22);border-radius:14px;">
+      <span style="font-size:12.5px;font-weight:700;color:#1e293b;">⬇ Прямое скачивание файлов из превью (без GitHub):</span>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <a class="action-btn primary" href="/docs/cat-logo-animation.html" download="cat-logo-animation.html" style="text-decoration:none;">Скачать cat-logo-animation.html</a>
+        <a class="action-btn" href="/assets/logo-src/cat-logo-animated-snippet.html" download="cat-logo-animated-snippet.html" style="text-decoration:none;">Скачать сниппет для вставки</a>
+        <a class="action-btn" href="/assets/logo-src/cat-logo-original.svg" download="cat-logo-original.svg" style="text-decoration:none;">Скачать исходный SVG</a>
+        <a class="action-btn" href="/docs/cat-logo-storyboard.png" download="cat-logo-storyboard.png" style="text-decoration:none;">Скачать раскадровку PNG</a>
+      </div>
+    </div>
+
+
+    <div id="rm-banner" class="reduced-motion-banner">
+      <span>Обнаружена системная настройка <b>prefers-reduced-motion</b>: автозапуск поставлен на паузу в исходной позе логотипа.</span>
+      <button type="button" class="action-btn primary" id="rm-play-btn">Запустить анимацию</button>
+    </div>
+
+    <section class="stage-card" aria-label="Сцена анимации логотипа">
+      <div class="stage-hud-top">
+        <div class="phase-pill-live">
+          <span class="phase-dot" id="live-dot"></span>
+          <span id="phase-label">I. Сидит (Исходная поза)</span>
+        </div>
+        <div class="pose-accuracy-badge is-locked" id="pose-badge">
+          PDF PATH LOCK: 100.0% (исходная поза сидя)
+        </div>
+      </div>
+
+      <svg id="scene-svg" viewBox="0 0 1440 760" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Анимированный логотип кота ONEDOPEA">
+        <defs>
+          <linearGradient id="stageGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.55" />
+            <stop offset="100%" stop-color="#dfe6f6" stop-opacity="0.32" />
+          </linearGradient>
+          <linearGradient id="shelfFaceGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#2c3854" />
+            <stop offset="50%" stop-color="#3c4c70" />
+            <stop offset="100%" stop-color="#263147" />
+          </linearGradient>
+          <radialGradient id="shadowGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#1a2547" stop-opacity="0.28" />
+            <stop offset="65%" stop-color="#1a2547" stop-opacity="0.09" />
+            <stop offset="100%" stop-color="#1a2547" stop-opacity="0" />
+          </radialGradient>
+        </defs>
+
+        <g id="camera-rig">
+          <g id="stage-environment">
+            <rect x="0" y="0" width="1440" height="760" fill="url(#stageGrad)" />
+
+            <line x1="70" y1="690" x2="1370" y2="690" stroke="#c3cde2" stroke-width="2.5" />
+            <line x1="120" y1="698" x2="1320" y2="698" stroke="#dce3f2" stroke-width="1.5" stroke-dasharray="10 8" />
+
+            <ellipse cx="775" cy="692" rx="370" ry="14" fill="url(#shadowGrad)" opacity="0.55" />
+
+            <g id="trajectory-guides" opacity="0.38" fill="none" stroke="#7d8fb8" stroke-width="1.6" stroke-dasharray="5 6">
+              <path d="M 480 462 Q 335 415 245 688" />
+              <path d="M 1165 688 Q 1085 350 960 462" />
+            </g>
+
+            <g id="shelf-prop">
+              <rect x="424" y="476" width="700" height="18" rx="6" fill="#1b2642" opacity="0.11" />
+              <path d="M 475 480 L 475 516 L 502 480 Z" fill="#8b98b8" opacity="0.45" />
+              <path d="M 1065 480 L 1065 516 L 1038 480 Z" fill="#8b98b8" opacity="0.45" />
+              <rect x="420" y="462" width="700" height="18" rx="5" fill="url(#shelfFaceGrad)" />
+              <line x1="423" y1="463.2" x2="1117" y2="463.2" stroke="#8fa3ce" stroke-width="1.5" opacity="0.7" />
+              <g id="home-mark" transform="translate(545, 462)">
+                <line x1="-42" y1="-2" x2="42" y2="-2" stroke="#3649b8" stroke-width="2.5" stroke-linecap="round" opacity="0.55" />
+                <text x="0" y="34" text-anchor="middle" font-size="10.5" font-weight="700" fill="#64748b" letter-spacing="0.08em">HOME MARK · ИСХОДНАЯ ПОЗА 1:1</text>
+              </g>
+            </g>
+
+            <ellipse id="cat-shadow-shelf" cx="545" cy="462" rx="82" ry="9" fill="url(#shadowGrad)" />
+            <ellipse id="cat-shadow-floor" cx="245" cy="690" rx="82" ry="10" fill="url(#shadowGrad)" opacity="0" />
+            <g id="fx-layer"></g>
+          </g>
+
+          <g id="cat-world-companion" style="display:none" pointer-events="none">
+            <g id="cat-local-companion">
+              <g id="cat-pass-halo-b"></g>
+              <g id="cat-pass-fill-b"></g>
+              <g id="cat-pass-holes-b"></g>
+              <g id="cat-pass-creases-b"></g>
+            </g>
+          </g>
+
+          <g id="cat-world">
+            <g id="cat-local">
+              <g id="cat-pass-halo"></g>
+              <g id="cat-pass-fill"></g>
+              <g id="cat-pass-holes"></g>
+              <g id="cat-pass-creases"></g>
+              <path id="cat-exact-pdf-path" d="M 569.38 317.94 C 591.14 311.62 604.82 349.32 608.27 367.23 C 610.91 380.98 612.66 392.96 612.47 408.06 C 612.07 438.59 610.25 435.49 593.31 434.27 C 566.71 432.35 551.82 413.89 549.76 388.04 C 547.65 361.47 546.67 324.52 569.38 317.94 Z M 402.39 218.97 C 411.96 214.59 421.99 240.98 423.05 247.39 C 427.93 276.87 403.56 301.76 396.71 279.69 C 394.39 272.21 392.47 267.93 392.10 259.07 C 391.64 248.25 392.93 246.12 396.34 238.05 C 399.61 230.30 395.85 221.96 402.39 218.97 Z M 40.64 270.35 C 33.59 273.12 26.68 264.15 23.91 260.46 C 19.00 253.90 17.38 247.05 18.96 237.02 C 20.35 228.12 33.44 206.45 43.79 205.79 C 49.49 213.55 47.87 221.44 45.26 231.11 C 38.98 254.37 42.67 265.12 40.64 270.35 Z M 118.59 644.06 C 119.62 646.98 119.10 645.38 123.19 647.15 C 123.50 647.28 123.78 647.41 124.06 647.54 L 125.77 648.50 C 123.36 650.60 122.62 652.95 122.80 656.73 C 128.41 656.38 125.65 652.62 136.27 654.35 C 135.69 658.59 132.64 659.02 130.23 663.26 C 136.47 663.23 168.92 654.07 178.18 652.03 C 203.64 646.43 197.18 636.93 197.18 607.06 C 197.18 565.87 201.62 517.86 222.03 481.81 C 224.37 477.68 227.31 470.85 231.62 468.72 C 231.02 474.47 227.90 479.81 226.17 484.66 C 212.55 522.82 203.71 577.28 204.46 618.06 L 205.74 654.53 C 199.31 657.14 176.00 659.78 167.48 662.22 C 162.31 663.69 164.54 662.19 163.08 665.06 C 166.94 668.53 170.75 668.17 175.46 666.08 C 174.07 671.61 169.01 672.73 168.72 677.68 L 183.30 675.65 C 181.19 677.97 178.90 679.29 178.26 683.26 C 191.75 683.05 207.17 681.88 220.38 680.92 C 260.22 678.04 254.17 679.17 262.50 612.18 L 265.18 594.98 C 265.83 593.40 265.62 593.88 266.36 592.89 C 280.46 605.54 263.52 639.40 298.55 669.82 C 333.23 699.93 383.51 695.85 429.02 679.61 C 439.22 675.97 459.94 666.00 471.90 668.42 C 491.42 672.37 498.11 675.03 520.41 669.12 C 534.12 665.49 545.21 657.67 555.94 649.67 C 598.44 617.99 611.47 555.92 626.60 500.35 C 628.62 492.92 630.64 486.32 633.15 479.97 C 636.90 470.51 639.75 471.00 647.15 465.83 C 683.30 440.55 701.49 406.57 705.38 359.04 C 710.79 359.46 708.23 360.83 714.55 361.36 C 714.05 349.31 698.66 316.05 689.36 313.85 C 682.96 321.35 668.32 354.23 668.54 365.86 C 674.77 364.77 676.29 361.03 682.53 360.01 C 684.30 391.99 658.70 428.87 643.12 431.41 C 643.19 416.48 645.04 403.66 645.02 388.06 C 644.97 346.77 633.29 310.32 609.99 291.42 C 580.26 267.31 545.50 284.93 527.41 321.20 C 512.75 350.60 506.63 396.92 520.48 430.04 C 530.36 453.64 549.91 469.49 574.28 475.04 C 586.28 477.77 594.36 475.08 604.68 472.79 C 604.82 480.67 599.09 501.40 596.92 509.71 C 594.00 520.90 590.16 532.41 586.01 543.61 C 577.85 565.60 568.70 583.84 554.87 601.58 C 546.79 611.95 520.63 641.97 500.88 635.51 C 496.76 634.16 491.42 629.44 489.62 624.96 C 487.77 620.36 490.63 611.10 491.65 606.06 C 498.58 571.68 495.82 525.72 485.50 493.74 C 470.78 448.10 446.31 403.47 409.39 373.05 C 405.57 369.91 402.07 366.85 398.35 364.02 C 394.20 360.86 390.55 358.77 387.08 355.06 C 385.70 342.34 392.53 329.10 398.32 321.05 C 406.36 309.84 413.04 307.87 421.31 299.01 C 444.38 274.33 449.90 228.49 423.30 200.13 C 398.90 174.11 383.08 144.40 383.16 104.06 C 383.22 72.36 392.29 58.78 378.71 25.66 C 376.44 27.34 378.52 25.25 376.74 27.34 C 375.41 28.91 375.95 28.25 375.10 29.98 C 374.21 31.79 373.66 33.11 372.61 35.22 C 365.29 49.88 356.50 81.74 340.33 83.38 C 335.10 83.91 331.26 82.09 328.37 79.07 C 324.45 74.96 325.38 72.45 325.18 66.06 C 312.19 56.55 272.29 49.19 270.23 48.06 C 271.80 43.68 274.33 42.97 275.79 38.06 C 268.53 33.28 226.30 36.74 220.09 37.80 C 202.56 40.79 187.16 43.45 171.43 49.16 C 154.25 55.39 142.70 62.43 127.40 48.02 C 114.86 36.21 115.72 21.29 114.07 1.30 C 99.70 2.37 95.58 29.60 95.35 43.06 C 94.51 91.82 73.06 95.29 56.53 128.19 C 46.75 147.67 56.71 154.40 39.11 172.82 C 28.16 184.29 19.63 188.84 10.48 205.21 C 3.05 218.51 -1.33 238.52 2.99 256.44 C 7.60 275.51 17.79 280.20 31.10 290.29 C 50.88 305.29 39.10 352.21 121.28 385.00 C 153.28 397.77 183.16 408.60 171.51 454.96 C 169.54 462.80 166.78 470.93 164.63 479.21 C 156.96 508.78 159.44 535.25 162.33 564.13 C 165.60 596.85 162.60 616.91 141.19 635.89 C 131.32 644.64 125.62 640.59 118.59 644.06 Z" fill="#fefefe" fill-rule="nonzero" stroke="#1a1a18" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round" opacity="0" />
+            </g>
+          </g>
+        </g>
+      </svg>
+
+      <div class="controls-bar">
+        <div class="timeline-row">
+          <button type="button" class="action-btn primary" id="play-pause-btn" aria-label="Пауза или воспроизведение">
+            <span id="play-pause-label">Пауза</span>
+          </button>
+          <button type="button" class="action-btn" id="replay-btn" aria-label="Сначала">
+            Сначала ↺
+          </button>
+          <div class="scrubber-wrap">
+            <input type="range" id="timeline-scrubber" min="0" max="10.8" step="0.01" value="0" aria-label="Таймлайн анимации" />
+          </div>
+          <div class="time-readout" id="time-readout">0.00s / 10.80s</div>
+        </div>
+
+        <div class="phase-buttons-row">
+          <div class="phase-steps" id="phase-steps">
+            <button type="button" class="phase-step-btn is-active" data-time="0.0">1. Сидит (0.0s)</button>
+            <button type="button" class="phase-step-btn" data-time="1.25">2. Подъём (1.2s)</button>
+            <button type="button" class="phase-step-btn" data-time="2.55">3. Спрыгивание (2.5s)</button>
+            <button type="button" class="phase-step-btn" data-time="5.70">4. Запрыгивание на полку (5.7s)</button>
+            <button type="button" class="phase-step-btn" data-time="6.80">5. Прогулка (6.8s)</button>
+            <button type="button" class="phase-step-btn" data-time="9.35">6. Возврат сидя 1:1 (9.3s)</button>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button type="button" class="action-btn" id="copy-snippet-btn">Скопировать HTML-код</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="info-grid">
+      <div class="info-card">
+        <h2>
+          <span>Подобранные роли для выполнения задачи</span>
+          <span style="font-size:11.5px; color:var(--text-muted); font-weight:500;">Пайплайн из 5 профильных ролей</span>
+        </h2>
+        <div class="roles-list">
+          <div class="role-item">
+            <span class="role-tag">Роль 01 · Brand & Art Direction</span>
+            <h3>Арт-директор / Хранитель бренда</h3>
+            <p>Отвечает за 100% сохранность силуэта из <code>логотип анимировать.pdf</code> (рожки-уши, спираль хвоста с пикой, трёхпалые лапки) и бесшовный возврат в исходную позу 1:1 в конце цикла.</p>
+          </div>
+          <div class="role-item">
+            <span class="role-tag">Роль 02 · Vector & Rigging</span>
+            <h3>Технический SVG-риггер</h3>
+            <p>Декомпозировал монолитный контур PDF (82 кривые Безье + 3 внутренних контура) на голову, параметрический торс, 4 двухсуставные лапы и волновой хвост с двухпроходной отрисовкой без швов.</p>
+          </div>
+          <div class="role-item">
+            <span class="role-tag">Роль 03 · Character Motion</span>
+            <h3>Ведущий моушн-дизайнер</h3>
+            <p>Поставил кошачью биомеханику 5 фаз: антиципацию и подъём крупа, параболу спрыгивания со squash & stretch, мощный прыжок на полку, 4-тактный шаг без скольжения лап и посадку.</p>
+          </div>
+          <div class="role-item">
+            <span class="role-tag">Роль 04 · Creative Frontend</span>
+            <h3>SVG / JS-инженер интеграции</h3>
+            <p>Реализовал процедурный движок Безье-морфинга на чистом инлайн-JS (<code>requestAnimationFrame</code>) внутри одного HTML без внешних библиотек, видео или GIF.</p>
+          </div>
+          <div class="role-item">
+            <span class="role-tag">Роль 05 · QA & Accessibility</span>
+            <h3>Инженер качества и доступности</h3>
+            <p>Обеспечил поддержку <code>prefers-reduced-motion</code>, интерактивный таймлайн, переключение «Контур PDF / Синий силуэт» и проверку побитового совпадения финального кадра.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <h2>
+          <span>Прямая вставка в HTML-код</span>
+          <button type="button" class="action-btn" id="copy-snippet-btn-2">Скопировать сниппет</button>
+        </h2>
+        <p style="font-size:12px; color:var(--text-muted); margin-bottom:10px; line-height:1.45;">
+          Вся анимация работает средствами, интегрируемыми напрямую в HTML (инлайн <code>&lt;svg&gt;</code> + <code>&lt;style&gt;</code> + <code>&lt;script&gt;</code>, 0 внешних зависимостей). Также сохранён готовый встраиваемый блок в <code>assets/logo-src/cat-logo-animated-snippet.html</code>.
+        </p>
+        <pre class="code-box" id="snippet-preview">&lt;!-- Самодостаточный анимированный логотип ONEDOPEA (Inline SVG + JS) --&gt;
+&lt;div id="onedopea-animated-logo" data-style="outline" data-loop="true"&gt;
+  &lt;!-- Вставьте содержимое файла docs/cat-logo-animation.html
+       или готового сниппета assets/logo-src/cat-logo-animated-snippet.html --&gt;
+&lt;/div&gt;</pre>
+      </div>
+    </section>
+  </div>
+
+  <button type="button" id="download-concept" title="Скачать автономный HTML-файл">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+      <polyline points="7 10 12 15 17 10"/>
+      <line x1="12" y1="15" x2="12" y2="3"/>
+    </svg>
+    <span>Скачать HTML одним файлом</span>
+  </button>
+
+<script>
+(function() {
+  "use strict";
+
+  const CAT_PATHS = {"tailHole": [["C", 569.38, 317.94, 591.14, 311.62, 604.82, 349.32, 608.27, 367.23], ["C", 608.27, 367.23, 610.91, 380.98, 612.66, 392.96, 612.47, 408.06], ["C", 612.47, 408.06, 612.07, 438.59, 610.25, 435.49, 593.31, 434.27], ["C", 593.31, 434.27, 566.71, 432.35, 551.82, 413.89, 549.76, 388.04], ["C", 549.76, 388.04, 547.65, 361.47, 546.67, 324.52, 569.38, 317.94]], "rightEarHole": [["C", 402.39, 218.97, 411.96, 214.59, 421.99, 240.98, 423.05, 247.39], ["C", 423.05, 247.39, 427.93, 276.87, 403.56, 301.76, 396.71, 279.69], ["C", 396.71, 279.69, 394.39, 272.21, 392.47, 267.93, 392.1, 259.07], ["C", 392.1, 259.07, 391.64, 248.25, 392.93, 246.12, 396.34, 238.05], ["C", 396.34, 238.05, 399.61, 230.3, 395.85, 221.96, 402.39, 218.97]], "leftEarHole": [["C", 40.64, 270.35, 33.59, 273.12, 26.68, 264.15, 23.91, 260.46], ["C", 23.91, 260.46, 19.0, 253.9, 17.38, 247.05, 18.96, 237.02], ["C", 18.96, 237.02, 20.35, 228.12, 33.44, 206.45, 43.79, 205.79], ["C", 43.79, 205.79, 49.49, 213.55, 47.87, 221.44, 45.26, 231.11], ["C", 45.26, 231.11, 38.98, 254.37, 42.67, 265.12, 40.64, 270.35]], "outer": [["C", 118.59, 644.06, 119.62, 646.98, 119.1, 645.38, 123.19, 647.15], ["C", 123.19, 647.15, 123.5, 647.28, 123.78, 647.41, 124.06, 647.54], ["L", 124.06, 647.54, 125.77, 648.5], ["C", 125.77, 648.5, 123.36, 650.6, 122.62, 652.95, 122.8, 656.73], ["C", 122.8, 656.73, 128.41, 656.38, 125.65, 652.62, 136.27, 654.35], ["C", 136.27, 654.35, 135.69, 658.59, 132.64, 659.02, 130.23, 663.26], ["C", 130.23, 663.26, 136.47, 663.23, 168.92, 654.07, 178.18, 652.03], ["C", 178.18, 652.03, 203.64, 646.43, 197.18, 636.93, 197.18, 607.06], ["C", 197.18, 607.06, 197.18, 565.87, 201.62, 517.86, 222.03, 481.81], ["C", 222.03, 481.81, 224.37, 477.68, 227.31, 470.85, 231.62, 468.72], ["C", 231.62, 468.72, 231.02, 474.47, 227.9, 479.81, 226.17, 484.66], ["C", 226.17, 484.66, 212.55, 522.82, 203.71, 577.28, 204.46, 618.06], ["L", 204.46, 618.06, 205.74, 654.53], ["C", 205.74, 654.53, 199.31, 657.14, 176.0, 659.78, 167.48, 662.22], ["C", 167.48, 662.22, 162.31, 663.69, 164.54, 662.19, 163.08, 665.06], ["C", 163.08, 665.06, 166.94, 668.53, 170.75, 668.17, 175.46, 666.08], ["C", 175.46, 666.08, 174.07, 671.61, 169.01, 672.73, 168.72, 677.68], ["L", 168.72, 677.68, 183.3, 675.65], ["C", 183.3, 675.65, 181.19, 677.97, 178.9, 679.29, 178.26, 683.26], ["C", 178.26, 683.26, 191.75, 683.05, 207.17, 681.88, 220.38, 680.92], ["C", 220.38, 680.92, 260.22, 678.04, 254.17, 679.17, 262.5, 612.18], ["L", 262.5, 612.18, 265.18, 594.98], ["C", 265.18, 594.98, 265.83, 593.4, 265.62, 593.88, 266.36, 592.89], ["C", 266.36, 592.89, 280.46, 605.54, 263.52, 639.4, 298.55, 669.82], ["C", 298.55, 669.82, 333.23, 699.93, 383.51, 695.85, 429.02, 679.61], ["C", 429.02, 679.61, 439.22, 675.97, 459.94, 666.0, 471.9, 668.42], ["C", 471.9, 668.42, 491.42, 672.37, 498.11, 675.03, 520.41, 669.12], ["C", 520.41, 669.12, 534.12, 665.49, 545.21, 657.67, 555.94, 649.67], ["C", 555.94, 649.67, 598.44, 617.99, 611.47, 555.92, 626.6, 500.35], ["C", 626.6, 500.35, 628.62, 492.92, 630.64, 486.32, 633.15, 479.97], ["C", 633.15, 479.97, 636.9, 470.51, 639.75, 471.0, 647.15, 465.83], ["C", 647.15, 465.83, 683.3, 440.55, 701.49, 406.57, 705.38, 359.04], ["C", 705.38, 359.04, 710.79, 359.46, 708.23, 360.83, 714.55, 361.36], ["C", 714.55, 361.36, 714.05, 349.31, 698.66, 316.05, 689.36, 313.85], ["C", 689.36, 313.85, 682.96, 321.35, 668.32, 354.23, 668.54, 365.86], ["C", 668.54, 365.86, 674.77, 364.77, 676.29, 361.03, 682.53, 360.01], ["C", 682.53, 360.01, 684.3, 391.99, 658.7, 428.87, 643.12, 431.41], ["C", 643.12, 431.41, 643.19, 416.48, 645.04, 403.66, 645.02, 388.06], ["C", 645.02, 388.06, 644.97, 346.77, 633.29, 310.32, 609.99, 291.42], ["C", 609.99, 291.42, 580.26, 267.31, 545.5, 284.93, 527.41, 321.2], ["C", 527.41, 321.2, 512.75, 350.6, 506.63, 396.92, 520.48, 430.04], ["C", 520.48, 430.04, 530.36, 453.64, 549.91, 469.49, 574.28, 475.04], ["C", 574.28, 475.04, 586.28, 477.77, 594.36, 475.08, 604.68, 472.79], ["C", 604.68, 472.79, 604.82, 480.67, 599.09, 501.4, 596.92, 509.71], ["C", 596.92, 509.71, 594.0, 520.9, 590.16, 532.41, 586.01, 543.61], ["C", 586.01, 543.61, 577.85, 565.6, 568.7, 583.84, 554.87, 601.58], ["C", 554.87, 601.58, 546.79, 611.95, 520.63, 641.97, 500.88, 635.51], ["C", 500.88, 635.51, 496.76, 634.16, 491.42, 629.44, 489.62, 624.96], ["C", 489.62, 624.96, 487.77, 620.36, 490.63, 611.1, 491.65, 606.06], ["C", 491.65, 606.06, 498.58, 571.68, 495.82, 525.72, 485.5, 493.74], ["C", 485.5, 493.74, 470.78, 448.1, 446.31, 403.47, 409.39, 373.05], ["C", 409.39, 373.05, 405.57, 369.91, 402.07, 366.85, 398.35, 364.02], ["C", 398.35, 364.02, 394.2, 360.86, 390.55, 358.77, 387.08, 355.06], ["C", 387.08, 355.06, 385.7, 342.34, 392.53, 329.1, 398.32, 321.05], ["C", 398.32, 321.05, 406.36, 309.84, 413.04, 307.87, 421.31, 299.01], ["C", 421.31, 299.01, 444.38, 274.33, 449.9, 228.49, 423.3, 200.13], ["C", 423.3, 200.13, 398.9, 174.11, 383.08, 144.4, 383.16, 104.06], ["C", 383.16, 104.06, 383.22, 72.36, 392.29, 58.78, 378.71, 25.66], ["C", 378.71, 25.66, 376.44, 27.34, 378.52, 25.25, 376.74, 27.34], ["C", 376.74, 27.34, 375.41, 28.91, 375.95, 28.25, 375.1, 29.98], ["C", 375.1, 29.98, 374.21, 31.79, 373.66, 33.11, 372.61, 35.22], ["C", 372.61, 35.22, 365.29, 49.88, 356.5, 81.74, 340.33, 83.38], ["C", 340.33, 83.38, 335.1, 83.91, 331.26, 82.09, 328.37, 79.07], ["C", 328.37, 79.07, 324.45, 74.96, 325.38, 72.45, 325.18, 66.06], ["C", 325.18, 66.06, 312.19, 56.55, 272.29, 49.19, 270.23, 48.06], ["C", 270.23, 48.06, 271.8, 43.68, 274.33, 42.97, 275.79, 38.06], ["C", 275.79, 38.06, 268.53, 33.28, 226.3, 36.74, 220.09, 37.8], ["C", 220.09, 37.8, 202.56, 40.79, 187.16, 43.45, 171.43, 49.16], ["C", 171.43, 49.16, 154.25, 55.39, 142.7, 62.43, 127.4, 48.02], ["C", 127.4, 48.02, 114.86, 36.21, 115.72, 21.29, 114.07, 1.3], ["C", 114.07, 1.3, 99.7, 2.37, 95.58, 29.6, 95.35, 43.06], ["C", 95.35, 43.06, 94.51, 91.82, 73.06, 95.29, 56.53, 128.19], ["C", 56.53, 128.19, 46.75, 147.67, 56.71, 154.4, 39.11, 172.82], ["C", 39.11, 172.82, 28.16, 184.29, 19.63, 188.84, 10.48, 205.21], ["C", 10.48, 205.21, 3.05, 218.51, -1.33, 238.52, 2.99, 256.44], ["C", 2.99, 256.44, 7.6, 275.51, 17.79, 280.2, 31.1, 290.29], ["C", 31.1, 290.29, 50.88, 305.29, 39.1, 352.21, 121.28, 385.0], ["C", 121.28, 385.0, 153.28, 397.77, 183.16, 408.6, 171.51, 454.96], ["C", 171.51, 454.96, 169.54, 462.8, 166.78, 470.93, 164.63, 479.21], ["C", 164.63, 479.21, 156.96, 508.78, 159.44, 535.25, 162.33, 564.13], ["C", 162.33, 564.13, 165.6, 596.85, 162.6, 616.91, 141.19, 635.89], ["C", 141.19, 635.89, 131.32, 644.64, 125.62, 640.59, 118.59, 644.06]]};
+
+  const outer = CAT_PATHS.outer;
+  const spTail = CAT_PATHS.tailHole;
+  const spRear = CAT_PATHS.rightEarHole;
+  const spLear = CAT_PATHS.leftEarHole;
+
+  function clamp(v, a, b) { return v < a ? a : (v > b ? b : v); }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function smoothstep(a, b, x) {
+    const t = clamp((x - a) / (b - a), 0, 1);
+    return t * t * (3 - 2 * t);
+  }
+  function easeInOutCubic(t) {
+    t = clamp(t, 0, 1);
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+  function easeOutCubic(t) {
+    t = clamp(t, 0, 1);
+    return 1 - Math.pow(1 - t, 3);
+  }
+
+  function rotPt(x, y, cx, cy, deg) {
+    if (deg === 0) return [x, y];
+    const r = deg * Math.PI / 180;
+    const c = Math.cos(r), s = Math.sin(r);
+    const dx = x - cx, dy = y - cy;
+    return [cx + dx * c - dy * s, cy + dx * s + dy * c];
+  }
+
+  function deformLegPt(x, y, shX, shY, kneeX, kneeY, upperDeg, kneeDeg, liftY) {
+    let w = clamp((y - (kneeY - 35)) / 70, 0, 1);
+    w = w * w * (3 - 2 * w);
+    if (w > 0 && (kneeDeg !== 0 || liftY !== 0)) {
+      const p = rotPt(x, y, kneeX, kneeY, kneeDeg * w);
+      x = p[0];
+      y = p[1] + liftY * w;
+    }
+    if (upperDeg !== 0) {
+      const p = rotPt(x, y, shX, shY, upperDeg);
+      x = p[0];
+      y = p[1];
+    }
+    return [x, y];
+  }
+
+  function deformTailPt(x, y, baseX, baseY, rootDeg, tipDeg, wave) {
+    const dist = Math.hypot(x - baseX, y - baseY);
+    const u = clamp(dist / 380, 0, 1);
+    const deg = rootDeg + tipDeg * (u * 0.7) + wave * Math.sin(u * Math.PI);
+    return rotPt(x, y, baseX, baseY, deg);
+  }
+
+  function deformHeadPt(x, y, earPerk) {
+    if (y < 125 && earPerk !== 0) {
+      const w = clamp((125 - y) / 100, 0, 1);
+      if (x < 180) {
+        return rotPt(x, y, 120, 75, -earPerk * 7 * w);
+      } else if (x > 315) {
+        return rotPt(x, y, 360, 85, earPerk * 7 * w);
+      }
+    }
+    return [x, y];
+  }
+
+  function transformSegs(segs, fn, dx, dy) {
+    dx = dx || 0; dy = dy || 0;
+    let out = "";
+    for (let i = 0; i < segs.length; i++) {
+      const s = segs[i];
+      if (s[0] === "L") {
+        const p1 = fn(s[3] + dx, s[4] + dy);
+        out += "L" + p1[0].toFixed(2) + " " + p1[1].toFixed(2) + " ";
+      } else {
+        const c1 = fn(s[3] + dx, s[4] + dy);
+        const c2 = fn(s[5] + dx, s[6] + dy);
+        const p1 = fn(s[7] + dx, s[8] + dy);
+        out += "C" + c1[0].toFixed(2) + " " + c1[1].toFixed(2) + " " +
+                     c2[0].toFixed(2) + " " + c2[1].toFixed(2) + " " +
+                     p1[0].toFixed(2) + " " + p1[1].toFixed(2) + " ";
+      }
+    }
+    return out;
+  }
+
+  function subpathTransformedD(sp, fn, dx, dy) {
+    dx = dx || 0; dy = dy || 0;
+    const p0 = fn(sp[0][1] + dx, sp[0][2] + dy);
+    return "M" + p0[0].toFixed(2) + " " + p0[1].toFixed(2) + " " + transformSegs(sp, fn, dx, dy) + "Z";
+  }
+
+  const hSegs = outer.slice(52, 77);
+  const ffSegs = outer.slice(78).concat(outer.slice(0, 10));
+  const fnSegs = outer.slice(10, 22);
+  const fnCreaseSegsA = outer.slice(10, 13);
+  const fnCreaseSegsB = outer.slice(20, 22);
+  const hfPawSegs = outer.slice(80).concat(outer.slice(0, 8));
+  const hnPawSegs = outer.slice(12, 21);
+  const tSegs = outer.slice(26, 48);
+  const tCreaseSegs = outer.slice(46, 48);
+
+  function buildCatGeometry(st) {
+    const sit = st.sit !== undefined ? st.sit : 1.0;
+    const arch = st.arch || 0.0;
+    const crouch = st.crouch || 0.0;
+    const shDy = crouch * 34.0;
+    const tailDx = (1.0 - sit) * 32.0;
+    const tailDy = (1.0 - sit) * (-155.0) + crouch * 36.0;
+
+    const earPerk = st.earPerk || 0;
+    const headRot = st.headRot || 0;
+    const headDx = st.headDx || 0;
+    const headDy = (st.headDy || 0) + shDy;
+    function fnHead(x, y) {
+      const p = deformHeadPt(x, y, earPerk);
+      const r = rotPt(p[0], p[1], 260, 365, headRot);
+      return [r[0] + headDx, r[1] + headDy];
+    }
+    const pH0 = fnHead(hSegs[0][1], hSegs[0][2]);
+    const cHl1 = fnHead(165, 432);
+    const cHl2 = fnHead(345, 432);
+    const headOuterD = "M" + pH0[0].toFixed(2) + " " + pH0[1].toFixed(2) + " " +
+      transformSegs(hSegs, fnHead) +
+      "C" + cHl1[0].toFixed(2) + " " + cHl1[1].toFixed(2) + " " +
+            cHl2[0].toFixed(2) + " " + cHl2[1].toFixed(2) + " " +
+            pH0[0].toFixed(2) + " " + pH0[1].toFixed(2) + "Z";
+    const headHolesD = subpathTransformedD(spRear, fnHead) + " " + subpathTransformedD(spLear, fnHead);
+
+    const ffRot = st.ffRot || 0, ffKnee = st.ffKnee || 0, ffLift = st.ffLift || 0;
+    function fnFf(x, y) {
+      return deformLegPt(x, y, 200, 460 + shDy * 0.5, 175, 585, ffRot, ffKnee, ffLift);
+    }
+    const pFf0 = fnFf(ffSegs[0][1], ffSegs[0][2]);
+    const cFf1 = fnFf(235, 435), cFf2 = fnFf(175, 430);
+    const flegFarD = "M" + pFf0[0].toFixed(2) + " " + pFf0[1].toFixed(2) + " " +
+      transformSegs(ffSegs, fnFf) +
+      "C" + cFf1[0].toFixed(2) + " " + cFf1[1].toFixed(2) + " " +
+            cFf2[0].toFixed(2) + " " + cFf2[1].toFixed(2) + " " +
+            pFf0[0].toFixed(2) + " " + pFf0[1].toFixed(2) + "Z";
+
+    const fnRot = st.fnRot || 0, fnKnee = st.fnKnee || 0, fnLift = st.fnLift || 0;
+    function fnFn(x, y) {
+      return deformLegPt(x, y, 245, 470 + shDy * 0.5, 225, 595, fnRot, fnKnee, fnLift);
+    }
+    const pFn0 = fnFn(fnSegs[0][1], fnSegs[0][2]);
+    const cFn1 = fnFn(272, 540), cFn2 = fnFn(275, 490), pFnTop = fnFn(268, 465);
+    const cFn3 = fnFn(260, 440), cFn4 = fnFn(233, 445);
+    const flegNearD = "M" + pFn0[0].toFixed(2) + " " + pFn0[1].toFixed(2) + " " +
+      transformSegs(fnSegs, fnFn) +
+      "C" + cFn1[0].toFixed(2) + " " + cFn1[1].toFixed(2) + " " +
+            cFn2[0].toFixed(2) + " " + cFn2[1].toFixed(2) + " " +
+            pFnTop[0].toFixed(2) + " " + pFnTop[1].toFixed(2) +
+      "C" + cFn3[0].toFixed(2) + " " + cFn3[1].toFixed(2) + " " +
+            cFn4[0].toFixed(2) + " " + cFn4[1].toFixed(2) + " " +
+            pFn0[0].toFixed(2) + " " + pFn0[1].toFixed(2) + "Z";
+    const pCr1 = fnFn(outer[10][1], outer[10][2]);
+    const pCr2 = fnFn(outer[20][1], outer[20][2]);
+    const flegNearCreaseD =
+      "M" + pCr1[0].toFixed(2) + " " + pCr1[1].toFixed(2) + " " + transformSegs(fnCreaseSegsA, fnFn) +
+      "M" + pCr2[0].toFixed(2) + " " + pCr2[1].toFixed(2) + " " + transformSegs(fnCreaseSegsB, fnFn);
+
+    const tuck = Math.max(0, (sit - 0.65) / 0.35);
+    const hindDy = (tuck * tuck) * (-75.0);
+    const hindDx = (sit * sit) * (-45.0);
+    const showHind = sit < 0.94;
+
+    let hlegFarD = "", hlegNearD = "", hlegNearCreaseD = "";
+    if (showHind) {
+      const hfRot = st.hfRot || 0, hfKnee = st.hfKnee || 0, hfLift = st.hfLift || 0;
+      const dxHf = 240.0;
+      function fnHf(x, y) {
+        const p = deformLegPt(x, y, 425, 485 + crouch * 24, 415, 585, hfRot, hfKnee, hfLift);
+        return [p[0] + hindDx, p[1] + hindDy];
+      }
+      const pHf0 = fnHf(392, 475);
+      const cHfa1 = fnHf(386, 510), cHfa2 = fnHf(398, 540);
+      const pHfa = fnHf(hfPawSegs[0][1] + dxHf, hfPawSegs[0][2]);
+      const cHfb1 = fnHf(442, 585), cHfb2 = fnHf(468, 555), pHfb = fnHf(462, 480);
+      const cHfc1 = fnHf(456, 445), cHfc2 = fnHf(398, 445);
+      hlegFarD = "M" + pHf0[0].toFixed(2) + " " + pHf0[1].toFixed(2) +
+        "C" + cHfa1[0].toFixed(2) + " " + cHfa1[1].toFixed(2) + " " +
+              cHfa2[0].toFixed(2) + " " + cHfa2[1].toFixed(2) + " " +
+              pHfa[0].toFixed(2) + " " + pHfa[1].toFixed(2) + " " +
+        transformSegs(hfPawSegs, fnHf, dxHf, 0) +
+        "C" + cHfb1[0].toFixed(2) + " " + cHfb1[1].toFixed(2) + " " +
+              cHfb2[0].toFixed(2) + " " + cHfb2[1].toFixed(2) + " " +
+              pHfb[0].toFixed(2) + " " + pHfb[1].toFixed(2) +
+        "C" + cHfc1[0].toFixed(2) + " " + cHfc1[1].toFixed(2) + " " +
+              cHfc2[0].toFixed(2) + " " + cHfc2[1].toFixed(2) + " " +
+              pHf0[0].toFixed(2) + " " + pHf0[1].toFixed(2) + "Z";
+
+      const hnRot = st.hnRot || 0, hnKnee = st.hnKnee || 0, hnLift = st.hnLift || 0;
+      const dxHn = 250.0;
+      function fnHn(x, y) {
+        const p = deformLegPt(x, y, 475, 485 + crouch * 24, 470, 595, hnRot, hnKnee, hnLift);
+        return [p[0] + hindDx, p[1] + hindDy];
+      }
+      const pHn0 = fnHn(438, 475);
+      const cHna1 = fnHn(430, 525), cHna2 = fnHn(452, 575);
+      const pHna = fnHn(hnPawSegs[0][1] + dxHn, hnPawSegs[0][2]);
+      const cHnb1 = fnHn(520, 575), cHnb2 = fnHn(532, 525), pHnb = fnHn(515, 475);
+      const cHnc1 = fnHn(500, 440), cHnc2 = fnHn(445, 440);
+      hlegNearD = "M" + pHn0[0].toFixed(2) + " " + pHn0[1].toFixed(2) +
+        "C" + cHna1[0].toFixed(2) + " " + cHna1[1].toFixed(2) + " " +
+              cHna2[0].toFixed(2) + " " + cHna2[1].toFixed(2) + " " +
+              pHna[0].toFixed(2) + " " + pHna[1].toFixed(2) + " " +
+        transformSegs(hnPawSegs, fnHn, dxHn, 0) +
+        "C" + cHnb1[0].toFixed(2) + " " + cHnb1[1].toFixed(2) + " " +
+              cHnb2[0].toFixed(2) + " " + cHnb2[1].toFixed(2) + " " +
+              pHnb[0].toFixed(2) + " " + pHnb[1].toFixed(2) +
+        "C" + cHnc1[0].toFixed(2) + " " + cHnc1[1].toFixed(2) + " " +
+              cHnc2[0].toFixed(2) + " " + cHnc2[1].toFixed(2) + " " +
+              pHn0[0].toFixed(2) + " " + pHn0[1].toFixed(2) + "Z";
+
+      if (sit < 0.72) {
+        const pHcr0 = fnHn(438, 505), cHcr1 = fnHn(433, 540), cHcr2 = fnHn(452, 580);
+        hlegNearCreaseD = "M" + pHcr0[0].toFixed(2) + " " + pHcr0[1].toFixed(2) +
+          "C" + cHcr1[0].toFixed(2) + " " + cHcr1[1].toFixed(2) + " " +
+                cHcr2[0].toFixed(2) + " " + cHcr2[1].toFixed(2) + " " +
+                pHna[0].toFixed(2) + " " + pHna[1].toFixed(2);
+      }
+    }
+
+    const tailRot = st.tailRot || 0, tailTip = st.tailTip || 0, tailWave = st.tailWave || 0;
+    function fnTail(x, y) {
+      const p = deformTailPt(x, y, 480, 645, tailRot, tailTip, tailWave);
+      return [p[0] + tailDx, p[1] + tailDy];
+    }
+    const pT0 = fnTail(tSegs[0][1], tSegs[0][2]);
+    const cTc1 = fnTail(455, 620), cTc2 = fnTail(448, 660);
+    const tailOuterD = "M" + pT0[0].toFixed(2) + " " + pT0[1].toFixed(2) + " " +
+      transformSegs(tSegs, fnTail) +
+      "C" + cTc1[0].toFixed(2) + " " + cTc1[1].toFixed(2) + " " +
+            cTc2[0].toFixed(2) + " " + cTc2[1].toFixed(2) + " " +
+            pT0[0].toFixed(2) + " " + pT0[1].toFixed(2) + "Z";
+    const tailHoleD = subpathTransformedD(spTail, fnTail);
+    const pTcr0 = fnTail(outer[46][1], outer[46][2]);
+    const tailCreaseD = "M" + pTcr0[0].toFixed(2) + " " + pTcr0[1].toFixed(2) + " " + transformSegs(tCreaseSegs, fnTail);
+
+    function lp(pStand, pSit) {
+      return [lerp(pStand[0], pSit[0], sit), lerp(pStand[1], pSit[1], sit)];
+    }
+    const ay = -arch * 38.0 * (1.0 - 0.5 * sit) + crouch * 32.0;
+    const pNeckL = [121.28, 385.00 + shDy];
+    const c77_1 = [153.28, 397.77 + shDy], c77_2 = [183.16, 408.60 + shDy], p77 = [171.51, 454.96 + shDy];
+    const pUshoulder = lp([262.0, 558.0 + shDy * 0.85], [265.18, 594.98]);
+    const p22 = lp([264.0, 556.0 + shDy * 0.85], [266.36, 592.89]);
+    const c23_1 = lp([285.0, 562.0 + ay * 0.45], [280.46, 605.54]);
+    const c23_2 = lp([310.0, 568.0 + ay * 0.55], [263.52, 639.40]);
+    const p23   = lp([345.0, 564.0 + ay * 0.55], [298.55, 669.82]);
+    const c24_1 = lp([385.0, 560.0 + ay * 0.55], [333.23, 699.93]);
+    const c24_2 = lp([425.0, 548.0 + ay * 0.40], [383.51, 695.85]);
+    const p24   = lp([465.0, 535.0 + crouch * 34.0], [429.02, 679.61]);
+    const p25   = [471.90 + tailDx, 668.42 + tailDy];
+    const c25_1 = lp([480.0, 528.0 + crouch * 35.0], [439.22, 675.97]);
+    const c25_2 = [p25[0] - 12.0, p25[1] - 2.0];
+    const p47   = [489.62 + tailDx, 624.96 + tailDy];
+    const c48_1 = [487.77 + tailDx, 620.36 + tailDy];
+    const c48_2 = [490.63 + tailDx, 611.10 + tailDy];
+    const p48   = [491.65 + tailDx, 606.06 + tailDy];
+    const c49_1 = lp([518.0, 422.0 + ay * 0.90], [498.58, 571.68]);
+    const c49_2 = lp([488.0, 392.0 + ay], [495.82, 525.72]);
+    const p49   = lp([462.0, 384.0 + ay * 0.85], [485.50, 493.74]);
+    const c50_1 = lp([438.0, 376.0 + ay * 0.65], [470.78, 448.10]);
+    const c50_2 = lp([418.0, 370.0 + ay * 0.40 + shDy * 0.5], [446.31, 403.47]);
+    const p50   = [409.39, 373.05 + shDy * 0.90];
+    const c51_1 = [405.57, 369.91 + shDy * 0.95], c51_2 = [402.07, 366.85 + shDy], p51 = [398.35, 364.02 + shDy];
+
+    const torsoD =
+      "M" + pNeckL[0].toFixed(2) + " " + pNeckL[1].toFixed(2) +
+      "C" + c77_1[0].toFixed(2) + " " + c77_1[1].toFixed(2) + " " + c77_2[0].toFixed(2) + " " + c77_2[1].toFixed(2) + " " + p77[0].toFixed(2) + " " + p77[1].toFixed(2) +
+      "L230 " + (520 + shDy).toFixed(2) + " L" + pUshoulder[0].toFixed(2) + " " + pUshoulder[1].toFixed(2) +
+      "L" + p22[0].toFixed(2) + " " + p22[1].toFixed(2) +
+      "C" + c23_1[0].toFixed(2) + " " + c23_1[1].toFixed(2) + " " + c23_2[0].toFixed(2) + " " + c23_2[1].toFixed(2) + " " + p23[0].toFixed(2) + " " + p23[1].toFixed(2) +
+      "C" + c24_1[0].toFixed(2) + " " + c24_1[1].toFixed(2) + " " + c24_2[0].toFixed(2) + " " + c24_2[1].toFixed(2) + " " + p24[0].toFixed(2) + " " + p24[1].toFixed(2) +
+      "C" + c25_1[0].toFixed(2) + " " + c25_1[1].toFixed(2) + " " + c25_2[0].toFixed(2) + " " + c25_2[1].toFixed(2) + " " + p25[0].toFixed(2) + " " + p25[1].toFixed(2) +
+      "L" + p47[0].toFixed(2) + " " + p47[1].toFixed(2) +
+      "C" + c48_1[0].toFixed(2) + " " + c48_1[1].toFixed(2) + " " + c48_2[0].toFixed(2) + " " + c48_2[1].toFixed(2) + " " + p48[0].toFixed(2) + " " + p48[1].toFixed(2) +
+      "C" + c49_1[0].toFixed(2) + " " + c49_1[1].toFixed(2) + " " + c49_2[0].toFixed(2) + " " + c49_2[1].toFixed(2) + " " + p49[0].toFixed(2) + " " + p49[1].toFixed(2) +
+      "C" + c50_1[0].toFixed(2) + " " + c50_1[1].toFixed(2) + " " + c50_2[0].toFixed(2) + " " + c50_2[1].toFixed(2) + " " + p50[0].toFixed(2) + " " + p50[1].toFixed(2) +
+      "C" + c51_1[0].toFixed(2) + " " + c51_1[1].toFixed(2) + " " + c51_2[0].toFixed(2) + " " + c51_2[1].toFixed(2) + " " + p51[0].toFixed(2) + " " + p51[1].toFixed(2) +
+      "L260 " + (375 + shDy).toFixed(2) + "Z";
+
+    const outerList = [];
+    if (showHind) outerList.push(hlegFarD);
+    outerList.push(flegFarD, torsoD, tailOuterD);
+    if (showHind) outerList.push(hlegNearD);
+    outerList.push(flegNearD, headOuterD);
+
+    let creasesD = flegNearCreaseD + " " + tailCreaseD;
+    if (hlegNearCreaseD) creasesD += " " + hlegNearCreaseD;
+
+    return {
+      outerD: outerList.join(" "),
+      holesD: headHolesD + " " + tailHoleD,
+      creasesD: creasesD
+    };
+  }
+
+  const X_HOME = 545;
+  const Y_SHELF = 462;
+  const Y_FLOOR = 690;
+  const CAT_SCALE = 0.37;
+
+  function sampleWalkLeg(phase, ampDeg, liftPx) {
+    const p = ((phase % 1) + 1) % 1;
+    if (p < 0.60) {
+      const u = p / 0.60;
+      const rot = lerp(ampDeg, -ampDeg, u);
+      return { rot: rot, knee: 0, lift: 0 };
+    } else {
+      const u = (p - 0.60) / 0.40;
+      const s = Math.sin(u * Math.PI);
+      const rot = lerp(-ampDeg, ampDeg, easeInOutCubic(u));
+      return { rot: rot, knee: -26 * s, lift: -liftPx * s };
+    }
+  }
+
+  function evaluateTimeline(t) {
+    t = ((t % 10.8) + 10.8) % 10.8;
+
+    const st = {
+      phaseId: 0,
+      phaseName: "I. Сидит (Исходная поза)",
+      exactLock: false,
+      x: X_HOME,
+      y: Y_SHELF,
+      dir: 1,
+      scaleX: 1,
+      scaleY: 1,
+      bodyRot: 0,
+      sit: 1.0,
+      arch: 0.0,
+      crouch: 0.0,
+      headRot: 0,
+      headDx: 0,
+      headDy: 0,
+      earPerk: 0,
+      ffRot: 0, ffKnee: 0, ffLift: 0,
+      fnRot: 0, fnKnee: 0, fnLift: 0,
+      hfRot: 0, hfKnee: 0, hfLift: 0,
+      hnRot: 0, hnKnee: 0, hnLift: 0,
+      tailRot: 0, tailTip: 0, tailWave: 0
+    };
+
+    if (t < 1.20) {
+      st.phaseId = 0;
+      st.phaseName = "I. Сидит в исходном положении (1:1 PDF)";
+      st.sit = 1.0;
+      if (t < 0.55) {
+        st.exactLock = true;
+      } else {
+        const u = smoothstep(0.55, 1.20, t);
+        const w = Math.sin(u * Math.PI);
+        st.headRot = -3.0 * w;
+        st.earPerk = 0.45 * w;
+        st.tailRot = 4.0 * w;
+        st.tailTip = 3.0 * w;
+      }
+      return st;
+    }
+
+    if (t < 2.50) {
+      st.phaseId = 1;
+      st.phaseName = "II. Подъём из положения сидя на четыре лапы";
+      if (t < 1.50) {
+        const u = easeInOutCubic((t - 1.20) / 0.30);
+        st.sit = 1.0 - 0.12 * u;
+        st.headRot = -6.5 * u;
+        st.headDx = -5 * u;
+        st.headDy = 8 * u;
+        st.earPerk = 0.5 * u;
+        st.tailRot = 8 * u;
+      } else if (t < 2.15) {
+        const u = easeInOutCubic((t - 1.50) / 0.65);
+        st.sit = lerp(0.88, 0.0, u);
+        st.arch = 0.18 * Math.sin(u * Math.PI);
+        st.headRot = lerp(-6.5, -3.5, u);
+        st.headDx = lerp(-5, -12, u);
+        st.headDy = lerp(8, 16, u);
+        st.earPerk = 0.45;
+        st.tailRot = lerp(8, 14, u);
+        st.tailTip = 5 * Math.sin(u * Math.PI);
+      } else {
+        const u = easeInOutCubic((t - 2.15) / 0.35);
+        st.sit = 0.0;
+        st.x = lerp(X_HOME, 480, u);
+        const stepS = Math.sin(u * Math.PI);
+        st.ffRot = 16 * stepS; st.ffKnee = -18 * stepS; st.ffLift = -12 * stepS;
+        st.hnRot = 15 * stepS; st.hnKnee = -16 * stepS; st.hnLift = -10 * stepS;
+        st.fnRot = -8 * stepS;
+        st.hfRot = -8 * stepS;
+        st.headRot = lerp(-3.5, -10, u);
+        st.headDx = -14;
+        st.headDy = lerp(16, 20, u);
+        st.tailRot = 15;
+      }
+      return st;
+    }
+
+    if (t < 4.35) {
+      st.phaseId = 2;
+      st.phaseName = "III. Спрыгивание с полки на нижний уровень";
+      st.sit = 0.0;
+
+      if (t < 3.00) {
+        const u = easeInOutCubic((t - 2.50) / 0.50);
+        st.x = 480;
+        st.y = Y_SHELF;
+        st.crouch = 0.92 * u;
+        st.arch = -0.32 * u;
+        st.headRot = lerp(-10, -14, u);
+        st.headDx = -16;
+        st.headDy = lerp(20, 12, u);
+        st.earPerk = lerp(0.4, -0.55, u);
+        st.tailRot = lerp(15, 22, u);
+        st.tailTip = 7 * u;
+      } else if (t < 3.72) {
+        const u = (t - 3.00) / 0.72;
+        st.x = lerp(480, 245, easeOutCubic(u));
+        const yLinear = lerp(Y_SHELF, Y_FLOOR, u * u);
+        const hopArc = -58 * 4 * u * (1 - u);
+        st.y = yLinear + hopArc;
+
+        st.crouch = (1 - smoothstep(0.0, 0.25, u)) * 0.4;
+        st.arch = 0.72 * Math.sin(u * Math.PI);
+        st.bodyRot = lerp(-8, -20, Math.sin(u * Math.PI * 0.85));
+        st.scaleX = 1 + 0.06 * Math.sin(u * Math.PI);
+        st.scaleY = 1 - 0.04 * Math.sin(u * Math.PI);
+
+        const reach = Math.sin(u * Math.PI);
+        st.ffRot = 34 * reach; st.ffKnee = -12 * (1 - u);
+        st.fnRot = 24 * reach; st.fnKnee = -10 * (1 - u);
+        st.hfRot = lerp(-36, 16, smoothstep(0.25, 0.95, u)) * reach;
+        st.hnRot = lerp(-26, 12, smoothstep(0.25, 0.95, u)) * reach;
+        st.headRot = lerp(-12, -4, u);
+        st.headDx = -12; st.headDy = 10;
+        st.earPerk = -0.65 * reach;
+        st.tailRot = lerp(22, 16, u);
+        st.tailTip = 8 * reach;
+      } else {
+        const u = (t - 3.72) / 0.63;
+        const squash = Math.sin(clamp(u / 0.45, 0, 1) * Math.PI) * (1 - 0.3 * u);
+        const settle = easeOutCubic(clamp((u - 0.35) / 0.65, 0, 1));
+        st.x = 245;
+        st.y = Y_FLOOR;
+        st.crouch = 0.88 * squash;
+        st.arch = -0.38 * squash;
+        st.scaleX = 1 + 0.07 * squash;
+        st.scaleY = 1 - 0.07 * squash;
+        st.bodyRot = lerp(-8, 0, settle);
+        st.headRot = -9 * squash;
+        st.headDx = -12; st.headDy = 16;
+        st.earPerk = lerp(-0.4, 0.3, settle);
+        st.tailRot = 14 + 10 * squash;
+      }
+      return st;
+    }
+
+    if (t < 6.75) {
+      st.phaseId = 3;
+      st.phaseName = "IV. Запрыгивание на поверхность полки";
+      st.sit = 0.0;
+
+      if (t < 4.60) {
+        const u = easeInOutCubic((t - 4.35) / 0.25);
+        st.x = 245;
+        st.y = Y_FLOOR - 14 * Math.sin(u * Math.PI);
+        const cosFlip = Math.cos(u * Math.PI);
+        st.dir = cosFlip >= 0 ? 1 : -1;
+        st.scaleX = Math.max(0.22, Math.abs(cosFlip));
+        st.crouch = 0.35 * Math.sin(u * Math.PI);
+        st.headDx = -12; st.headDy = 16;
+        st.tailRot = 16;
+      } else if (t < 5.45) {
+        const u = (t - 4.60) / 0.85;
+        st.dir = -1;
+        st.x = lerp(245, 1165, easeInOutCubic(u));
+        const cyc = u * 3.0;
+        const hop = Math.abs(Math.sin(cyc * Math.PI));
+        st.y = Y_FLOOR - 18 * hop;
+        st.arch = 0.35 * Math.sin(cyc * Math.PI * 2);
+        st.bodyRot = -5 * Math.cos(cyc * Math.PI * 2);
+
+        const lFf = sampleWalkLeg(cyc + 0.0, 26, 20);
+        const lFn = sampleWalkLeg(cyc + 0.15, 26, 20);
+        const lHf = sampleWalkLeg(cyc + 0.50, 26, 20);
+        const lHn = sampleWalkLeg(cyc + 0.65, 26, 20);
+        st.ffRot = lFf.rot; st.ffKnee = lFf.knee; st.ffLift = lFf.lift;
+        st.fnRot = lFn.rot; st.fnKnee = lFn.knee; st.fnLift = lFn.lift;
+        st.hfRot = lHf.rot; st.hfKnee = lHf.knee; st.hfLift = lHf.lift;
+        st.hnRot = lHn.rot; st.hnKnee = lHn.knee; st.hnLift = lHn.lift;
+        st.headDx = -12; st.headDy = 14;
+        st.tailRot = 18 + 6 * Math.sin(cyc * Math.PI * 2);
+      } else if (t < 5.70) {
+        const u = easeInOutCubic((t - 5.45) / 0.25);
+        st.x = 1165;
+        st.y = Y_FLOOR - 12 * Math.sin(u * Math.PI);
+        const cosFlip = -Math.cos(u * Math.PI);
+        st.dir = cosFlip >= 0 ? 1 : -1;
+        st.scaleX = Math.max(0.22, Math.abs(cosFlip));
+        st.crouch = 0.35 * Math.sin(u * Math.PI);
+        st.headDx = -12; st.headDy = 16;
+        st.tailRot = 16;
+      } else if (t < 6.08) {
+        const u = easeInOutCubic((t - 5.70) / 0.38);
+        st.x = 1165;
+        st.y = Y_FLOOR;
+        st.crouch = 0.98 * u;
+        st.arch = -0.35 * u;
+        st.headRot = 12 * u;
+        st.headDx = -10;
+        st.headDy = lerp(16, 6, u);
+        st.earPerk = 0.65 * u;
+        st.tailRot = lerp(16, 24, u);
+        st.tailWave = 5 * Math.sin(u * Math.PI * 2);
+      } else if (t < 6.56) {
+        const u = (t - 6.08) / 0.48;
+        st.x = lerp(1165, 960, easeInOutCubic(u));
+        const yBase = lerp(Y_FLOOR, Y_SHELF, easeOutCubic(u));
+        const highArc = -115 * 4 * u * (1 - u);
+        st.y = yBase + highArc;
+
+        const leapS = Math.sin(u * Math.PI);
+        st.arch = 0.82 * leapS;
+        st.bodyRot = lerp(22, -8, u) * leapS;
+        st.scaleX = 1 + 0.07 * leapS;
+        st.scaleY = 1 - 0.05 * leapS;
+
+        st.ffRot = 38 * leapS; st.ffKnee = -16 * (1 - u);
+        st.fnRot = 28 * leapS; st.fnKnee = -12 * (1 - u);
+        st.hfRot = lerp(-38, 18, smoothstep(0.35, 0.95, u)) * leapS;
+        st.hnRot = lerp(-28, 14, smoothstep(0.35, 0.95, u)) * leapS;
+
+        st.headRot = lerp(12, -4, u);
+        st.headDx = -10; st.headDy = 8;
+        st.earPerk = 0.6 * leapS;
+        st.tailRot = 14 + 6 * leapS;
+        st.tailTip = 6 * leapS;
+      } else {
+        const u = (t - 6.56) / 0.19;
+        const sq = Math.sin(u * Math.PI);
+        st.x = 960;
+        st.y = Y_SHELF;
+        st.crouch = 0.55 * sq;
+        st.arch = -0.22 * sq;
+        st.headDx = -12; st.headDy = 16;
+        st.tailRot = 14 + 8 * sq;
+      }
+      return st;
+    }
+
+    if (t < 9.30) {
+      st.phaseId = 4;
+      st.phaseName = "V. Прогулка по поверхности полки";
+      st.sit = 0.0;
+      st.y = Y_SHELF;
+
+      const u = (t - 6.75) / (9.30 - 6.75);
+      const walkProgress = smoothstep(0.0, 1.0, u);
+      st.x = lerp(960, X_HOME, walkProgress);
+
+      const env = smoothstep(0.0, 0.10, u) * (1 - smoothstep(0.86, 1.0, u));
+      const cycles = u * 3.5;
+
+      const lFn = sampleWalkLeg(cycles + 0.00, 21 * env, 18 * env);
+      const lHf = sampleWalkLeg(cycles + 0.25, 20 * env, 16 * env);
+      const lFf = sampleWalkLeg(cycles + 0.50, 21 * env, 18 * env);
+      const lHn = sampleWalkLeg(cycles + 0.75, 20 * env, 16 * env);
+
+      st.fnRot = lFn.rot; st.fnKnee = lFn.knee; st.fnLift = lFn.lift;
+      st.hfRot = lHf.rot; st.hfKnee = lHf.knee; st.hfLift = lHf.lift;
+      st.ffRot = lFf.rot; st.ffKnee = lFf.knee; st.ffLift = lFf.lift;
+      st.hnRot = lHn.rot; st.hnKnee = lHn.knee; st.hnLift = lHn.lift;
+
+      const bob = Math.sin(cycles * Math.PI * 4) * env;
+      const sway = Math.sin(cycles * Math.PI * 2) * env;
+      st.arch = 0.10 + 0.06 * bob;
+      st.crouch = 0.06 * (1 + bob) * env;
+      st.headRot = -2.5 + 2.0 * bob;
+      st.headDx = -12;
+      st.headDy = 17 + 3.5 * bob;
+      st.earPerk = 0.35 * env;
+      st.tailRot = 13 + 5 * sway;
+      st.tailTip = 4 * Math.cos(cycles * Math.PI * 2) * env;
+      st.tailWave = 4 * sway;
+      return st;
+    }
+
+    st.phaseId = 5;
+    st.phaseName = "VI. Возвращение в исходное положение сидя (1:1)";
+    st.x = X_HOME;
+    st.y = Y_SHELF;
+
+    if (t < 10.25) {
+      const u = easeInOutCubic((t - 9.30) / 0.95);
+      st.sit = u;
+      const settleS = Math.sin(u * Math.PI);
+      st.arch = 0.14 * settleS * (1 - u);
+      st.headRot = lerp(-2.5, 0, u) + 2.5 * settleS;
+      st.headDx = lerp(-12, 0, u);
+      st.headDy = lerp(17, 0, u);
+      st.earPerk = 0.3 * settleS;
+      st.tailRot = lerp(13, 0, u);
+      st.tailTip = 4 * settleS * (1 - u);
+    } else {
+      st.sit = 1.0;
+      st.exactLock = true;
+    }
+    return st;
+  }
+
+  const passHalo = document.getElementById("cat-pass-halo");
+  const passFill = document.getElementById("cat-pass-fill");
+  const passHoles = document.getElementById("cat-pass-holes");
+  const passCreases = document.getElementById("cat-pass-creases");
+  const exactPdfPath = document.getElementById("cat-exact-pdf-path");
+
+  const compGroup = document.getElementById("cat-world-companion");
+  const compLocal = document.getElementById("cat-local-companion");
+  const passHaloB = document.getElementById("cat-pass-halo-b");
+  const passFillB = document.getElementById("cat-pass-fill-b");
+  const passHolesB = document.getElementById("cat-pass-holes-b");
+  const passCreasesB = document.getElementById("cat-pass-creases-b");
+
+  const catWorld = document.getElementById("cat-world");
+  const catLocal = document.getElementById("cat-local");
+  const cameraRig = document.getElementById("camera-rig");
+  const shadowShelf = document.getElementById("cat-shadow-shelf");
+  const shadowFloor = document.getElementById("cat-shadow-floor");
+  const fxLayer = document.getElementById("fx-layer");
+
+  const phaseLabelEl = document.getElementById("phase-label");
+  const poseBadgeEl = document.getElementById("pose-badge");
+  const scrubberEl = document.getElementById("timeline-scrubber");
+  const timeReadoutEl = document.getElementById("time-readout");
+  const phaseStepBtns = Array.from(document.querySelectorAll(".phase-step-btn"));
+
+  let currentStyle = "outline";
+  let currentCam = "stage";
+  let speedMult = 1.0;
+  let isPlaying = true;
+  let animTime = 0.0;
+  let lastNow = performance.now();
+  let lastTriggerBand = -1;
+
+  function makePathEl(parent) {
+    const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    parent.appendChild(p);
+    return p;
+  }
+
+  const pHalo = makePathEl(passHalo);
+  const pFill = makePathEl(passFill);
+  const pHoles = makePathEl(passHoles);
+  const pCreases = makePathEl(passCreases);
+
+  const pHaloB = makePathEl(passHaloB);
+  const pFillB = makePathEl(passFillB);
+  const pHolesB = makePathEl(passHolesB);
+  const pCreasesB = makePathEl(passCreasesB);
+
+  function applyCatStyleToLayers(geom, mode, haloEl, fillEl, holesEl, creasesEl) {
+    haloEl.setAttribute("d", geom.outerD);
+    fillEl.setAttribute("d", geom.outerD);
+    holesEl.setAttribute("d", geom.holesD);
+    creasesEl.setAttribute("d", geom.creasesD);
+
+    if (mode === "outline") {
+      haloEl.setAttribute("fill", "#1a1a18");
+      haloEl.setAttribute("stroke", "#1a1a18");
+      haloEl.setAttribute("stroke-width", "6.4");
+      haloEl.setAttribute("stroke-linejoin", "round");
+      haloEl.setAttribute("stroke-linecap", "round");
+
+      fillEl.setAttribute("fill", "#fefefe");
+      fillEl.setAttribute("stroke", "none");
+
+      holesEl.setAttribute("fill", "#fefefe");
+      holesEl.setAttribute("stroke", "#1a1a18");
+      holesEl.setAttribute("stroke-width", "3.2");
+      holesEl.setAttribute("stroke-linejoin", "round");
+
+      creasesEl.setAttribute("fill", "none");
+      creasesEl.setAttribute("stroke", "#1a1a18");
+      creasesEl.setAttribute("stroke-width", "3.4");
+      creasesEl.setAttribute("stroke-linecap", "round");
+      creasesEl.setAttribute("stroke-linejoin", "round");
+    } else {
+      const holeBg = currentStyle === "silhouette" ? "#e7edf9" : "#ffffff";
+      haloEl.setAttribute("fill", "#ffffff");
+      haloEl.setAttribute("stroke", "#ffffff");
+      haloEl.setAttribute("stroke-width", "18");
+      haloEl.setAttribute("stroke-linejoin", "round");
+      haloEl.setAttribute("stroke-linecap", "round");
+
+      fillEl.setAttribute("fill", "#2a3984");
+      fillEl.setAttribute("stroke", "#2a3984");
+      fillEl.setAttribute("stroke-width", "2.0");
+      fillEl.setAttribute("stroke-linejoin", "round");
+
+      holesEl.setAttribute("fill", holeBg);
+      holesEl.setAttribute("stroke", "none");
+
+      creasesEl.setAttribute("fill", "none");
+      creasesEl.setAttribute("stroke", holeBg);
+      creasesEl.setAttribute("stroke-width", "3.6");
+      creasesEl.setAttribute("stroke-linecap", "round");
+      creasesEl.setAttribute("stroke-linejoin", "round");
+    }
+  }
+
+  function spawnRipple(x, y, color) {
+    const c = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+    c.setAttribute("cx", x.toFixed(1));
+    c.setAttribute("cy", y.toFixed(1));
+    c.setAttribute("rx", "12");
+    c.setAttribute("ry", "4");
+    c.setAttribute("fill", "none");
+    c.setAttribute("stroke", color || "#3649b8");
+    c.setAttribute("stroke-width", "2.2");
+    c.setAttribute("opacity", "0.75");
+    fxLayer.appendChild(c);
+
+    const t0 = performance.now();
+    function step(now) {
+      const u = clamp((now - t0) / 520, 0, 1);
+      c.setAttribute("rx", (12 + 68 * easeOutCubic(u)).toFixed(1));
+      c.setAttribute("ry", (4 + 14 * easeOutCubic(u)).toFixed(1));
+      c.setAttribute("opacity", (0.75 * (1 - u)).toFixed(2));
+      if (u < 1) {
+        requestAnimationFrame(step);
+      } else if (c.parentNode) {
+        c.parentNode.removeChild(c);
+      }
+    }
+    requestAnimationFrame(step);
+  }
+
+  function renderAtTime(t) {
+    const st = evaluateTimeline(t);
+    const geom = buildCatGeometry(st);
+
+    const primaryMode = currentStyle === "silhouette" ? "silhouette" : "outline";
+    applyCatStyleToLayers(geom, primaryMode, pHalo, pFill, pHoles, pCreases);
+
+    if (st.exactLock && primaryMode === "outline") {
+      exactPdfPath.setAttribute("opacity", "1");
+    } else {
+      exactPdfPath.setAttribute("opacity", "0");
+    }
+
+    const anchorX = 330;
+    const anchorY = 681;
+    const sx = st.dir * st.scaleX * CAT_SCALE;
+    const sy = st.scaleY * CAT_SCALE;
+
+    catWorld.setAttribute("transform", "translate(" + st.x.toFixed(2) + "," + st.y.toFixed(2) + ") scale(" + sx.toFixed(4) + "," + sy.toFixed(4) + ")");
+    catLocal.setAttribute("transform", "rotate(" + st.bodyRot.toFixed(2) + " 0 -130) translate(" + (-anchorX) + "," + (-anchorY) + ")");
+
+    if (currentStyle === "both") {
+      compGroup.style.display = "";
+      applyCatStyleToLayers(geom, "silhouette", pHaloB, pFillB, pHolesB, pCreasesB);
+      compGroup.setAttribute("transform", "translate(" + (st.x + 215).toFixed(2) + "," + st.y.toFixed(2) + ") scale(" + (sx * 0.88).toFixed(4) + "," + (sy * 0.88).toFixed(4) + ")");
+      compLocal.setAttribute("transform", "rotate(" + st.bodyRot.toFixed(2) + " 0 -130) translate(" + (-anchorX) + "," + (-anchorY) + ")");
+    } else {
+      compGroup.style.display = "none";
+    }
+
+    const overShelf = st.x > 405 && st.x < 1135 && st.y <= Y_SHELF + 40;
+    if (overShelf) {
+      const h = Math.max(0, Y_SHELF - st.y);
+      const shScale = clamp(1 - h / 220, 0.35, 1.0);
+      shadowShelf.setAttribute("cx", st.x.toFixed(1));
+      shadowShelf.setAttribute("rx", (84 * shScale).toFixed(1));
+      shadowShelf.setAttribute("opacity", (0.85 * shScale).toFixed(2));
+      shadowFloor.setAttribute("opacity", "0.12");
+      shadowFloor.setAttribute("cx", st.x.toFixed(1));
+    } else {
+      const h = Math.max(0, Y_FLOOR - st.y);
+      const flScale = clamp(1 - h / 280, 0.3, 1.0);
+      shadowFloor.setAttribute("cx", st.x.toFixed(1));
+      shadowFloor.setAttribute("rx", (84 * flScale).toFixed(1));
+      shadowFloor.setAttribute("opacity", (0.9 * flScale).toFixed(2));
+      shadowShelf.setAttribute("opacity", "0");
+    }
+
+    const band = Math.floor(t * 10);
+    if (band !== lastTriggerBand) {
+      lastTriggerBand = band;
+      if (band === 30) spawnRipple(480, Y_SHELF, "#64748b");
+      if (band === 37) spawnRipple(245, Y_FLOOR, "#3649b8");
+      if (band === 61) spawnRipple(1165, Y_FLOOR, "#3649b8");
+      if (band === 65) spawnRipple(960, Y_SHELF, "#3649b8");
+    }
+
+    if (currentCam === "closeup") {
+      const camZoom = 1.72;
+      const targetX = clamp(st.x, 260, 1180);
+      const targetY = clamp(st.y - 110, 260, 560);
+      const tx = 720 - targetX * camZoom;
+      const ty = 400 - targetY * camZoom;
+      cameraRig.setAttribute("transform", "translate(" + tx.toFixed(1) + "," + ty.toFixed(1) + ") scale(" + camZoom + ")");
+    } else {
+      cameraRig.setAttribute("transform", "");
+    }
+
+    if (phaseLabelEl) phaseLabelEl.textContent = st.phaseName;
+    if (poseBadgeEl && st.exactLock) {
+      poseBadgeEl.textContent = "PDF PATH LOCK: 100.0% (исходная поза 1:1)";
+      poseBadgeEl.classList.add("is-locked");
+    } else if (poseBadgeEl) {
+      poseBadgeEl.textContent = "RIG ACTIVE · sit=" + st.sit.toFixed(2) + " · X=" + Math.round(st.x) + " Y=" + Math.round(st.y);
+      poseBadgeEl.classList.remove("is-locked");
+    }
+
+    if (scrubberEl) scrubberEl.value = t.toFixed(2);
+    if (timeReadoutEl) timeReadoutEl.textContent = t.toFixed(2) + "s / 10.80s";
+
+    for (let i = 0; i < phaseStepBtns.length; i++) {
+      phaseStepBtns[i].classList.toggle("is-active", i === st.phaseId);
+    }
+  }
+
+  function tick(now) {
+    const dt = Math.min(0.06, (now - lastNow) / 1000);
+    lastNow = now;
+    if (isPlaying) {
+      animTime = (animTime + dt * speedMult) % 10.8;
+      renderAtTime(animTime);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  const playPauseBtn = document.getElementById("play-pause-btn");
+  const playPauseLabel = document.getElementById("play-pause-label");
+  const liveDot = document.getElementById("live-dot");
+
+  function setPlaying(play) {
+    isPlaying = play;
+    if (playPauseLabel) playPauseLabel.textContent = isPlaying ? "Пауза" : "Пуск ▶";
+    if (liveDot) liveDot.style.background = isPlaying ? "#10b981" : "#f59e0b";
+  }
+
+  if (playPauseBtn) playPauseBtn.addEventListener("click", function() {
+    setPlaying(!isPlaying);
+  });
+
+  var repBtn = document.getElementById("replay-btn"); if (repBtn) repBtn.addEventListener("click", function() {
+    animTime = 0.0;
+    renderAtTime(0.0);
+    setPlaying(true);
+  });
+
+  if (scrubberEl) scrubberEl.addEventListener("input", function() {
+    setPlaying(false);
+    animTime = parseFloat(scrubberEl.value) || 0;
+    renderAtTime(animTime);
+  });
+
+  phaseStepBtns.forEach(function(btn) {
+    btn.addEventListener("click", function() {
+      animTime = parseFloat(btn.getAttribute("data-time")) || 0;
+      renderAtTime(animTime);
+    });
+  });
+
+  document.querySelectorAll("[data-style]").forEach(function(btn) {
+    btn.addEventListener("click", function() {
+      currentStyle = btn.getAttribute("data-style");
+      document.querySelectorAll("[data-style]").forEach(function(b) {
+        b.classList.toggle("is-active", b === btn);
+      });
+      document.body.classList.toggle("style-silhouette", currentStyle === "silhouette");
+      renderAtTime(animTime);
+    });
+  });
+
+  document.querySelectorAll("[data-cam]").forEach(function(btn) {
+    btn.addEventListener("click", function() {
+      currentCam = btn.getAttribute("data-cam");
+      document.querySelectorAll("[data-cam]").forEach(function(b) {
+        b.classList.toggle("is-active", b === btn);
+      });
+      renderAtTime(animTime);
+    });
+  });
+
+  document.querySelectorAll("[data-speed]").forEach(function(btn) {
+    btn.addEventListener("click", function() {
+      speedMult = parseFloat(btn.getAttribute("data-speed")) || 1.0;
+      document.querySelectorAll("[data-speed]").forEach(function(b) {
+        b.classList.toggle("is-active", b === btn);
+      });
+    });
+  });
+
+  window.addEventListener("keydown", function(e) {
+    if (e.target && (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA")) return;
+    if (e.code === "Space") {
+      e.preventDefault();
+      setPlaying(!isPlaying);
+    } else if (e.key === "r" || e.key === "R" || e.key === "к" || e.key === "К") {
+      animTime = 0;
+      renderAtTime(0);
+      setPlaying(true);
+    } else if (e.code === "ArrowRight") {
+      setPlaying(false);
+      animTime = (animTime + 0.15) % 10.8;
+      renderAtTime(animTime);
+    } else if (e.code === "ArrowLeft") {
+      setPlaying(false);
+      animTime = (animTime - 0.15 + 10.8) % 10.8;
+      renderAtTime(animTime);
+    }
+  });
+
+  const rmQuery = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)");
+  const rmBanner = document.getElementById("rm-banner");
+  if (rmQuery && rmQuery.matches) {
+    setPlaying(false);
+    if (rmBanner) rmBanner.classList.add("is-visible");
+  }
+  var rmBtn = document.getElementById("rm-play-btn"); if (rmBtn) rmBtn.addEventListener("click", function() {
+    rmBanner.classList.remove("is-visible");
+    setPlaying(true);
+  });
+
+  function copyEmbedSnippet(btn) {
+    const svgClone = document.getElementById("scene-svg").outerHTML;
+    const oldText = btn.textContent;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(svgClone).then(function() {
+        btn.textContent = "Скопировано ✓";
+        setTimeout(function() { btn.textContent = oldText; }, 1800);
+      });
+    }
+  }
+  var cs1 = document.getElementById("copy-snippet-btn"); if (cs1) cs1.addEventListener("click", function() {
+    copyEmbedSnippet(this);
+  });
+  var cs2 = document.getElementById("copy-snippet-btn-2"); if (cs2) cs2.addEventListener("click", function() {
+    copyEmbedSnippet(this);
+  });
+
+  function triggerSelfDownload() {
+    const html = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+    const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "cat-logo-animation.html";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function() { URL.revokeObjectURL(url); }, 1500);
+  }
+  var dlBtn = document.getElementById("download-concept"); if (dlBtn) dlBtn.addEventListener("click", triggerSelfDownload);
+  if (location.search.indexOf("download=1") !== -1) {
+    setTimeout(triggerSelfDownload, 350);
+  }
+
+  renderAtTime(0.0);
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
