@@ -1,4 +1,4 @@
-:HL["/onedopea/_next/static/chunks/20dr7k-wa1ujd.css","style"]
+:HL["/onedopea/_next/static/chunks/3ja1oa8fobn3-.css","style"]
 2:[["children",{"s":"__PAGE__","h":160}]]
 1:[["children",{"s":"/_not-found","h":96,"c":"$Q2"}]]
-0:{"b":"ps4oJCSWLI-YILk1V6jM2","t":{"t":{"s":"","h":80,"c":"$Q1"}}}
+0:{"b":"wqWrU-fuDWAsgsVxN_M3z","t":{"t":{"s":"","h":80,"c":"$Q1"}}}

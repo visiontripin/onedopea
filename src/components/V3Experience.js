@@ -10,6 +10,8 @@ const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '';
 export default function V3Experience({ posts: initialPosts }) {
   const [worldTheme, setWorldTheme] = useState('default');
   const [visibleStage, setVisibleStage] = useState('default');
+  const [pillsHidden, setPillsHidden] = useState(false);
+  const [dopeScrolled, setDopeScrolled] = useState(false);
   const [fallbackMode, setFallbackMode] = useState(false);
   const [posts, setPosts] = useState(initialPosts);
 
@@ -36,7 +38,13 @@ export default function V3Experience({ posts: initialPosts }) {
             if (active) setWorldTheme(nextTheme);
           },
           onStageChange: (nextStage) => {
-            if (active) setVisibleStage(nextStage);
+            if (active) {
+              setVisibleStage(nextStage);
+              if (nextStage !== 'blue') setDopeScrolled(false);
+            }
+          },
+          onPillsHiddenChange: (hidden) => {
+            if (active) setPillsHidden(hidden);
           },
           onWebGLFallback: () => {
             if (active) setFallbackMode(true);
@@ -64,6 +72,16 @@ export default function V3Experience({ posts: initialPosts }) {
       engineRef.current = null;
       if (engine) engine.destroy();
     };
+  }, []);
+
+  useEffect(() => {
+    const dopeEl = pageDopeRef.current;
+    if (!dopeEl) return;
+    const onScroll = () => {
+      setDopeScrolled(dopeEl.scrollTop > 120);
+    };
+    dopeEl.addEventListener('scroll', onScroll, { passive: true });
+    return () => dopeEl.removeEventListener('scroll', onScroll);
   }, []);
 
   useEffect(() => {
@@ -102,9 +120,10 @@ export default function V3Experience({ posts: initialPosts }) {
   const showDope = visibleStage === 'blue';
   const mountOneIframe = worldTheme === 'red' || showOne;
   const hideCaption = SEGMENT_CONFIG.hideCaptionWhenOpen && worldTheme !== 'default';
-  const hidePills = !SEGMENT_CONFIG.keepCornerPillsVisible && (showOne || showDope);
+  const hidePills = !SEGMENT_CONFIG.keepCornerPillsVisible && pillsHidden;
 
   function handleBackToPills() {
+    setPillsHidden(false);
     if (engineRef.current) engineRef.current.backToPills();
     else {
       setWorldTheme('default');
@@ -113,6 +132,7 @@ export default function V3Experience({ posts: initialPosts }) {
   }
 
   function handleSwitchToRed() {
+    setPillsHidden(false);
     if (engineRef.current) engineRef.current.switchToRed();
     else {
       setWorldTheme('red');
@@ -121,6 +141,7 @@ export default function V3Experience({ posts: initialPosts }) {
   }
 
   function handleSwitchToBlue() {
+    setPillsHidden(false);
     if (engineRef.current) engineRef.current.switchToBlue();
     else {
       setWorldTheme('blue');
@@ -145,8 +166,9 @@ export default function V3Experience({ posts: initialPosts }) {
         aria-hidden={!showOne}
       >
         <div className="one-topbar stage-item">
-          <button type="button" className="one-nav-btn" onClick={handleBackToPills} data-frag="chip">
-            ↶ Капсулы
+          <button type="button" className="one-nav-btn one-pills-btn" onClick={handleBackToPills} data-frag="chip">
+            <i className="pills-mini-icon" aria-hidden="true" />
+            <span>К пилюлям</span>
           </button>
           <button type="button" className="one-nav-btn" onClick={handleSwitchToBlue} data-frag="chip">
             ✦ Dope
@@ -204,6 +226,17 @@ export default function V3Experience({ posts: initialPosts }) {
           onChooseStyle={handleBackToPills}
         />
       </section>
+
+      {/* Плавающая верхняя кнопка «К пилюлям» при прокрутке ленты Dope */}
+      <button
+        type="button"
+        className={`dope-floating-pills-btn${showDope && dopeScrolled ? ' is-shown' : ''}`}
+        onClick={handleBackToPills}
+        tabIndex={showDope && dopeScrolled ? 0 : -1}
+      >
+        <i className="pills-mini-icon" aria-hidden="true" />
+        <span>К пилюлям</span>
+      </button>
 
       {/* 4. Слой 3D-капсул и надпись «Выбирай!» */}
       <div
