@@ -4,7 +4,7 @@
 
 export const SEGMENT_CONFIG = {
     pageAppearDelayMs: 900,
-    keepCornerPillsVisible: true,
+    keepCornerPillsVisible: false,
     hideCaptionWhenOpen: true,
 };
 
@@ -43,6 +43,7 @@ export function mountCapsulesEngine({
     pageDopeEl,
     onThemeChange,
     onStageChange,
+    onPillsHiddenChange,
     onWebGLFallback,
 }) {
     const THREE = window.THREE;
@@ -50,7 +51,14 @@ export function mountCapsulesEngine({
     let rafId = 0;
     let activeWorldTheme = 'default';
     let pageRevealTimer = null;
+    let pillsAreHidden = false;
     const boundIframeCleanups = [];
+
+    function setPillsHidden(nextHidden) {
+        if (pillsAreHidden === nextHidden) return;
+        pillsAreHidden = nextHidden;
+        if (onPillsHiddenChange) onPillsHiddenChange(nextHidden);
+    }
 
     const QUALITY = {
         mobile:
@@ -261,7 +269,7 @@ export function mountCapsulesEngine({
             }
 
             // Построение одной половинки капсулы (открытый цилиндр + полусфера + ободок)
-            function createCapsuleHalfMesh(side, radius, halfCylLen, outerMat, innerMat) {
+            function createCapsuleHalfMesh(side, radius, halfCylLen, outerMat, innerMat, seamDotMat) {
                 const halfGroup = new THREE.Group();
 
                 // Внешний цилиндр половинки
@@ -306,13 +314,6 @@ export function mountCapsulesEngine({
 
                 // Лёгкая продольная насечка на ободке, чтобы было заметно закручивание при закрытии
                 const seamDotGeo = new THREE.BoxGeometry(0.08, 0.035, 0.035);
-                const seamDotMat = new THREE.MeshStandardMaterial({
-                    color: 0xffffff,
-                    roughness: 0.15,
-                    metalness: 0.1,
-                    transparent: true,
-                    opacity: 0.55
-                });
                 const seamDot = new THREE.Mesh(seamDotGeo, seamDotMat);
                 seamDot.position.set(side * 0.05, radius - 0.015, 0);
                 seamDot.renderOrder = 4;
@@ -358,8 +359,16 @@ export function mountCapsulesEngine({
                     side: THREE.BackSide
                 });
 
-                const leftHalf = createCapsuleHalfMesh(-1, radius, halfCylLen, shellMat, innerWallMat);
-                const rightHalf = createCapsuleHalfMesh(1, radius, halfCylLen, shellMat, innerWallMat);
+                const seamDotMat = new THREE.MeshStandardMaterial({
+                    color: 0xffffff,
+                    roughness: 0.15,
+                    metalness: 0.1,
+                    transparent: true,
+                    opacity: 0.55
+                });
+
+                const leftHalf = createCapsuleHalfMesh(-1, radius, halfCylLen, shellMat, innerWallMat, seamDotMat);
+                const rightHalf = createCapsuleHalfMesh(1, radius, halfCylLen, shellMat, innerWallMat, seamDotMat);
                 group.add(leftHalf);
                 group.add(rightHalf);
 
@@ -518,6 +527,9 @@ export function mountCapsulesEngine({
                     group,
                     leftHalf,
                     rightHalf,
+                    shellMat,
+                    innerWallMat,
+                    seamDotMat,
                     hitMesh,
                     fragBoxes,
                     fragDots,
@@ -532,7 +544,8 @@ export function mountCapsulesEngine({
                     baseZ: options.baseZ,
                     innerEmissive: options.innerEmissive,
                     themeGrainEmissive: options.themeGrainEmissive,
-                    state: 'closed', // 'closed' | 'open' | 'dock_closing' | 'docked' | 'undocking' | 'collecting' | 'closing'
+                    state: 'closed', // 'closed' | 'open' | 'vanished' | 'dock_closing' | 'docked' | 'undocking' | 'collecting' | 'closing'
+                    shellFade: 1,
                     openProgress: 0,
                     pageRevealed: false,
                     revealTimer: 0,
@@ -1030,14 +1043,65 @@ export function mountCapsulesEngine({
 
             // ================= СЦЕНАРИИ СОСТОЯНИЙ =================
 
-            // 1. Клик по закрытой капсуле -> перемещение в центр, раскрытие и поэтапное высыпание
+            // 1. Клик по закрытой капсуле -> перемещение в центр, раскрытие, высыпание и исчезновение обеих капсул
+            function applyPillShellAlpha(pillObj) {
+                const a = THREE.MathUtils.clamp(pillObj.shellFade, 0, 1);
+                pillObj.shellMat.opacity = 0.58 * a;
+                pillObj.innerWallMat.opacity = 0.22 * a;
+                pillObj.seamDotMat.opacity = 0.55 * a;
+                pillObj.group.visible = a > 0.004;
+            }
+
+            function resetPillImmediate(pillObj) {
+                pillObj.state = 'closed';
+                pillObj.shellFade = 1;
+                pillObj.openProgress = 0;
+                pillObj.pageRevealed = false;
+                pillObj.themeTriggered = false;
+                pillObj.collectInPlace = false;
+                pillObj.curScale = 1;
+                pillObj.group.position.set(pillObj.baseX, pillObj.baseY, pillObj.baseZ);
+                pillObj.group.scale.setScalar(1);
+                pillObj.leftHalf.position.set(0, 0, 0);
+                pillObj.leftHalf.rotation.set(0, 0, 0);
+                pillObj.rightHalf.position.set(0, 0, 0);
+                pillObj.rightHalf.rotation.set(0, 0, 0);
+                pillObj.group.updateMatrixWorld(true);
+                applyPillShellAlpha(pillObj);
+                pillObj.fragBoxes.visible = true;
+                pillObj.fragDots.visible = true;
+                for (let s = 0; s < 2; s++) {
+                    const set = s === 0 ? pillObj.boxFrags : pillObj.dotFrags;
+                    const mesh = s === 0 ? pillObj.fragBoxes : pillObj.fragDots;
+                    for (let i = 0; i < set.length; i++) {
+                        const f = set[i];
+                        f.spilled = false;
+                        f.hidden = false;
+                        f.arrived = false;
+                        f.assembleP = 0;
+                        f.fadeP = 0;
+                        f.colorMix = 0;
+                        f.vel.set(0, 0, 0);
+                        f.curScale.copy(f.baseScale);
+                        f.worldPos.copy(f.pos).applyMatrix4(pillObj.group.matrixWorld);
+                        writeFragInstance(mesh, i, f, 1);
+                        mesh.setColorAt(i, f.origColor);
+                    }
+                    mesh.instanceMatrix.needsUpdate = true;
+                    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+                }
+            }
+
             function openPill(pillObj, angles) {
                 if (pillObj.state !== 'closed') return;
+                setPillsHidden(false);
 
-                // Если другая капсула активна или в углу — запускаем её засасывание на месте без пересечения с центром
+                // Если другая капсула активна или исчезла — возвращаем или сбрасываем её
                 const otherPill = pillObj === redPill ? bluePill : redPill;
                 const otherAngles = pillObj === redPill ? blueAngles : redAngles;
-                if (otherPill.state === 'open') {
+                if (otherPill.state === 'vanished') {
+                    resetPillImmediate(otherPill);
+                } else if (otherPill.state === 'open') {
                     const dockInfo = getCornerDockTransform();
                     const distToCenter = Math.hypot(otherPill.group.position.x, otherPill.group.position.y - 0.32);
                     if (distToCenter < 1.9) {
@@ -1063,6 +1127,12 @@ export function mountCapsulesEngine({
 
                 pillObj.collectInPlace = false;
                 pillObj.state = 'open';
+                pillObj.shellFade = 1;
+                applyPillShellAlpha(pillObj);
+                pillObj.fragBoxes.visible = true;
+                pillObj.fragDots.visible = true;
+                otherPill.fragBoxes.visible = true;
+                otherPill.fragDots.visible = true;
                 pillObj.openTimer = 0;
                 pillObj.themeTriggered = false;
 
@@ -1181,10 +1251,30 @@ export function mountCapsulesEngine({
             }
 
             function resetPill(pillObj, angles) {
-                if (pillObj.state === 'open') {
+                setPillsHidden(false);
+                if (pillObj.state === 'vanished') {
+                    pillObj.state = 'open';
+                    pillObj.pageRevealed = true;
+                    pillObj.openProgress = 1;
+                    pillObj.curScale = 1;
+                    pillObj.group.position.set(0, 0.32, 0.35);
+                    pillObj.group.scale.setScalar(1);
+                    pillObj.leftHalf.position.set(-0.62, -0.08, 0);
+                    pillObj.leftHalf.rotation.set(0.08, 0.14, -0.98);
+                    pillObj.rightHalf.position.set(0.62, -0.08, 0);
+                    pillObj.rightHalf.rotation.set(-0.08, -0.14, 0.98);
+                    pillObj.fragBoxes.visible = true;
+                    pillObj.fragDots.visible = true;
+                    startCollectingPill(pillObj, angles);
+                } else if (pillObj.state === 'open') {
+                    pillObj.fragBoxes.visible = true;
+                    pillObj.fragDots.visible = true;
                     startCollectingPill(pillObj, angles);
                 } else if (pillObj.state === 'dock_closing' || pillObj.state === 'docked') {
                     startUndockPill(pillObj, angles);
+                } else {
+                    pillObj.fragBoxes.visible = true;
+                    pillObj.fragDots.visible = true;
                 }
             }
 
@@ -1243,9 +1333,10 @@ export function mountCapsulesEngine({
                     targetScale = dockInfo.scale;
                 }
 
-                // Если другая капсула активна, вторая (закрытая) капсула улетает в правый верхний угол (50px от верха)
+                // Если включено удержание угловых капсул — вторая капсула паркуется в правый верхний угол;
+                // иначе она остаётся на месте и плавно исчезает вместе с первой после высыпания содержимого
                 const otherPill = pillObj === redPill ? bluePill : redPill;
-                const isParkedTopRight = pillObj.state === 'closed' && otherPill.state !== 'closed';
+                const isParkedTopRight = SEGMENT_CONFIG.keepCornerPillsVisible && pillObj.state === 'closed' && otherPill.state !== 'closed';
                 if (isParkedTopRight) {
                     const topRightInfo = getTopRightDockTransform();
                     targetPosX = topRightInfo.x + driftX * 0.16;
@@ -1557,13 +1648,19 @@ export function mountCapsulesEngine({
                     _origEmissive.setHex(pillObj.innerEmissive);
                     pillObj.fragMat.emissive.lerp(_origEmissive, 1 - Math.exp(-5 * dt));
 
+                    const closedFadeScale = SEGMENT_CONFIG.keepCornerPillsVisible
+                        ? 1
+                        : Math.pow(Math.max(0, pillObj.shellFade), 0.7);
+                    pillObj.fragBoxes.visible = closedFadeScale > 0.008;
+                    pillObj.fragDots.visible = closedFadeScale > 0.008;
+
                     for (let s = 0; s < 2; s++) {
                         const set = s === 0 ? boxFrags : dotFrags;
                         const mesh = s === 0 ? pillObj.fragBoxes : pillObj.fragDots;
                         for (let i = 0; i < set.length; i++) {
                             const f = set[i];
                             f.worldPos.copy(f.pos).applyMatrix4(pillObj.group.matrixWorld);
-                            f.curScale.copy(f.baseScale);
+                            f.curScale.copy(f.baseScale).multiplyScalar(closedFadeScale);
                             writeFragInstance(mesh, i, f, pillObj.curScale);
 
                             if (f.colorMix > 0.001) {
@@ -1709,11 +1806,29 @@ export function mountCapsulesEngine({
                         }
                     }
 
-                    // Все фрагменты растворились в странице — пустая капсула закрывается и уплывает в угол
-                    if (fadedCount >= totalFrags * 0.98 || pillObj.openTimer > 8.0) {
-                        pillObj.state = 'dock_closing';
-                        pillObj.dockTimer = 0;
+                    // После высыпания содержимого обе оболочки капсул плавно исчезают
+                    if (!SEGMENT_CONFIG.keepCornerPillsVisible && (spilledCount >= totalFrags * 0.85 || pillObj.openTimer > 1.35 || pillObj.pageRevealed)) {
+                        pillObj.shellFade = Math.max(0, pillObj.shellFade - dt * 2.3);
                     }
+
+                    // Все фрагменты растворились в странице — прячем обе капсулы полностью
+                    if (fadedCount >= totalFrags * 0.98 || pillObj.openTimer > 7.2) {
+                        if (SEGMENT_CONFIG.keepCornerPillsVisible) {
+                            pillObj.state = 'dock_closing';
+                            pillObj.dockTimer = 0;
+                        } else {
+                            pillObj.state = 'vanished';
+                            pillObj.shellFade = 0;
+                            pillObj.fragBoxes.visible = false;
+                            pillObj.fragDots.visible = false;
+                            setPillsHidden(true);
+                        }
+                    }
+
+                } else if (pillObj.state === 'vanished') {
+                    pillObj.shellFade = 0;
+                    pillObj.fragBoxes.visible = false;
+                    pillObj.fragDots.visible = false;
 
                 } else if (pillObj.state === 'dock_closing' || pillObj.state === 'docked' || pillObj.state === 'undocking') {
                     // Фрагменты уже растворились в странице — прячем их до возврата
@@ -1842,12 +1957,31 @@ export function mountCapsulesEngine({
                     pillObj.fragDots.instanceColor.needsUpdate = true;
                 }
 
+                // Управление исчезновением / проявлением оболочки обеих капсул
+                if (!SEGMENT_CONFIG.keepCornerPillsVisible) {
+                    const otherVanishing =
+                        (otherPill.state === 'open' && (otherPill.openTimer > 1.35 || otherPill.pageRevealed)) ||
+                        otherPill.state === 'vanished';
+                    if (pillObj.state === 'closed' && otherVanishing) {
+                        pillObj.shellFade = Math.max(0, pillObj.shellFade - dt * 2.3);
+                    } else if (
+                        pillObj.state === 'collecting' ||
+                        pillObj.state === 'closing' ||
+                        (pillObj.state === 'closed' && !otherVanishing)
+                    ) {
+                        pillObj.shellFade = Math.min(1, pillObj.shellFade + dt * 3.0);
+                    }
+                } else {
+                    pillObj.shellFade = 1;
+                }
+                applyPillShellAlpha(pillObj);
+
                 // Обновление деликатной тени под капсулой
                 const isDarkBg = activeWorldTheme === 'red';
                 const shadowVisibility =
-                    (pillObj.state === 'docked' || pillObj.state === 'dock_closing' || isParkedTopRight || isDarkBg)
+                    (pillObj.state === 'docked' || pillObj.state === 'dock_closing' || pillObj.state === 'vanished' || isParkedTopRight || isDarkBg)
                         ? 0.0
-                        : 0.42;
+                        : 0.42 * pillObj.shellFade;
 
                 pillObj.shadowMesh.material.opacity += (shadowVisibility - pillObj.shadowMesh.material.opacity) * (1 - Math.exp(-4 * dt));
                 pillObj.shadowMesh.position.x = pillObj.group.position.x;
@@ -1880,7 +2014,8 @@ export function mountCapsulesEngine({
     }
 
     function getIntersectedPill(clientX, clientY) {
-        if (!SEGMENT_CONFIG.keepCornerPillsVisible && activeWorldTheme !== 'default') return null;
+        if (pillsAreHidden) return null;
+        if (!SEGMENT_CONFIG.keepCornerPillsVisible && (activeWorldTheme !== 'default' || redPill.state === 'open' || bluePill.state === 'open')) return null;
         const rect = renderer.domElement.getBoundingClientRect();
         if (!rect.width || !rect.height) return null;
         pointer.x = ((clientX - rect.left) / rect.width) * 2 - 1;
@@ -1889,7 +2024,9 @@ export function mountCapsulesEngine({
 
         const hits = raycaster.intersectObjects([redPill.hitMesh, bluePill.hitMesh], false);
         if (!hits.length) return null;
-        return hits[0].object === redPill.hitMesh ? redPill : bluePill;
+        const hitPill = hits[0].object === redPill.hitMesh ? redPill : bluePill;
+        if (hitPill.shellFade < 0.25 || hitPill.state === 'vanished') return null;
+        return hitPill;
     }
 
     function handlePillClick(clientX, clientY) {
@@ -2012,18 +2149,20 @@ export function mountCapsulesEngine({
             applyWorldTheme('default');
         },
         switchToRed() {
+            setPillsHidden(false);
             showPageStage('default');
+            if (bluePill.state === 'vanished') resetPillImmediate(bluePill);
             if (redPill.state !== 'closed') {
-                redPill.state = 'closed';
-                redPill.openProgress = 0;
+                resetPillImmediate(redPill);
             }
             openPill(redPill, redAngles);
         },
         switchToBlue() {
+            setPillsHidden(false);
             showPageStage('default');
+            if (redPill.state === 'vanished') resetPillImmediate(redPill);
             if (bluePill.state !== 'closed') {
-                bluePill.state = 'closed';
-                bluePill.openProgress = 0;
+                resetPillImmediate(bluePill);
             }
             openPill(bluePill, blueAngles);
         },

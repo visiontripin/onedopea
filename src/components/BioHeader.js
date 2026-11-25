@@ -33,8 +33,9 @@ export default function BioHeader({
           <span>ONEDOPEA</span>
         </a>
         <div className="bio-actions">
-          <button type="button" className="quiet-button" onClick={onChooseStyle} data-frag="chip">
-            Капсулы
+          <button type="button" className="pills-back-btn" onClick={onChooseStyle} data-frag="chip">
+            <i className="pills-mini-icon" aria-hidden="true" />
+            <span>К пилюлям</span>
           </button>
           <a className="admin-link" href={`${basePath}/admin/`} data-frag="chip">
             Админ-панель

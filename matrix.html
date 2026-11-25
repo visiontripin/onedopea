@@ -498,13 +498,13 @@ body.paused #slide-panel{filter:saturate(.72)}
 <canvas id="c"></canvas>
 <div class="vignette" aria-hidden="true"></div>
 
-<!-- ═══ ЗАСТАВКА: ПРОГРЕСС-БАР ИЗ БУКВ ONEDOPEA + КНОПКА ЗАПУСКА ═══ -->
-<div id="boot">
+<!-- ═══ ЗАСТАВКА ОТКЛЮЧЕНА: МГНОВЕННЫЙ ВХОД НА КАНАЛ 01 ═══ -->
+<div id="boot" class="gone" aria-hidden="true">
   <div id="boot-inner">
 
     <div id="boot-title" aria-hidden="true"></div>
     <div id="boot-bar-wrap"><div id="boot-bar"></div><div id="boot-ticks"></div></div>
-    <div id="boot-row"><span id="boot-log">ИНИЦИАЛИЗАЦИЯ ЯДРА…</span><span id="boot-pct">0%</span></div>
+    <div id="boot-row"><span id="boot-log"></span><span id="boot-pct"></span></div>
     <button type="button" id="boot-run"><span class="run-ico">▶</span><span class="lbl">Запуск</span></button>
   </div>
 </div>
@@ -562,7 +562,7 @@ body.paused #slide-panel{filter:saturate(.72)}
 </div>
 
 <button type="button" id="bug" aria-label="Режим ONEDOPEA" title="РЕЖИМ ONEDOPEA // 10С">ONEDOPEA<span class="bug-dot">●</span></button>
-<button type="button" id="rew" aria-label="Перемотка к заставке" title="Перемотка к заставке">◄◄ ПЕРЕМОТКА</button>
+<button type="button" id="rew" aria-label="Перемотка к началу" title="Перемотка к началу">◄◄ ПЕРЕМОТКА</button>
 
 <div id="rew-osd" aria-hidden="true">◄◄ ПЕРЕМОТКА</div>
 <div id="osd" aria-hidden="true"></div>
@@ -574,7 +574,6 @@ body.paused #slide-panel{filter:saturate(.72)}
   <div id="help-card">
     <div class="help-head"><span>УПРАВЛЕНИЕ</span><button type="button" id="helpClose" aria-label="Закрыть">✕</button></div>
     <ul>
-      <li><kbd>ЗАПУСК</kbd><span>Старт показа на заставке (клик или ПРОБЕЛ / ENTER)</span></li>
       <li><kbd>← →</kbd><span>Переключение проектов (каналов)</span></li>
       <li><kbd>1 – 7</kbd><span>Прямой переход к каналу проекта (или клик по точкам внизу)</span></li>
       <li><kbd>СВАЙП</kbd><span>Влево/вправо — каналы, вверх/вниз — скорость</span></li>
@@ -583,7 +582,7 @@ body.paused #slide-panel{filter:saturate(.72)}
       <li><kbd>ПРОБЕЛ</kbd><span>Пауза / продолжить</span></li>
       <li><kbd>F</kbd><span>Во весь экран</span></li>
       <li><kbd>H</kbd><span>Эта справка</span></li>
-      <li><kbd>ПЕРЕМОТКА</kbd><span>VHS-перемотка обратно к заставке</span></li>
+      <li><kbd>ПЕРЕМОТКА</kbd><span>VHS-перемотка к первому каналу</span></li>
     </ul>
     <div class="help-sect">СЕКРЕТНЫЕ ФРАЗЫ</div>
     <ul>
@@ -1934,7 +1933,7 @@ function finishRewind(now){
   [hudEl,bugEl,rewBtn].forEach(el=>el.classList.remove('is-sucked'));
   [bugEl,rewBtn,hudEl].forEach(b=>{b.classList.remove('glitch-out');void b.offsetWidth;b.classList.add('glitch-in');});
   setTimeout(()=>[bugEl,rewBtn,hudEl].forEach(b=>b.classList.remove('glitch-in')),520);
-  startBoot(now);
+  powerOn(now);
 }
 rewBtn.addEventListener('click',()=>startRewind(vNow));
 
@@ -1962,7 +1961,7 @@ function loop(rawNow){
     }
 
     switch(phase){
-      case 'wait': if(now>=phaseStart)startBoot(now); break;
+      case 'wait': if(now>=phaseStart)powerOn(now); break;
       case 'boot': updateBoot(now); break;
       case 'bootwait': break; /* ждём нажатия «ЗАПУСК» */
       case 'bootoff': break;
@@ -2025,10 +2024,11 @@ function loop(rawNow){
   requestAnimationFrame(loop);
 }
 
-/* ══════════ СТАРТ ══════════ */
-applyNight();applyRainLevel();buildBoot();
-phaseStart=vNow+420;
-console.log('%cONEDOPEA %c// v4.6 %c01 BOTCONTROL • 02 ТИТАН • 03 VISION AUDIO • 04 ПОДРАБОТКА.МСК • 05 ЛЕСНОЕ·АФИША • 06 ПЕРЕКУР+ • H — справка','color:#0f0;font-weight:bold;font-size:14px','color:#7dfba4','color:#0a0');
+/* ══════════ СТАРТ (БЕЗ ЗАГРУЗОЧНОЙ ЗАСТАВКИ) ══════════ */
+applyNight();applyRainLevel();
+bootEl.classList.add('gone');
+powerOn(vNow);
+console.log('%cONEDOPEA %c// v4.6 %c01 BOTCONTROL • 02 ТИТАН • 03 VISION AUDIO • 04 ПОДРАБОТКА.МСК • 05 ЛЕСНОЕ·АФИША • 06 ПЕРЕКУР+ • 07 EX • H — справка','color:#0f0;font-weight:bold;font-size:14px','color:#7dfba4','color:#0a0');
 requestAnimationFrame(loop);
 </script>
 </body>
