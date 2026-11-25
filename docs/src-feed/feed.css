@@ -1,0 +1,505 @@
+        /* ==========================================================================
+           [V7] ПОЛНАЯ СТРАНИЦА DOPE — лента публикаций с живыми котами
+           --------------------------------------------------------------------------
+           Структура:
+             .dope-shell          — контейнер прокрутки (внутри .page-stage)
+             .bio-header          — шапка профиля (аватар = место, куда прыгает кот)
+             .feed-column         — лента карточек
+             .cat-avatar          — «фото профиля» каждой публикации (кот живёт здесь)
+             .cat-scene           — площадка анимации внутри аватара
+             .cat-door            — окошко с логотипом проекта (его царапают)
+             .cat-board           — верхняя кромка карточки (по ней гуляют)
+           ========================================================================== */
+
+        /* Прокрутка ленты живёт на самом .page-stage (уже overflow-y: auto),
+           поэтому позиционируем контент обычным потоком внутри «колонки». */
+        #page-dope {
+            padding: 0 0 96px;
+            color: #23324a;
+            background:
+                radial-gradient(1200px 620px at 50% -8%, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0) 68%),
+                linear-gradient(180deg, #eff3fb 0%, #e9eef9 52%, #eef2fb 100%);
+        }
+        #page-dope .dope-shell {
+            width: min(720px, calc(100% - 36px));
+            margin: 0 auto;
+            padding-top: 14px;
+        }
+
+        /* --- Шапка профиля --- */
+        #page-dope .bio-header {
+            width: 100%;
+            margin: 0 0 18px;
+            padding: 0;
+        }
+        #page-dope .bio-topline {
+            position: sticky;
+            top: 0;
+            z-index: 4;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 12px 0 14px;
+            border-bottom: 1px solid rgba(128, 147, 181, 0.16);
+            background: linear-gradient(180deg, rgba(238, 242, 251, 0.96), rgba(238, 242, 251, 0.72) 72%, rgba(238, 242, 251, 0));
+            backdrop-filter: blur(10px);
+        }
+        #page-dope .bio-main {
+            display: grid;
+            grid-template-columns: 148px 1fr;
+            align-items: center;
+            gap: 26px;
+            width: 100%;
+            margin: 22px 0 18px;
+        }
+        #page-dope .bio-divider { width: 100%; }
+
+        /* --- Аватар профиля (главный кот) --- */
+        .profile-orb {
+            position: relative;
+            display: grid;
+            place-items: center;
+            width: 132px;
+            height: 132px;
+            margin: auto;
+            border: 1px solid #fff;
+            border-radius: 50%;
+            color: #6c82c5;
+            background: radial-gradient(circle at 31% 24%, #fff 0 7%, #e6edff 35%, #cad6f5 80%);
+            box-shadow:
+                inset -10px -13px 30px rgba(103, 128, 190, 0.13),
+                inset 8px 10px 25px #fff,
+                0 18px 42px rgba(94, 119, 185, 0.19);
+            overflow: hidden;
+        }
+        .profile-orb .orb-letter {
+            font-family: 'Manrope', sans-serif;
+            font-size: 34px;
+            font-weight: 800;
+            letter-spacing: -0.08em;
+            transition: opacity 0.45s ease;
+        }
+        .profile-orb.is-cat-home .orb-letter { opacity: 0; }
+        .profile-orb.is-cat-landing { animation: orbLanding 0.62s cubic-bezier(0.22, 1, 0.36, 1) both; }
+        @keyframes orbLanding {
+            0% { transform: scale(1); }
+            35% { transform: scale(1.055) translateY(2px); }
+            70% { transform: scale(0.992); }
+            100% { transform: scale(1); }
+        }
+        .profile-orb::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 50%;
+            border: 2px solid rgba(124, 147, 232, 0.6);
+            opacity: 0;
+            pointer-events: none;
+        }
+        .profile-orb.is-cat-landing::after {
+            animation: orbRing 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.06s both;
+        }
+        @keyframes orbRing {
+            0% { opacity: 0.85; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1.34); }
+        }
+
+        /* ==========================================================================
+           КОТ В КАЖДОМ «ФОТО ПРОФИЛЯ» ПУБЛИКАЦИИ
+           ========================================================================== */
+        .post-card {
+            position: relative;
+            overflow: visible;
+            border: 1px solid rgba(255, 255, 255, 0.94);
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 14px 42px rgba(64, 82, 124, 0.08);
+            backdrop-filter: blur(12px);
+            padding: 16px 18px 14px;
+            margin-bottom: 16px;
+        }
+        .post-card.is-lit {
+            box-shadow: 0 18px 48px rgba(64, 82, 124, 0.14);
+        }
+        .post-head {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            margin-bottom: 12px;
+        }
+        .post-author {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.32;
+            min-width: 0;
+        }
+        .post-author strong {
+            color: #33435d;
+            font-size: 12.5px;
+            font-weight: 700;
+        }
+        .post-author span {
+            color: #8492a8;
+            font-size: 10.5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .post-more {
+            margin-left: auto;
+            border: 0;
+            background: transparent;
+            color: #9aa7bd;
+            font-size: 15px;
+            letter-spacing: 0.06em;
+            cursor: pointer;
+        }
+
+        /* --- Аватар-«фото профиля» карточки: 40×40, в нём живёт кот --- */
+        .cat-avatar {
+            position: relative;
+            flex: 0 0 auto;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 1px solid #fff;
+            background:
+                radial-gradient(circle at 32% 26%, #ffffff 0 8%, #e7eeff 38%, #cfdbf7 82%);
+            box-shadow: inset -4px -6px 12px rgba(103, 128, 190, 0.16), 0 6px 14px rgba(90, 112, 172, 0.16);
+            z-index: 3;
+        }
+        .cat-avatar::after {
+            /* мягкое световое кольцо, отделяющее кота от карточки */
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            pointer-events: none;
+        }
+        .cat-scene {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        /* Кот: силуэт из инк-спрайта, трансформации задаёт JS */
+        .cat-sprite-inline {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 38px;
+            height: 38px;
+            margin: -19px 0 0 -19px;
+            background-image: var(--cat-url);
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            transform-origin: 50% 78%;
+            will-change: transform;
+            /* белая обводка + мягкая тень: силуэт читается на светлом аватаре */
+            filter:
+                drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.95))
+                drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.85))
+                drop-shadow(0 3px 3px rgba(43, 58, 134, 0.28));
+        }
+        /* Окошко с логотипом проекта — его царапает кот во второй публикации */
+        .cat-door {
+            position: absolute;
+            right: -4px;
+            bottom: -4px;
+            width: 21px;
+            height: 21px;
+            border-radius: 7px;
+            border: 1px solid rgba(255, 255, 255, 0.95);
+            background: #fff center/72% no-repeat;
+            box-shadow: 0 3px 8px rgba(69, 92, 152, 0.24);
+            z-index: 4;
+        }
+        .cat-scratch {
+            position: absolute;
+            right: -1px;
+            bottom: 1px;
+            width: 30px;
+            height: 30px;
+            border-radius: 9px;
+            pointer-events: none;
+            opacity: 0;
+            overflow: visible;
+            z-index: 5;
+        }
+        .cat-scratch.is-on { animation: scratchFlash 0.6s ease-out both; }
+        @keyframes scratchFlash {
+            0% { opacity: 0.95; }
+            100% { opacity: 0; }
+        }
+        /* Верхняя кромка карточки, по которой гуляет кот из третьей публикации */
+        .cat-board {
+            position: absolute;
+            left: 12px;
+            right: 12px;
+            top: -1px;
+            height: 3px;
+            border-radius: 3px;
+            opacity: 0;
+            background: linear-gradient(90deg, rgba(118, 148, 232, 0), rgba(118, 148, 232, 0.5), rgba(118, 148, 232, 0));
+            pointer-events: none;
+        }
+        .cat-board.is-on { opacity: 1; }
+        /* Кот-путешественник: появляется на кромке карточки */
+        .cat-walker {
+            position: absolute;
+            top: -22px;
+            left: 0;
+            width: 30px;
+            height: 30px;
+            background-image: var(--cat-url);
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            pointer-events: none;
+            z-index: 6;
+            opacity: 0;
+            will-change: transform;
+        }
+        .cat-walker.is-on { opacity: 1; }
+        /* Следы лапок на кромке */
+        .cat-paws {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 5;
+        }
+        .cat-paws i {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background: rgba(96, 124, 205, 0.55);
+            animation: pawFade 1.4s ease-out both;
+        }
+        @keyframes pawFade {
+            0% { opacity: 0; transform: scale(0.6); }
+            20% { opacity: 0.9; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.4); }
+        }
+
+        /* --- Медиа публикации --- */
+        .post-media {
+            position: relative;
+            margin-bottom: 12px;
+        }
+        .post-art {
+            display: block;
+            width: 100%;
+            border-radius: 14px;
+            border: 1px solid rgba(210, 221, 240, 0.9);
+            background: #f6f9ff;
+            aspect-ratio: 900 / 560;
+            object-fit: cover;
+        }
+        .post-audio {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 13px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #1b2438, #2d3b5e);
+            color: #fff;
+        }
+        .post-audio img {
+            width: 74px;
+            height: 74px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            flex-shrink: 0;
+        }
+        .post-audio h3 { font-size: 14px; margin-bottom: 3px; }
+        .post-audio p { font-size: 11.5px; color: rgba(255, 255, 255, 0.75); line-height: 1.5; }
+        .post-audio .bars {
+            margin-left: auto;
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            height: 34px;
+        }
+        .post-audio .bars i {
+            width: 3px;
+            border-radius: 2px;
+            background: linear-gradient(180deg, #9fb6ff, #5a76d8);
+            animation: barPulse 1.4s ease-in-out infinite;
+        }
+        @keyframes barPulse {
+            0%, 100% { transform: scaleY(0.35); }
+            50% { transform: scaleY(1); }
+        }
+        .post-copy {
+            font-size: 12.5px;
+            line-height: 1.62;
+            color: #5e6c84;
+        }
+        .post-copy strong { color: #33435d; }
+        .post-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        .post-tags a {
+            padding: 2px 7px;
+            border-radius: 7px;
+            color: #5b74bb;
+            background: rgba(111, 140, 220, 0.1);
+            font-size: 10.5px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .social-row {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 11px;
+            padding-top: 9px;
+            border-top: 1px solid rgba(196, 209, 232, 0.55);
+        }
+        .social-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            min-height: 28px;
+            padding: 0 8px;
+            border: 0;
+            border-radius: 8px;
+            background: transparent;
+            color: #8a97ae;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.2s, background 0.2s, transform 0.15s;
+        }
+        .social-action svg { width: 15px; height: 15px; }
+        .social-action:hover { color: #4d63a6; background: rgba(111, 140, 220, 0.08); }
+        .social-action:active { transform: scale(0.94); }
+        .social-action.is-active { color: #5268d8; }
+        .social-action.is-active svg { fill: rgba(82, 104, 216, 0.16); }
+        .social-action.is-saved { color: #3f9d6a; }
+        .social-action.save-action { margin-left: auto; }
+        .post-outlinks {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 10px;
+        }
+        .post-outlink {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 5px 10px;
+            border: 1px solid rgba(126, 152, 220, 0.32);
+            border-radius: 999px;
+            color: #45599c;
+            background: rgba(255, 255, 255, 0.86);
+            font-size: 10.5px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s;
+        }
+        .post-outlink:hover {
+            transform: translateY(-1px);
+            border-color: rgba(110, 140, 225, 0.6);
+            box-shadow: 0 6px 16px rgba(74, 96, 160, 0.14);
+        }
+
+        /* --- Подвал ленты --- */
+        .feed-end {
+            padding: 22px 0 8px;
+            text-align: center;
+            color: #8b98ad;
+            font-size: 11px;
+        }
+        .feed-footer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 14px;
+            padding: 18px 0 0;
+            color: #7d8ba3;
+            font-size: 10.5px;
+        }
+        .feed-footer a { color: #5b74bb; text-decoration: none; }
+        .feed-footer a:hover { text-decoration: underline; }
+
+        /* --- Появление ленты «как настоящая»: карточки въезжают по одной --- */
+        #page-dope.is-visible .post-card {
+            animation: cardIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+            animation-delay: calc(var(--i, 0) * 70ms + 120ms);
+        }
+        @keyframes cardIn {
+            0% { opacity: 0; transform: translateY(16px) scale(0.99); }
+            100% { opacity: 1; transform: none; }
+        }
+
+        @media (max-width: 720px) {
+            #page-dope .dope-shell { width: calc(100% - 24px); }
+            #page-dope .bio-main { grid-template-columns: 96px 1fr; gap: 16px; }
+            #page-dope .profile-orb { width: 88px; height: 88px; }
+            #page-dope .profile-orb .orb-letter { font-size: 26px; }
+            .post-card { padding: 13px 14px 12px; }
+            .post-audio .bars { display: none; }
+            #page-dope .profile-stats { gap: 14px; font-size: 11px; margin: 10px 0; }
+            #page-dope .bio-description { font-size: 11.5px; line-height: 1.55; }
+            #page-dope .bio-title-line h1 { font-size: 20px; }
+            #page-dope #download-concept { display: none; }
+        }
+
+        /* Обложка аудио: мягкая подложка под внешнюю картинку SoundCloud */
+        .post-audio-art {
+            position: relative;
+            display: grid;
+            place-items: center;
+            width: 74px;
+            height: 74px;
+            flex-shrink: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            background: linear-gradient(145deg, #2b3a5c, #16203a 55%, #0f1728);
+            box-shadow: inset 0 0 24px rgba(128, 160, 255, 0.18);
+        }
+        .post-audio-art img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .post-audio-art b {
+            position: relative;
+            z-index: 1;
+            max-width: 62px;
+            color: rgba(255, 255, 255, 0.92);
+            font-size: 9.5px;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            line-height: 1.15;
+            text-align: center;
+            text-transform: uppercase;
+            text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+        }
+
+        /* «Игрушка» для сценария play: светящаяся точка-волна в аватаре */
+        .cat-toy {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 5px;
+            height: 5px;
+            margin: -2.5px 0 0 -2.5px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #fff 0 35%, rgba(126, 160, 255, 0.95) 60%, rgba(126, 160, 255, 0) 72%);
+            box-shadow: 0 0 6px rgba(120, 150, 255, 0.8);
+            pointer-events: none;
+        }
