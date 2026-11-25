@@ -13,9 +13,12 @@
 ## Ссылки
 
 - **Посмотреть вживую:** <https://visiontripin.github.io/onedopea/docs/capsules-v2-concept.html>
-- **Скачать одним файлом:** кнопка «Скачать концепт» в правом нижнем углу страницы
-  или <https://github.com/visiontripin/onedopea/raw/main/docs/capsules-v2-concept.html>
-  (ПКМ → «Сохранить ссылку как…», файл автономный — открывается двойным кликом)
+- **Скачать одним файлом (прямая ссылка):**
+  <https://visiontripin.github.io/onedopea/docs/capsules-v2-concept.html?download=1>
+  — открывается и сразу сохраняется как `capsules-v2-concept.html`
+  (то же в один клик: кнопка «Скачать концепт» в правом нижнем углу страницы).
+- **Скачать с GitHub:** <https://github.com/visiontripin/onedopea/raw/main/docs/capsules-v2-concept.html>
+  (ПКМ → «Сохранить ссылку как…»; файл автономный — открывается двойным кликом)
 - **Раскадровка PNG:** <https://github.com/visiontripin/onedopea/raw/main/docs/capsules-v2-storyboard.png>
 
 Быстрые команды:

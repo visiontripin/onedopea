@@ -104,27 +104,41 @@
                 dom.floatBtn.classList.toggle('is-shown', show);
             }, { passive: true });
 
-            // Скачивание автономного концепта одним файлом (все ассеты уже внутри)
+            // Скачивание автономного концепта одним файлом (все ассеты уже внутри).
+            // Работает и по кнопке, и по ссылке с ?download=1 (для «прямой ссылки на скачивание»).
+            function downloadConcept() {
+                const fallbackName = 'onedopea-capsules-v2.html';
+                const fileName = (window.location.pathname || '').split('/').pop() || fallbackName;
+                const src = window.location.href.split('#')[0].split('?')[0];
+                fetch(src, { cache: 'no-store' })
+                    .then(function (r) {
+                        if (!r.ok) throw new Error('fetch failed');
+                        return r.blob();
+                    })
+                    .then(function (blob) {
+                        const href = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = href;
+                        a.download = fileName;
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                        setTimeout(function () { URL.revokeObjectURL(href); }, 4000);
+                    })
+                    .catch(function () { window.open(src, '_blank'); });
+            }
+
             const downloadBtn = $('download-concept');
             if (downloadBtn) {
                 downloadBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
                     e.stopPropagation();
-                    const name = 'onedopea-capsules-v2.html';
-                    const fileName = (window.location.pathname || '').split('/').pop() || name;
-                    fetch(window.location.href, { cache: 'no-store' })
-                        .then(function (r) { if (!r.ok) throw new Error('fetch'); return r.blob(); })
-                        .then(function (blob) {
-                            const href = URL.createObjectURL(blob);
-                            const a = document.createElement('a');
-                            a.href = href;
-                            a.download = fileName || name;
-                            document.body.appendChild(a);
-                            a.click();
-                            a.remove();
-                            setTimeout(function () { URL.revokeObjectURL(href); }, 4000);
-                        })
-                        .catch(function () { window.open(window.location.href, '_blank'); });
+                    downloadConcept();
                 });
+            }
+            if (PARAMS.get('download') === '1') {
+                // даём странице дорисоваться, чтобы браузер не отменил сохранение
+                setTimeout(downloadConcept, 350);
             }
 
             // Фолбэк-кнопки
