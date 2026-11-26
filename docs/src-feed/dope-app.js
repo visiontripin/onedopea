@@ -29,6 +29,8 @@
            [V6] Таймлайн настраивается в CFG.timing.*, для проверки есть ?debug=1.
            ========================================================================== */
         (function () {
+/*__FEED_BUNDLE__*/
+
             'use strict';
 
             /* ======================================================================
@@ -129,8 +131,6 @@
                 webgl: $('webgl-container'),
                 fallback: $('v3-fallback'),
                 floatBtn: $('dope-floating-pills'),
-                catSprite: $('cat-sprite'),
-                catShadow: $('cat-shadow'),
                 catPuff: $('cat-puff'),
                 catLayer: $('cat-fx-layer'),
                 orb: document.querySelector('#page-dope .profile-orb'),
@@ -713,140 +713,18 @@
             }
 
             /* ======================================================================
-               9. КОТ-ЛОГОТИП  [V4]
+               9. КОТ-ЛОГОТИП  [V10]
                ----------------------------------------------------------------------
-               Силуэт из логотипа (белый слой) + мягкая цветная подложка-обводка.
-               Бежит «галопом»: присед → прыжок, squash-stretch, наклон, шлейф.
+               Растрового спрайта и 3D-плоскости больше нет: кота целиком рисует
+               векторный риг в DOM (hero-cat.js + feed-rig.js). Здесь остаётся
+               только «держатель состояния», который читают движок и отладка.
                ====================================================================== */
-            const CAT_DATA_URL = 'data:image/png;base64,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';
-
-            /**
-             * Готовим два спрайта кота из одного PNG с альфой:
-             *  • ink   — «чернильный» силуэт бренда (для светлой ленты Dope);
-             *  • plate — тот же силуэт, раздутый в белую стикерную обводку
-             *            (рисуем его 12 раз со сдвигом, потом кладём ink сверху).
-             */
-            function makeCatTextures(onReady) {
-                const img = new Image();
-                img.onload = function () {
-                    const S = 512;
-                    const canvasFor = function (draw) {
-                        const cv = document.createElement('canvas');
-                        cv.width = cv.height = S;
-                        const x = cv.getContext('2d');
-                        x.clearRect(0, 0, S, S);
-                        draw(x, cv);
-                        const t = new THREE.CanvasTexture(cv);
-                        if ('encoding' in t) t.encoding = THREE.sRGBEncoding;
-                        t.minFilter = THREE.LinearFilter;
-                        t.anisotropy = 4;
-                        return t;
-                    };
-
-                    const ink = canvasFor(function (x) {
-                        x.drawImage(img, 0, 0, S, S);
-                        x.globalCompositeOperation = 'source-in';
-                        x.fillStyle = '#2b3a86';
-                        x.fillRect(0, 0, S, S);
-                    });
-
-                    const plate = canvasFor(function (x) {
-                        const steps = 20;
-                        const r = 9;
-                        for (let i = 0; i < steps; i++) {
-                            const a = i / steps * Math.PI * 2;
-                            x.drawImage(img, Math.cos(a) * r, Math.sin(a) * r, S, S);
-                        }
-                        x.globalCompositeOperation = 'source-in';
-                        x.fillStyle = '#ffffff';
-                        x.fillRect(0, 0, S, S);
-                        x.drawImage(img, 0, 0, S, S);
-                    });
-
-                    onReady({ ink: ink, plate: plate });
-                };
-                img.src = CAT_DATA_URL;
-            }
-
-            function buildCat() {
-                const root = new THREE.Group();
-                root.visible = false;
-                scene.add(root);
-
-                const rig = new THREE.Group();       // squash / stretch / наклон
-                root.add(rig);
-
-                // цветная подложка (обводка + мягкая тень)
-                const halo = new THREE.Mesh(
-                    new THREE.PlaneGeometry(1, 1),
-                    new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1, depthWrite: false })
-                );
-                halo.position.set(0.006, -0.006, -0.002);
-                rig.add(halo);
-
-                // ink-силуэт: изображение уже нужного цвета, множитель белый
-                const sprite = new THREE.Mesh(
-                    new THREE.PlaneGeometry(1, 1),
-                    new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, depthWrite: false })
-                );
-                sprite.renderOrder = 9;
-                rig.add(sprite);
-
-                // шлейф скорости
-                const ghosts = [];
-                for (let i = 0; i < 3; i++) {
-                    const g = new THREE.Mesh(
-                        new THREE.PlaneGeometry(1, 1),
-                        new THREE.MeshBasicMaterial({
-                            color: 0xffffff,
-                            transparent: true,
-                            opacity: 0.34 - i * 0.1,
-                            depthWrite: false
-                        })
-                    );
-                    g.renderOrder = 8;
-                    g.visible = false;
-                    rig.add(g);
-                    ghosts.push(g);
-                }
-
-                // тень на «полу»
-                const shTex = shadowTexture('40,55,110');
-                const shadow = new THREE.Mesh(
-                    new THREE.PlaneGeometry(1, 0.24),
-                    new THREE.MeshBasicMaterial({ map: shTex, transparent: true, opacity: 0.5, depthWrite: false })
-                );
-                shadow.position.z = -0.05;
-                root.add(shadow);
-
-                return {
-                    root: root, rig: rig, sprite: sprite, halo: halo, ghosts: ghosts, shadow: shadow,
-                    ready: false,
-                    state: 'idle',
-                    t: 0,
-                    pos: new THREE.Vector3(),
-                    from: new THREE.Vector3(),
-                    to: new THREE.Vector3(),
-                    ctrl: new THREE.Vector3(),
-                    scale: 0.5,
-                    baseScale: 0.5,
-                    facing: -1,
-                    trail: [],
-                    ghosts: ghosts
-                };
-            }
-            const catRig = buildCat();
-            makeCatTextures(function (tex) {
-                catRig.halo.material.map = tex.plate;
-                catRig.halo.material.needsUpdate = true;
-                catRig.sprite.material.map = tex.ink;
-                catRig.sprite.material.needsUpdate = true;
-                catRig.ghosts.forEach(function (g) {
-                    g.material.map = tex.ink;
-                    g.material.needsUpdate = true;
-                });
-                catRig.ready = true;
-            });
+            const catRig = {
+                ready: true,
+                state: 'idle',
+                pos: new THREE.Vector3(),
+                root: { visible: false }
+            };
 
             /* ======================================================================
                10. КАПСУЛЫ
@@ -1322,6 +1200,7 @@
                 catRig.state = 'idle';
                 catRig.root.visible = false;
                 catLaunched = false;
+                if (typeof HERO !== 'undefined') HERO.reset();
 
                 dom.caption.classList.add('is-hidden');
                 setPillsHidden(true);
@@ -1384,15 +1263,27 @@
                 }
                 // Кот возвращается в капсулу (синяя ветка)
                 if (p.id === 'blue') {
-                    const orb = measureOrb() || feedTargets().orb;
-                    if (orb) {
-                        catRig.state = 'return';
-                        catRig.t = 0;
-                        catRig.from.copy(screenToWorld(orb.x, orb.y, 0.8));
-                        catRig.pos.copy(catRig.from);
-                        catRig.root.visible = true;
-                        catRig.scale = catBaseScale * 0.55;
-                        catRig.squash = 1;
+                    // [V9] Кот убегает из аватара в пасть капсулы — тем же ригом,
+                    // с работающими лапами, а не «уезжающей картинкой».
+                    // страница уже скрыта — измерять орб поздно, поэтому берём
+                    // последнюю известную точку героя (он стоит в аватаре)
+                    const orb = measureOrb() || feedTargets().orb || {
+                        x: HERO.state.x, y: HERO.state.y, r: 46
+                    };
+                    const mouth = worldToScreen(pillWorldMouth(p, new THREE.Vector3()));
+                    // страница уже закрыта, поэтому «дома ли кот» знает сам риг
+                    const catHome = HERO.state.home;
+                    if (orb && (catHome || HERO.state.state !== 'idle')) {
+                        HERO.flee(
+                            { x: orb.x, y: orb.y + (orb.r || 40) * 0.4 },
+                            { x: mouth.x, y: mouth.y + 14 },
+                            function () {
+                                catRig.state = 'gone';
+                                catRig.root.visible = false;
+                            }
+                        );
+                    } else {
+                        catRig.state = 'gone';
                     }
                     if (typeof FEED !== 'undefined' && FEED.onCatLeaving) FEED.onCatLeaving();
                 }
@@ -1797,235 +1688,43 @@
                16. КОТ: ПРЫЖОК ИЗ КАПСУЛЫ → БЕГ → АВАТАР  [V4]
                ====================================================================== */
             function launchCat(pill) {
-                if (!catRig.ready) {
-                    catRig.ready = true;
-                }
-                const mouth = pillWorldMouth(pill, new THREE.Vector3());
+                // [V9] Кот выпрыгивает не 3D-плоскостью, а живым векторным ригом
+                // в DOM: у него работают лапы, хвост и корпус на всём пути.
+                if (!catRig.ready) catRig.ready = true;
+                const mouthScreen = worldToScreen(pillWorldMouth(pill, new THREE.Vector3()));
                 const target = feedTargets();
-                catRig.state = 'leap';
                 catLaunched = true;
-                catRig.t = 0;
-                catRig.from.copy(mouth);
-                catRig.pos.copy(mouth);
-                catRig.facing = -1;
-                // [V7] Первая цель — первая публикация: кот приземляется на неё,
-                // затем карабкается наверх, к месту фото профиля.
-                catRig.post = target.post;
-                catRig.orb = target.orb;
-                catRig.to = target.post
-                    ? screenToWorld(target.post.x, target.post.y, 0.85)
-                    : (target.orb ? screenToWorld(target.orb.x, target.orb.y, 0.85) : screenToWorld(W * 0.5, H * 0.7, 0.85));
-                catRig.landScale = target.post
-                    ? pxToWorld(Math.min(target.post.w || 90, 132) * 0.92)
-                    : (target.orb ? pxToWorld(target.orb.r * 2.1) : catBaseScale * 0.8);
-                catRig.ctrl.set(
-                    lerp(mouth.x, catRig.to.x, 0.42),
-                    Math.max(mouth.y, catRig.to.y) + 0.9,
-                    lerp(mouth.z, catRig.to.z, 0.5)
-                );
-                catRig.root.visible = true;
-                catRig.alpha = 1;
-                catRig.scale = catBaseScale * 0.35;
-                catRig.retTo = null;
-                catRig.trail.length = 0;
-                catRig.ghosts.forEach(function (g) { g.visible = false; });
+                catRig.state = 'gone';          // 3D-кот больше не рисуется
+                catRig.root.visible = false;
+                const to = target.post
+                    ? { x: target.post.x, y: target.post.y }
+                    : (target.orb ? { x: target.orb.x, y: target.orb.y } : { x: W * 0.5, y: H * 0.7 });
+                HERO.launch({
+                    from: { x: mouthScreen.x, y: mouthScreen.y + 18 },
+                    to: to,
+                    postW: target.post ? Math.min(target.post.w || 320, 420) : 320,
+                    orb: target.orb
+                });
                 dom.catPuff.classList.remove('is-on');
                 void dom.catPuff.offsetWidth;
                 if (typeof FEED !== 'undefined' && FEED.onCatLeap) FEED.onCatLeap();
             }
 
             function updateCat(dt, now) {
-                const cat = catRig;
-                if (cat.state === 'idle') {
-                    cat.root.visible = false;
-                    return;
+                // [V9] Весь путь кота (полёт, посадка, карабканье) ведёт HERO.
+                // 3D-объект кота остаётся только как «погашенный» держатель
+                // состояния для обратной совместимости вызовов FEED.
+                catRig.root.visible = false;
+                HERO.update(dt);
+
+                const trail = document.getElementById('cat-light-trail');
+                if (!trail) return;
+                const st = HERO.state.state;
+                if (st === 'leap' || st === 'climb' || st === 'land' || st === 'flee') {
+                    trail.style.background =
+                        'radial-gradient(circle at ' + (HERO.state.x / W * 100).toFixed(1) + '% ' +
+                        (HERO.state.y / H * 100).toFixed(1) + '%, rgba(150, 168, 255, 0.26), transparent 34%)';
                 }
-                cat.t += dt;
-
-                if (cat.state !== 'land' && cat.state !== 'gone') cat.alpha = 1;
-                if (cat.state === 'leap') {
-                    // Выпрыгивание: короткая дуга вверх-вперёд + рост
-                    const p = clamp(cat.t / 0.42, 0, 1);
-                    const e = easeOutCubic(p);
-                    cat.pos.lerpVectors(cat.from, cat.ctrl, e * 0.55);
-                    cat.scale = lerp(catBaseScale * 0.3, catBaseScale * 1.02, easeOutQuint(p));
-                    cat.facing = cat.to.x < cat.from.x ? -1 : 1;
-                    if (p >= 1) {
-                        cat.state = 'run';
-                        cat.t = 0;
-                        cat.runFrom = cat.pos.clone();
-                        cat.runCtrl = cat.ctrl.clone();
-                        cat.runDur = CFG.timing.catRunDuration;
-                        cat.trail.length = 0;
-                    }
-                } else if (cat.state === 'run') {
-                    const p = clamp(cat.t / cat.runDur, 0, 1);
-                    const e = easeInOutCubic(p);
-                    const u = 1 - e;
-                    // квадратичная дуга «бег с прыжками»
-                    cat.pos.x = u * u * cat.runFrom.x + 2 * u * e * cat.runCtrl.x + e * e * cat.to.x;
-                    cat.pos.y = u * u * cat.runFrom.y + 2 * u * e * cat.runCtrl.y + e * e * cat.to.y;
-                    cat.pos.z = lerp(cat.runFrom.z, cat.to.z, e);
-                    // галоп: 4 отталкивания за пробег
-                    const gait = Math.abs(Math.sin(p * Math.PI * 3.4));
-                    cat.pos.y += gait * 0.16 * (1 - p * 0.55);
-                    cat.scale = lerp(catBaseScale, catRig.landScale, easeInOutCubic(p));
-                    if (cat.to.x < cat.runFrom.x) cat.facing = -1; else cat.facing = 1;
-
-                    // шлейф
-                    cat.trailTimer = (cat.trailTimer || 0) + dt;
-                    if (cat.trailTimer > 0.045) {
-                        cat.trailTimer = 0;
-                        cat.trail.unshift({ x: cat.pos.x, y: cat.pos.y, s: cat.scale });
-                        if (cat.trail.length > 3) cat.trail.pop();
-                    }
-                    if (p >= 1) {
-                        cat.state = 'land';
-                        cat.t = 0;
-                        cat.trail.length = 0;
-                        onCatLand();
-                    }
-                } else if (cat.state === 'land') {
-                    // [V7] Кот приземлился на первую публикацию: приседает, оглядывается,
-                    // затем карабкается вверх — к месту фото профиля.
-                    const settle = 0.42;
-                    if (cat.t < settle) {
-                        const p = easeOutCubic(cat.t / settle);
-                        const squash = 1 - 0.26 * Math.sin(p * Math.PI) + Math.sin(cat.t * 22) * 0.02 * (1 - p);
-                        cat.scale = catRig.landScale * (0.94 + 0.06 * p);
-                        cat.squash = squash;
-                        cat.pos.x += (catRig.to.x - cat.pos.x) * (1 - Math.exp(-14 * dt));
-                        cat.pos.y += (catRig.to.y - cat.pos.y) * (1 - Math.exp(-14 * dt));
-                    } else {
-                        // старт карабканья: цель — аватар (фото профиля)
-                        const orb = feedTargets().orb || catRig.orb;
-                        catRig.climbFrom = catRig.pos.clone();
-                        catRig.climbTo = orb ? screenToWorld(orb.x, orb.y, 0.85) : catRig.to.clone();
-                        catRig.climbDur = 1.05;
-                        cat.state = 'climb';
-                        cat.t = 0;
-                        cat.squash = 1;
-                        cat.scale = catRig.landScale;
-                        if (typeof FEED !== 'undefined' && FEED.onCatLandedOnPost) FEED.onCatLandedOnPost();
-                    }
-                } else if (cat.state === 'climb') {
-                    // Карабканье: зигзаг «по стене» карточки — два толчка лапами,
-                    // лёгкое покачивание, «когти» цепляются за край.
-                    const p = clamp(cat.t / catRig.climbDur, 0, 1);
-                    const e = easeInOutCubic(p);
-                    const from = catRig.climbFrom, to = catRig.climbTo;
-                    const zig = Math.sin(p * Math.PI * 3.2) * 0.11 * (1 - p * 0.4);
-                    cat.pos.x = lerp(from.x, to.x, e);
-                    cat.pos.y = lerp(from.y, to.y, e) + zig;
-                    cat.pos.z = lerp(from.z, to.z, e);
-                    const stroke = Math.abs(Math.sin(p * Math.PI * 6));
-                    cat.pos.y += stroke * 0.045;
-                    cat.facing = (p > 0.62) ? 1 : -1;
-                    cat.scale = lerp(catRig.landScale, catRig.landScale * 0.78, e);
-                    cat.squash = 1 + Math.sin(p * Math.PI * 6) * 0.05;
-                    cat.rig.rotation.z = Math.sin(p * Math.PI * 3.2) * 0.12;
-                    // когти цепляются за карточку: оставляем следы по траектории
-                    catRig.clawTimer = (catRig.clawTimer || 0) + dt;
-                    if (catRig.clawTimer > 0.1) {
-                        catRig.clawTimer = 0;
-                        if (typeof FEED !== 'undefined' && FEED.onClimbTrail) FEED.onClimbTrail(worldToScreen(cat.pos));
-                    }
-                    if (p >= 1) {
-                        // забрался: кот «входит» в аватар — дальше живёт 2D-кот в ленте
-                        cat.state = 'idle';
-                        cat.t = 0;
-                        cat.alpha = 1;
-                        cat.root.visible = false;
-                        cat.rig.rotation.z = 0;
-                        cat.squash = 1;
-                        if (typeof FEED !== 'undefined' && FEED.onCatArrived) FEED.onCatArrived();
-                    }
-                } else if (cat.state === 'return') {
-                    // Обратный путь: из аватара в пасть капсулы
-                    const dur = 0.95;
-                    const p = clamp(cat.t / dur, 0, 1);
-                    const e = easeInOutCubic(p);
-                    if (!cat.retTo) {
-                        cat.retTo = pillWorldMouth(pillById.blue, new THREE.Vector3());
-                        cat.retCtrl = new THREE.Vector3(
-                            lerp(cat.from.x, cat.retTo.x, 0.5),
-                            Math.max(cat.from.y, cat.retTo.y) + 0.85,
-                            lerp(cat.from.z, cat.retTo.z, 0.5)
-                        );
-                    }
-                    const u = 1 - e;
-                    cat.pos.x = u * u * cat.from.x + 2 * u * e * cat.retCtrl.x + e * e * cat.retTo.x;
-                    cat.pos.y = u * u * cat.from.y + 2 * u * e * cat.retCtrl.y + e * e * cat.retTo.y;
-                    cat.pos.z = lerp(cat.from.z, cat.retTo.z, e);
-                    const gait = Math.abs(Math.sin(p * Math.PI * 3));
-                    cat.pos.y += gait * 0.14;
-                    cat.facing = cat.retTo.x < cat.from.x ? -1 : 1;
-                    cat.scale = lerp(catBaseScale * 0.4, catBaseScale * 0.42, p) * (1 - p * 0.75);
-                    cat.trailTimer = (cat.trailTimer || 0) + dt;
-                    if (cat.trailTimer > 0.05) {
-                        cat.trailTimer = 0;
-                        cat.trail.unshift({ x: cat.pos.x, y: cat.pos.y, s: cat.scale });
-                        if (cat.trail.length > 2) cat.trail.pop();
-                    }
-                    if (p >= 1) {
-                        cat.state = 'gone';
-                        cat.root.visible = false;
-                        cat.trail.length = 0;
-                        cat.retTo = null;
-                    }
-                }
-
-                if (cat.state === 'gone') {
-                    cat.root.visible = false;
-                    return;
-                }
-
-                // --- применяем трансформ ---
-                cat.root.position.copy(cat.pos);
-                const bob = Math.sin((cat.t || 0) * 2) * 0.01;
-                cat.root.position.y += bob;
-                cat.rig.scale.set(cat.facing * cat.scale, cat.scale, 1);
-                // squash-stretch по вертикали: капсула «дышит» в беге.
-                // [V7] В посадке/карабканье сквош задаёт сам стейт (cat.squash).
-                const squash = cat.squash !== undefined ? cat.squash : 1 + Math.sin((cat.t || 0) * 13) * 0.035;
-                cat.rig.scale.y *= squash;
-                cat.rig.scale.x *= (1 / Math.max(0.6, squash * 0.5 + 0.5));
-                if (cat.state === 'run') {
-                    cat.rig.rotation.z = Math.sin((cat.t || 0) * 13) * 0.045 - cat.facing * 0.03;
-                } else if (cat.state !== 'climb') {
-                    cat.rig.rotation.z = 0;
-                }
-                if (cat.state === 'run' || cat.state === 'land' || cat.state === 'climb') {
-                    const sc = worldToScreen(cat.pos);
-                    const trail = document.getElementById('cat-light-trail');
-                    if (trail) {
-                        trail.style.background =
-                            'radial-gradient(circle at ' + (sc.x / W * 100).toFixed(1) + '% ' +
-                            (sc.y / H * 100).toFixed(1) + '%, rgba(150, 168, 255, 0.26), transparent 34%)';
-                    }
-                }
-                const mat = cat.sprite.material;
-                mat.opacity = cat.alpha === undefined ? 1 : cat.alpha;
-                cat.halo.material.opacity = 0.92 * (cat.alpha === undefined ? 1 : cat.alpha);
-                cat.halo.scale.set(1.02, 1.02, 1);
-
-                // шлейф-призраки
-                cat.ghosts.forEach(function (g, i) {
-                    const tr = cat.trail[i];
-                    if (!tr || cat.state === 'land') { g.visible = false; return; }
-                    g.visible = true;
-                    g.position.set(tr.x - cat.pos.x, tr.y - cat.pos.y, -0.01 - i * 0.005);
-                    g.scale.set(cat.facing * tr.s, tr.s, 1);
-                    g.material.opacity = (0.26 - i * 0.075) * (cat.alpha === undefined ? 1 : cat.alpha);
-                });
-
-                // тень на «полу» страницы (для climb — тень прижата к карточке)
-                const floorY = cat.to ? Math.min(cat.to.y - 0.35, cat.pos.y) : cat.pos.y - 0.35;
-                cat.shadow.visible = true;
-                cat.shadow.position.set(0, floorY - cat.pos.y + 0.04, -0.02);
-                const d = clamp(1 - (cat.pos.y - floorY) * 0.5, 0.35, 1);
-                cat.shadow.scale.set(cat.scale * 1.1 * d, d, 1);
-                cat.shadow.material.opacity = 0.42 * d * (cat.alpha === undefined ? 1 : cat.alpha);
             }
 
             function onCatLand() {
@@ -2436,8 +2135,6 @@
                 }
 
                 // --- спецэффекты кадра ---
-                dom.catSprite.style.opacity = '0';
-                dom.catShadow.style.opacity = '0';
 
             }
 
@@ -2520,6 +2217,8 @@
                 worldToScreen: worldToScreen,
                 pills: pills,
                 cat: catRig,
+                hero: HERO,
+                rig: { buildCatSVG: buildCatSVG, CatRig: CatRig },
                 glyphs: glyphs,
                 rain: rain,
                 open: function (which) { resetAll(); openPill(pillById[which]); },

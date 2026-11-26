@@ -39,9 +39,6 @@
                     paws: null,
                     hero: true
                 });
-                actor.sprite.style.width = '62px';
-                actor.sprite.style.height = '62px';
-                actor.sprite.style.margin = '-31px 0 0 -31px';
                 actor.sprite.style.opacity = '0';
                 actor.setActive(false);
                 actor.frozen = true;
@@ -77,10 +74,6 @@
                         walker: q('[data-cat-walker="' + index + '"]', card),
                         paws: q('[data-cat-paws="' + index + '"]', card)
                     });
-                    // базовый размер кота под аватар 42px
-                    actor.sprite.style.width = '38px';
-                    actor.sprite.style.height = '38px';
-                    actor.sprite.style.margin = '-19px 0 0 -19px';
                     actor.sprite.style.opacity = '0';
                     actor.setActive(false);
                     actor.card = card;
@@ -218,6 +211,7 @@
                         hero.actor.t = 0;
                     }
                     hero.orb.classList.add('is-cat-home');
+                    hero.sprite.style.opacity = '1';
                     hero.orb.classList.remove('is-cat-landing');
                     void hero.orb.offsetWidth;
                     hero.orb.classList.add('is-cat-landing');
@@ -232,6 +226,18 @@
                     a.frozen = false;
                     a.setActive(true);
                 });
+                // [V9] IntersectionObserver мог погасить только что включённых котов
+                // (страница в этот момент ещё меняет прозрачность) — включаем ещё раз,
+                // когда лента уже проявилась.
+                setTimeout(function () {
+                    state.actors.forEach(function (a) { a.frozen = false; a.setActive(true); });
+                    // главный кот в орбе: включаем и снимаем «призрак» от наблюдателя
+                    const h = state.hero;
+                    if (h) {
+                        if (h.actor) { h.actor.frozen = false; h.actor.setActive(true); }
+                        h.sprite.style.opacity = '1';
+                    }
+                }, 420);
                 // главный кот в аватаре — танцует от радости
                 if (state.hero) {
                     const orbScene = state.hero.scene;

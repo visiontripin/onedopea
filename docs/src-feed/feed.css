@@ -185,25 +185,31 @@
             overflow: hidden;
             pointer-events: none;
         }
-        /* Кот: силуэт из инк-спрайта, трансформации задаёт JS */
-        .cat-sprite-inline {
+        /* Кот: векторный риг (SVG). Сценарий задаёт позу, JS ставит трансформ. */
+        .cat-rig-box {
             position: absolute;
             left: 50%;
             top: 50%;
-            width: 38px;
-            height: 38px;
-            margin: -19px 0 0 -19px;
-            background-image: var(--cat-url);
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            transform-origin: 50% 78%;
-            will-change: transform;
-            /* белая обводка + мягкая тень: силуэт читается на светлом аватаре */
+            width: 46px;
+            height: 40px;
+            margin: -21px 0 0 -23px;
+            opacity: 0;
+            will-change: transform, opacity;
+            transform-origin: 50% 82%;
             filter:
                 drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.95))
-                drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.85))
-                drop-shadow(0 3px 3px rgba(43, 58, 134, 0.28));
+                drop-shadow(0 2px 2px rgba(43, 58, 134, 0.26));
+        }
+        .cat-rig-box--walk {
+            width: 44px;
+            height: 38px;
+            margin: -20px 0 0 -22px;
+            opacity: 1;
+        }
+        .profile-orb .cat-rig-box {
+            width: 96px;
+            height: 84px;
+            margin: -42px 0 0 -48px;
         }
         /* Окошко с логотипом проекта — его царапает кот во второй публикации */
         .cat-door {
@@ -253,12 +259,8 @@
             position: absolute;
             top: -22px;
             left: 0;
-            width: 30px;
-            height: 30px;
-            background-image: var(--cat-url);
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
+            width: 44px;
+            height: 38px;
             pointer-events: none;
             z-index: 6;
             opacity: 0;

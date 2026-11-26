@@ -742,9 +742,9 @@
         }
 
         /* ==========================================================================
-           [V4] 2D-слой персонажа: кот выпрыгивает из капсулы и бежит к аватару,
-           затем обратно забирается в капсулу. Анимируется по экранным координатам,
-           синхронно с 3D (см. catFx в скрипте).
+           [V10] 2D-слой персонажа: главный кот живёт здесь — выпрыгивает из капсулы,
+           летит к аватару, карабкается по кромке карточки и убегает обратно в зев
+           при сборе. Позы ставит векторный риг (hero-cat.js), координаты — экранные.
            ========================================================================== */
         #cat-fx-layer {
             position: fixed;
@@ -752,34 +752,6 @@
             z-index: 33;
             pointer-events: none;
             overflow: hidden;
-        }
-        .cat-sprite {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 120px;
-            height: 120px;
-            margin: -60px 0 0 -60px;
-            background-image: url(data:image/png;base64,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);
-            background-size: 100% 100%;
-            background-repeat: no-repeat;
-            will-change: transform, filter, opacity;
-            /* Двойная подложка даёт «чистый» силуэт на светлом и тёмном фоне */
-            filter: drop-shadow(0 10px 14px rgba(52, 71, 133, 0.22));
-            opacity: 0;
-        }
-        /* Тень под котом: эллипс, который сплющивается в прыжке */
-        .cat-shadow {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 96px;
-            height: 20px;
-            margin: -10px 0 0 -48px;
-            border-radius: 50%;
-            background: radial-gradient(ellipse at center, rgba(37, 52, 104, 0.36), rgba(37, 52, 104, 0) 72%);
-            opacity: 0;
-            will-change: transform, opacity;
         }
         /* Пыль/искры при отталкивании в момент прыжка */
         .cat-puff {
@@ -882,7 +854,6 @@
             .one-topbar { top: 10px; left: 10px; gap: 6px; }
             .one-nav-btn { padding: 8px 12px; font-size: 10px; }
             #download-concept { padding: 8px 11px; font-size: 10px; right: 10px; bottom: 10px; }
-            .cat-sprite { width: 92px; height: 92px; margin: -46px 0 0 -46px; }
             #choose-caption { font-size: 12.5px; padding: 8px 13px; }
         }
 
@@ -1147,25 +1118,31 @@
             overflow: hidden;
             pointer-events: none;
         }
-        /* Кот: силуэт из инк-спрайта, трансформации задаёт JS */
-        .cat-sprite-inline {
+        /* Кот: векторный риг (SVG). Сценарий задаёт позу, JS ставит трансформ. */
+        .cat-rig-box {
             position: absolute;
             left: 50%;
             top: 50%;
-            width: 38px;
-            height: 38px;
-            margin: -19px 0 0 -19px;
-            background-image: var(--cat-url);
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            transform-origin: 50% 78%;
-            will-change: transform;
-            /* белая обводка + мягкая тень: силуэт читается на светлом аватаре */
+            width: 46px;
+            height: 40px;
+            margin: -21px 0 0 -23px;
+            opacity: 0;
+            will-change: transform, opacity;
+            transform-origin: 50% 82%;
             filter:
                 drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.95))
-                drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.85))
-                drop-shadow(0 3px 3px rgba(43, 58, 134, 0.28));
+                drop-shadow(0 2px 2px rgba(43, 58, 134, 0.26));
+        }
+        .cat-rig-box--walk {
+            width: 44px;
+            height: 38px;
+            margin: -20px 0 0 -22px;
+            opacity: 1;
+        }
+        .profile-orb .cat-rig-box {
+            width: 96px;
+            height: 84px;
+            margin: -42px 0 0 -48px;
         }
         /* Окошко с логотипом проекта — его царапает кот во второй публикации */
         .cat-door {
@@ -1215,12 +1192,8 @@
             position: absolute;
             top: -22px;
             left: 0;
-            width: 30px;
-            height: 30px;
-            background-image: var(--cat-url);
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
+            width: 44px;
+            height: 38px;
             pointer-events: none;
             z-index: 6;
             opacity: 0;
@@ -1484,9 +1457,7 @@
 
     <!-- [V4] 2D-персонаж: кот выпрыгивает из синей капсулы и бежит к фото профиля -->
     <div id="cat-fx-layer" aria-hidden="true">
-        <div class="cat-shadow" id="cat-shadow"></div>
         <div class="cat-puff" id="cat-puff"></div>
-        <div class="cat-sprite" id="cat-sprite"></div>
     </div>
 
     <!-- ==================== 2. СТРАНИЦА ONE (ПОЯВЛЯЕТСЯ ПОСЛЕ КРАСНОЙ ПИЛЮЛИ) ==================== -->
@@ -1786,6 +1757,375 @@
         ];
 
         /* ==========================================================================
+           [V9] КОТ-ПЕРСОНАЖ: векторный скелет с шарнирами
+           --------------------------------------------------------------------------
+           Раньше кот был одной растровой картинкой: он не мог бежать, махать лапами
+           или отталкиваться — поэтому и читался как «наклейка, которую таскают».
+           Теперь это SVG-риг: тело, голова, четыре двухзвенные лапы, хвост, глаза.
+           Каждая часть — отдельная группа со своим шарниром, анимация ставит им
+           реальные углы (rotate) и масштабы (squash/stretch), поэтому кот именно
+           бежит, отталкивается, карабкается и садится.
+           ========================================================================== */
+        const rigClamp = (v, a, b) => (v < a ? a : (v > b ? b : v));
+
+        const CAT_INK = '#2b3a86';
+        const CAT_INK_DARK = '#22306f';
+        const CAT_BELLY = '#f2f5ff';
+        const CAT_OUTLINE = '#1b2557';
+        const CAT_COLLAR = '#5f74c9';
+        const CAT_NOSE = '#ffb2ba';
+        const CAT_WHISKER = '#b9c4e6';
+
+        /* Одна лапа: бедро (hip → knee) + голень (knee → foot) + ступня.
+           Каждая часть обёрнута в <g> с transform-origin в шарнире. */
+        function catLeg(id, hip, knee, foot, wide) {
+            const w1 = wide ? 8.6 : 7.6;
+            const w2 = wide ? 7.0 : 6.2;
+            return `
+            <g class="leg" data-leg="${id}" style="transform-origin:${hip[0]}px ${hip[1]}px">
+              <g class="thigh" style="transform-origin:${hip[0]}px ${hip[1]}px">
+                <line x1="${hip[0]}" y1="${hip[1]}" x2="${knee[0]}" y2="${knee[1]}"
+                      stroke="${CAT_OUTLINE}" stroke-width="${w1 + 3.2}" stroke-linecap="round"/>
+                <line x1="${hip[0]}" y1="${hip[1]}" x2="${knee[0]}" y2="${knee[1]}"
+                      stroke="${CAT_INK}" stroke-width="${w1}" stroke-linecap="round"/>
+                <g class="shin" style="transform-origin:${knee[0]}px ${knee[1]}px">
+                  <circle cx="${knee[0]}" cy="${knee[1]}" r="${w1 * 0.42}"
+                          fill="${CAT_INK}" stroke="${CAT_OUTLINE}" stroke-width="2"/>
+                  <line x1="${knee[0]}" y1="${knee[1]}" x2="${foot[0]}" y2="${foot[1]}"
+                        stroke="${CAT_OUTLINE}" stroke-width="${w2 + 3}" stroke-linecap="round"/>
+                  <line x1="${knee[0]}" y1="${knee[1]}" x2="${foot[0]}" y2="${foot[1]}"
+                        stroke="${CAT_INK}" stroke-width="${w2}" stroke-linecap="round"/>
+                  <ellipse class="paw" cx="${foot[0]}" cy="${foot[1]}" rx="${w2 * 0.92}" ry="${w2 * 0.66}"
+                           fill="${CAT_INK}" stroke="${CAT_OUTLINE}" stroke-width="1.9"
+                           style="transform-origin:${foot[0]}px ${foot[1]}px"/>
+                </g>
+              </g>
+            </g>`;
+        }
+
+        function buildCatSVG() {
+            return `
+<svg class="catSvg" viewBox="0 0 124 108" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <clipPath id="catBodyClip"><ellipse cx="62" cy="62" rx="27" ry="18.5"/></clipPath>
+  </defs>
+
+  <ellipse class="catShadow" cx="62" cy="100" rx="25" ry="4.2"
+           fill="rgba(37,52,104,0.18)" style="transform-origin:62px 100px"/>
+
+  <!-- дальние лапы -->
+  ${catLeg('backFar', [45, 64], [42, 78], [41, 92], false)}
+  ${catLeg('frontFar', [78, 64], [82, 78], [84, 92], false)}
+
+  <!-- хвост -->
+  <g class="tail" style="transform-origin:37px 62px">
+    <path class="tailPath" d="M37 62 C 26 60, 19 48, 21 36"
+          fill="none" stroke="${CAT_OUTLINE}" stroke-width="11.2" stroke-linecap="round"/>
+    <path class="tailPath2" d="M37 62 C 26 60, 19 48, 21 36"
+          fill="none" stroke="${CAT_INK}" stroke-width="7.8" stroke-linecap="round"/>
+  </g>
+
+  <!-- тело -->
+  <g class="torso" style="transform-origin:62px 74px">
+    <ellipse cx="62" cy="62" rx="27" ry="18.5"
+             fill="${CAT_INK}" stroke="${CAT_OUTLINE}" stroke-width="3"/>
+    <g clip-path="url(#catBodyClip)">
+      <ellipse cx="70" cy="72" rx="15" ry="10" fill="${CAT_BELLY}"/>
+      <path d="M44 50 q5 4.5 0 9 M52 47 q5 4.5 0 9 M60 46 q5 4.5 0 9"
+            fill="none" stroke="${CAT_INK_DARK}" stroke-width="3.2" stroke-linecap="round"/>
+    </g>
+  </g>
+
+  <!-- ближние лапы -->
+  ${catLeg('backNear', [50, 66], [47, 80], [46, 94], true)}
+  ${catLeg('frontNear', [74, 66], [77, 81], [75, 95], true)}
+
+  <!-- голова -->
+  <g class="head" style="transform-origin:92px 42px">
+    <g class="ear earL">
+      <path d="M81 30 L78 12 L93 24 Z" fill="${CAT_INK}" stroke="${CAT_OUTLINE}" stroke-width="2.4"
+            stroke-linejoin="round"/>
+      <path d="M83 27 L82 18 L89 24 Z" fill="#7a8acf"/>
+    </g>
+    <g class="ear earR">
+      <path d="M100 26 L106 10 L109 28 Z" fill="${CAT_INK}" stroke="${CAT_OUTLINE}" stroke-width="2.4"
+            stroke-linejoin="round"/>
+      <path d="M102 25 L105 17 L106 26 Z" fill="#7a8acf"/>
+    </g>
+    <circle cx="92" cy="42" r="17" fill="${CAT_INK}" stroke="${CAT_OUTLINE}" stroke-width="3"/>
+    <ellipse cx="96" cy="48" rx="10" ry="7" fill="${CAT_BELLY}"/>
+    <g class="eye eyeL" style="transform-origin:88px 40px">
+      <ellipse cx="88" cy="40" rx="4.3" ry="5" fill="#ffffff"/>
+      <ellipse class="pupil" cx="89" cy="40.4" rx="2.2" ry="2.8" fill="#141a33"/>
+    </g>
+    <g class="eye eyeR" style="transform-origin:100px 39px">
+      <ellipse cx="100" cy="39" rx="4.1" ry="4.8" fill="#ffffff"/>
+      <ellipse class="pupil" cx="101" cy="39.4" rx="2.1" ry="2.7" fill="#141a33"/>
+    </g>
+    <path d="M94.5 46 l2.2 1.5 -2.2 1.5 -2.2 -1.5 Z" fill="${CAT_NOSE}"/>
+    <path d="M93.6 50 q1.4 2.2 3 0" fill="none" stroke="${CAT_OUTLINE}" stroke-width="1.3"
+          stroke-linecap="round"/>
+    <g class="whiskers" stroke="${CAT_WHISKER}" stroke-width="1.4" stroke-linecap="round" fill="none">
+      <path d="M103 45 q8 -2 11 -4"/>
+      <path d="M103 48 q8 1 11 2"/>
+      <path d="M83 46 q-8 -2 -10 -5"/>
+      <path d="M83 49 q-8 1 -10 3"/>
+    </g>
+    <path d="M80 57 q13 5 25 1" fill="none" stroke="${CAT_COLLAR}" stroke-width="4.2"
+          stroke-linecap="round"/>
+    <circle cx="92" cy="60" r="3.1" fill="#d6ddff" stroke="${CAT_OUTLINE}" stroke-width="1.1"/>
+  </g>
+</svg>`;
+        }
+
+        /* ======================================================================
+           РИГ: доступ к шарнирам + позы
+           ====================================================================== */
+        class CatRig {
+            constructor(svgEl) {
+                this.svg = svgEl;
+                this.legs = {};
+                ['backFar', 'frontFar', 'backNear', 'frontNear'].forEach((id) => {
+                    const leg = svgEl.querySelector('[data-leg="' + id + '"]');
+                    this.legs[id] = {
+                        leg: leg,
+                        thigh: leg.querySelector('.thigh'),
+                        shin: leg.querySelector('.shin'),
+                        paw: leg.querySelector('.paw')
+                    };
+                });
+                this.tail = svgEl.querySelector('.tail');
+                this.torso = svgEl.querySelector('.torso');
+                this.head = svgEl.querySelector('.head');
+                this.shadow = svgEl.querySelector('.catShadow');
+                this.eyes = [svgEl.querySelector('.eyeL'), svgEl.querySelector('.eyeR')];
+                this.pupils = Array.from(svgEl.querySelectorAll('.pupil'));
+                this.blinkT = Math.random() * 3;
+                this.blink = 0;
+            }
+
+            _set(el, angle, extra) {
+                if (!el) return;
+                el.style.transform = 'rotate(' + angle.toFixed(2) + 'deg)' + (extra || '');
+            }
+
+            /* --- тело: наклон + squash/stretch --- */
+            setBody(angle, squashY, squashX, dy) {
+                if (!this.torso) return;
+                this.torso.style.transform =
+                    'translateY(' + (dy || 0).toFixed(2) + 'px) rotate(' + angle.toFixed(2) + 'deg) ' +
+                    'scale(' + squashX.toFixed(3) + ',' + squashY.toFixed(3) + ')';
+            }
+
+            setHead(angle, dy, dx) {
+                if (!this.head) return;
+                this.head.style.transform = 'translate(' + (dx || 0).toFixed(2) + 'px,' +
+                    (dy || 0).toFixed(2) + 'px) rotate(' + angle.toFixed(2) + 'deg)';
+            }
+
+            setTail(angle, curl) {
+                if (!this.tail) return;
+                this.tail.style.transform = 'rotate(' + angle.toFixed(2) + 'deg)';
+                const p1 = this.tail.querySelector('.tailPath');
+                const p2 = this.tail.querySelector('.tailPath2');
+                if (p1 && p2) {
+                    // «волна» по хвосту: изгиб гуляет от основания к кончику
+                    const c = curl;
+                    const d = 'M37 62 C ' + (26 - c * 0.5).toFixed(1) + ' ' + (60 - c * 0.4).toFixed(1) +
+                        ', ' + (19 - c * 1.1).toFixed(1) + ' ' + (48 - c * 1.5).toFixed(1) +
+                        ', ' + (21 + c * 0.9).toFixed(1) + ' ' + (36 - c * 2.1).toFixed(1);
+                    p1.setAttribute('d', d);
+                    p2.setAttribute('d', d);
+                }
+            }
+
+            /* Одна лапа: угол бедра, угол колена (относительный). */
+            setLeg(id, hipAngle, kneeAngle) {
+                const L = this.legs[id];
+                if (!L) return;
+                this._set(L.thigh, hipAngle);
+                this._set(L.shin, kneeAngle);
+            }
+
+            /* --- ПОЗЫ --- */
+
+            /* Бег (галоп): фаза 0..1. Диагональные пары работают в противофазе. */
+            poseRun(phase) {
+                const n = phase * Math.PI * 2;
+                const s1 = Math.sin(n), s2 = Math.sin(n + Math.PI);
+                const c1 = Math.cos(n), c2 = Math.cos(n + Math.PI);
+                // ближние лапы — основная пара, дальние — с небольшим офсетом
+                this.setLeg('frontNear', s1 * 34, Math.max(0, c1) * 34);
+                this.setLeg('backNear', s2 * 32, Math.max(0, c2) * 30);
+                this.setLeg('frontFar', s2 * 28, Math.max(0, c2) * 28);
+                this.setLeg('backFar', s1 * 26, Math.max(0, c1) * 26);
+                // корпус: покачивание + сжатие на отталкивании
+                const bob = Math.abs(Math.sin(n)) * 2.2;
+                const squash = 1 + Math.sin(n * 2) * 0.06;
+                this.setBody(Math.sin(n) * 3.4, squash, 1 / squash, -bob);
+                this.setHead(Math.sin(n) * 4 - 3, Math.sin(n * 2) * 1.6, Math.sin(n) * 1.2);
+                this.setTail(-10 + Math.sin(n) * 12, 8 + Math.sin(n + 0.8) * 9);
+                this._shadow(1 - bob * 0.05);
+            }
+
+            /* --- ПОЛЁТ. Силуэт вытянут по траектории: передние лапы вперёд,
+               задние отведены назад, хвост выпрямлен в струю. ---------------- */
+            poseFly(p) {
+                const tuck = Math.sin(Math.min(1, p * 1.1) * Math.PI);
+                const reach = 1 - Math.abs(p - 0.45) * 0.5;
+                // передние лапы выброшены вперёд, задние — назад (поза прыжка)
+                this.setLeg('frontNear', -46 - tuck * 16, -34 - tuck * 10);
+                this.setLeg('frontFar', -40 - tuck * 12, -28 - tuck * 8);
+                this.setLeg('backNear', 40 + tuck * 18, 30 + tuck * 12);
+                this.setLeg('backFar', 34 + tuck * 14, 24 + tuck * 10);
+                const stretch = 1.14 + tuck * 0.1;
+                this.setBody(-4, stretch, 1 / stretch, 0);
+                this.setHead(-10 - tuck * 4, 0, 1);
+                this.setTail(-34 - tuck * 10, 4 + (1 - tuck) * 8);
+                this._shadow(0.5);
+                void reach;
+            }
+
+            /* --- КАРАБКАНЬЕ. Риг поворачивается целиком (кот «встаёт на стену»),
+               а поза — это умеренный цикл перебора: передние лапы тянутся вверх
+               по стене, задние подтягиваются следом. Больших углов не нужно:
+               силуэт вертикальный, и лапы читаются как лапы, а не как макароны. */
+            poseClimb(phase) {
+                const n = phase * Math.PI * 2;
+                const s1 = Math.sin(n), s2 = Math.sin(n + Math.PI);
+                const lift = Math.max(0, s1), lift2 = Math.max(0, s2);
+                // Передние лапы по очереди «забрасываются» выше головы — это и есть
+                // перехват; задние подтягиваются следом, корпус прижат к стене.
+                this.setLeg('frontNear', -78 + s1 * 30, -18 - lift * 26);
+                this.setLeg('frontFar', -66 + s2 * 28, -12 - lift2 * 24);
+                this.setLeg('backNear', 34 + s2 * 16, 22 + lift2 * 14);
+                this.setLeg('backFar', 26 + s1 * 14, 18 + lift * 12);
+                this.setBody(-6 + Math.sin(n) * 3, 1.02, 0.99, -Math.abs(s1) * 1.2);
+                this.setHead(-30 + Math.sin(n) * 5, -2, 1);
+                this.setTail(34 + Math.sin(n) * 12, 6);
+            }
+
+            /* --- ЦАРАПАНЬЕ. Стоит на задних, передней лапой бьёт по двери. -- */
+            poseScratch(phase) {
+                const f = Math.sin(phase * Math.PI * 2);
+                this.setLeg('frontNear', -66 + f * 30, -22 - Math.max(0, f) * 26);
+                this.setLeg('frontFar', -48 + Math.max(0, -f) * 18, -12);
+                this.setLeg('backNear', 26, 20);
+                this.setLeg('backFar', 20, 16);
+                this.setBody(-20, 1.06, 0.95, 0);
+                this.setHead(-14 + f * 2, -2, 2);
+                this.setTail(30 + f * 6, 10);
+            }
+
+            /* --- ТАНЕЦ. Перенос веса, подскок, «лапы вверх» по такту. --------- */
+            poseDance(t) {
+                const beat = t * 5.2;
+                const hop = Math.max(0, Math.sin(beat));
+                const side = Math.sin(beat * 0.5);
+                this.setLeg('frontNear', -30 + Math.sin(beat) * 30, 26 + hop * 18);
+                this.setLeg('frontFar', -24 - Math.sin(beat) * 26, 20 + hop * 16);
+                this.setLeg('backNear', 12 + Math.cos(beat) * 12, -8);
+                this.setLeg('backFar', 8 - Math.cos(beat) * 10, -6);
+                this.setBody(side * 5 - 3, 1 + hop * 0.07, 1 - hop * 0.04, -hop * 1.8);
+                this.setHead(-6 + side * 6, -hop * 1.4, side * 1.6);
+                this.setTail(-12 + side * 22, 12 + side * 10);
+            }
+
+            /* Прыжок: p 0..1 — от приседа до вытянутого полёта. */
+            poseLeap(p) {
+                const tuck = Math.sin(Math.min(1, p * 1.15) * Math.PI);
+                this.setLeg('frontNear', -22 - tuck * 34, 34 + tuck * 26);
+                this.setLeg('backNear', 20 + tuck * 28, -16 - tuck * 26);
+                this.setLeg('frontFar', -18 - tuck * 30, 30 + tuck * 22);
+                this.setLeg('backFar', 18 + tuck * 24, -14 - tuck * 22);
+                const stretch = 1 + tuck * 0.18;
+                this.setBody(-6 + tuck * 10, stretch, 1 / stretch, 0);
+                this.setHead(-8 + tuck * 6, 0, 0);
+                this.setTail(-22 - tuck * 18, 10 + tuck * 10);
+                this._shadow(0.55);
+            }
+
+            /* Приземление: сплющивание p 1 → 0. */
+            poseLand(p) {
+                const sq = 0.74 + (1 - p) * 0.26;
+                this.setLeg('frontNear', 16, 30);
+                this.setLeg('backNear', -12, -22);
+                this.setLeg('frontFar', 12, 26);
+                this.setLeg('backFar', -10, -18);
+                this.setBody(0, sq, 1 + (1 - sq) * 0.9, (1 - sq) * 4);
+                this.setHead(0, (1 - sq) * 6, 0);
+                this.setTail(-18, 6);
+                this._shadow(1.1);
+            }
+
+            /* Сидит (для аватаров): дышит, хвост качается, глаза моргают. */
+            poseSit(t, mood) {
+                const breathe = Math.sin(t * 2.1) * 0.02;
+                const sway = Math.sin(t * 1.1) * 3;
+                this.setLeg('frontNear', 4, 6);
+                this.setLeg('backNear', -8, -10);
+                this.setLeg('frontFar', 0, 4);
+                this.setLeg('backFar', -6, -8);
+                this.setBody(0, 1 + breathe, 1 - breathe * 0.6, -Math.abs(breathe) * 8);
+                this.setHead(Math.sin(t * 0.9) * 3, Math.sin(t * 2.1) * 0.8, Math.sin(t * 0.7) * 0.8);
+                this.setTail(-6 + sway, 5 + Math.sin(t * 1.6) * 4);
+                this._shadow(1);
+                if (mood === 'sleep') {
+                    this.setHead(6 + Math.sin(t * 0.8) * 2, 2, 0);
+                    this.setEyeOpen(0.08);
+                }
+            }
+
+            /* Стоит (старт/финиш). */
+            poseIdle(t) {
+                this.setLeg('frontNear', 2, 4);
+                this.setLeg('backNear', -4, -6);
+                this.setLeg('frontFar', 0, 2);
+                this.setLeg('backFar', -3, -5);
+                this.setBody(Math.sin(t * 1.4) * 0.8, 1 + Math.sin(t * 2.2) * 0.012, 1, 0);
+                this.setHead(Math.sin(t * 1.1) * 2, 0, 0);
+                this.setTail(-8 + Math.sin(t * 1.3) * 6, 6);
+                this._shadow(1);
+            }
+
+            _shadow(scale) {
+                if (!this.shadow) return;
+                this.shadow.style.transform = 'scale(' + scale.toFixed(2) + ',' + (0.9 + scale * 0.1).toFixed(2) + ')';
+                this.shadow.style.opacity = String(0.55 / Math.max(0.6, scale));
+            }
+
+            twitchEar(amount) {
+                const e = this.svg.querySelector('.earR');
+                if (e) e.style.transform = 'rotate(' + amount.toFixed(2) + 'deg)';
+            }
+
+            setEyeOpen(open) {
+                this.eyes.forEach((e) => { if (e) e.style.transform = 'scaleY(' + open.toFixed(2) + ')'; });
+            }
+
+            updateBlink(dt) {
+                this.blinkT -= dt;
+                if (this.blinkT <= 0) {
+                    this.blinkT = 2 + Math.random() * 3.4;
+                    this.blink = 1;
+                }
+                if (this.blink > 0) {
+                    this.blink = Math.max(0, this.blink - dt * 6);
+                    this.setEyeOpen(1 - this.blink * 0.92);
+                }
+            }
+
+            lookAt(dx, dy) {
+                const x = rigClamp(dx, -1, 1) * 1.5;
+                const y = rigClamp(dy, -1, 1) * 1.5;
+                this.pupils.forEach((p) => {
+                    p.setAttribute('transform', 'translate(' + x.toFixed(2) + ',' + y.toFixed(2) + ')');
+                });
+            }
+        }
+
+
+        /* ==========================================================================
            [V7] ЛЕНТА DOPE: сборка карточек + живые коты в каждом «фото профиля»
            --------------------------------------------------------------------------
            Что здесь есть:
@@ -1802,13 +2142,6 @@
                                    первую публикацию и карабкается на место фото
                                    профиля; при сборе капсулы кот убегает обратно.
            ========================================================================== */
-        // Спрайт кота появляется в движке позже — берём его лениво.
-        let CAT_URL = '';
-        function catUrl() {
-            if (!CAT_URL) CAT_URL = typeof CAT_DATA_URL !== 'undefined' ? CAT_DATA_URL : '';
-            return CAT_URL;
-        }
-
         const ICONS = {
             heart: '<path d="M20.8 4.7a5.4 5.4 0 0 0-7.6 0L12 5.9l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6l1.2 1.2L12 21l7.6-7.5 1.2-1.2a5.4 5.4 0 0 0 0-7.6Z"/>',
             comment: '<path d="M20 11.5a7.5 7.5 0 0 1-8 7.5 8.6 8.6 0 0 1-3.5-.7L4 20l1.4-3.8A7.2 7.2 0 0 1 4 11.5 7.5 7.5 0 0 1 12 4a7.5 7.5 0 0 1 8 7.5Z"/>',
@@ -1901,17 +2234,25 @@
         }
 
         /* ======================================================================
-           2. КОТ В АВАТАРЕ: спрайт + сценарии поведения
+           2. КОТ В АВАТАРЕ: векторный риг + сценарии поведения
+           ----------------------------------------------------------------------
+           Раньше здесь был спрайт-картинка, которой двигали transform: кот
+           «переезжал» по аватару, не двигая лапами. Теперь в аватар вставляется
+           SVG-риг (feed-rig.js), а сценарий задаёт ПОЗУ: цикл бега, карабканье,
+           приседание, танец, сон. Лапы, хвост, корпус и голова живут отдельно,
+           поэтому движение читается как движение животного.
            ====================================================================== */
-        function makeSprite(cls, parent) {
-            const el = document.createElement('div');
-            el.className = cls;
-            el.style.setProperty('--cat-url', 'url("' + catUrl() + '")');
-            parent.appendChild(el);
-            return el;
-        }
-
         const CAT_SCRIPTS = ['dance', 'scratch', 'climb', 'peek', 'play', 'sleep', 'chase', 'jump'];
+
+        function makeRig(host, cls) {
+            const box = document.createElement('div');
+            box.className = cls || 'cat-rig-box';
+            box.innerHTML = buildCatSVG();
+            host.appendChild(box);
+            const svg = box.querySelector('svg');
+            svg.classList.add('cat-rig');
+            return { box: box, svg: svg, rig: new CatRig(svg) };
+        }
 
         function CatActor(opts) {
             this.card = opts.card;
@@ -1923,10 +2264,20 @@
             this.door = opts.card.querySelector('.cat-door');
             this.scratch = opts.card.querySelector('.cat-scratch');
             this.board = opts.card.querySelector('.cat-board');
+            this.hero = !!opts.hero;
 
-            this.sprite = makeSprite('cat-sprite-inline', this.scene);
-            // кот-путешественник по кромке карточки: тот же спрайт
-            if (this.walker) this.walker.style.setProperty('--cat-url', 'url("' + catUrl() + '")');
+            const made = makeRig(this.scene, 'cat-rig-box');
+            this.box = made.box;
+            this.svg = made.svg;
+            this.rig = made.rig;
+            this.sprite = this.box;          // совместимость с мостом (opacity)
+
+            // кот-путешественник по кромке карточки — тоже векторный
+            if (this.walker) {
+                const walk = makeRig(this.walker, 'cat-rig-box cat-rig-box--walk');
+                this.walkSvg = walk.svg;
+                this.walkRig = walk.rig;
+            }
             if (this.script === 'play') {
                 this.toy = document.createElement('i');
                 this.toy.className = 'cat-toy';
@@ -1935,14 +2286,13 @@
             this.t = Math.random() * 6;      // разные фазы — коты не синхронны
             this.phase = 0;
             this.visible = false;
-            this.heroMode = false;           // «прибыл из капсулы» — сценарий доигрывает вход
+            this.heroMode = false;
             this.frozen = false;
             this.blink = 0;
             this.nextBlink = 1 + Math.random() * 3;
             this.pawTimer = 0;
             this.walkX = 0;
             this.walkDir = 1;
-            this.jumpT = 0;
             this.lastTimer = Math.random() * 2;
             this.ready = true;
         }
@@ -1950,12 +2300,12 @@
         CatActor.prototype.setActive = function (on) {
             this.visible = on;
             if (!on) {
-                this.sprite.style.opacity = '0';
+                this.box.style.opacity = '0';
                 if (this.toy) this.toy.style.opacity = '0';
                 if (this.walker) this.walker.classList.remove('is-on');
                 if (this.board) this.board.classList.remove('is-on');
             } else {
-                this.sprite.style.opacity = '1';
+                this.box.style.opacity = '1';
             }
         };
 
@@ -1965,135 +2315,140 @@
             dot.style.left = x.toFixed(1) + 'px';
             dot.style.top = y.toFixed(1) + 'px';
             this.paws.appendChild(dot);
-            const self = this;
             setTimeout(function () { dot.remove(); }, 1500);
         };
 
-        /* Универсальный апдейт: каждый сценарий возвращает {x, y, sx, sy, rot}
-           в координатах сцены аватара (центр = 0,0, радиус ~21px). */
+        /* Универсальный апдейт: сценарий возвращает позу в координатах сцены
+           аватара (центр = 0,0). Каждый кадр выбирается ПОЗА рига:
+             run / climb / sit / leap / land / idle  (см. CatRig). */
         CatActor.prototype.update = function (dt) {
             if (!this.visible || this.frozen) return;
             this.t += dt;
             const T = this.t;
-            let x = 0, y = 0, sx = 1, sy = 1, rot = 0;
-            let opacity = 1;
-
-            const breathe = 1 + Math.sin(T * 3.1) * 0.03;
+            const rig = this.rig;
+            let x = 0, y = 0, sc = 1, rot = 0, sy = 1, opacity = 1;
+            let pose = rig.poseSit.bind(rig), phase = T;
 
             switch (this.script) {
                 case 'dance': {
-                    // Танцует: покачивание в такт, подпрыгивания «диско», поворот
-                    const beat = T * 5.4;
+                    // Танцует в такт: перенос веса с лапы на лапу + подскоки,
+                    // иногда крутится вокруг себя и «хлопает» передними лапами.
+                    const beat = T * 5.2;
                     const hop = Math.max(0, Math.sin(beat));
-                    x = Math.sin(beat * 0.5) * 3.0;
-                    y = -hop * 2.6;
-                    rot = Math.sin(beat) * 0.22;
-                    sy = (0.94 + hop * 0.14) * breathe;
-                    sx = 1 / sy;
-                    // иногда крутится вокруг себя (флип)
+                    const side = Math.sin(beat * 0.5);
+                    x = side * 2.6;
+                    y = -hop * 2.4;
+                    rot = side * 0.18;
+                    sy = 1 + hop * 0.06;
+                    pose = function () { rig.poseDance(T); };
                     const cyc = T % 4.6;
-                    if (cyc > 3.4) rot += (cyc - 3.4) / 1.2 * Math.PI * 2;
-                    // музыкальные ноты
-                    this.noteTimer = (this.noteTimer || 0) + dt;
-                    if (this.noteTimer > 0.7) {
-                        this.noteTimer = 0;
-                        spawnNote(this.scene);
+                    if (cyc > 3.4) {                      // флип раз в цикл
+                        const f = (cyc - 3.4) / 1.2;
+                        rot += f * Math.PI * 2;
+                        y -= Math.sin(f * Math.PI) * 9;
                     }
+                    this.noteTimer = (this.noteTimer || 0) + dt;
+                    if (this.noteTimer > 0.65) { this.noteTimer = 0; spawnNote(this.scene); }
                     break;
                 }
                 case 'scratch': {
-                    // Царапает окошко с логотипом: подходит к двери, «молотит» лапой
-                    const toward = 1.4;
-                    x = toward + Math.sin(T * 12) * 1.0 * (Math.sin(T * 2.2) > 0.1 ? 1 : 0.12);
-                    y = 1.6 + Math.cos(T * 12) * 0.9;
-                    rot = 0.2 + Math.sin(T * 12) * 0.1;
-                    sx = 1 + Math.sin(T * 12) * 0.05;
-                    sy = 1 - Math.sin(T * 12) * 0.05;
+                    // Царапает окошко с логотипом: подходит, встаёт на задние,
+                    // «молотит» передней лапой по двери, потом отходит и садится.
+                    const toward = 1.5;
                     const cyc = T % 3.9;
-                    if (cyc < 0.55) {
+                    const scratching = cyc < 1.7;
+                    if (scratching) {
+                        const fast = Math.sin(T * 17);
+                        x = toward + fast * 0.9;
+                        y = 1.4 + Math.cos(T * 17) * 0.7;
+                        rot = 0.16;
+                        pose = function () { rig.poseScratch(T * 2.6); };
                         if (this.scratch && !this.scratch.classList.contains('is-on')) {
                             this.scratch.classList.remove('is-on');
                             void this.scratch.offsetWidth;
                             this.scratch.classList.add('is-on');
                         }
-                    }
-                    // между «сессиями» кот отходит и садится
-                    if (cyc > 2.5) {
-                        const back = (cyc - 2.5) / 1.4;
-                        x = toward * (1 - back) - 2.4 * back;
-                        y = 1.6 - Math.sin(back * Math.PI) * 1.6;
-                        rot = 0.2 * (1 - back);
+                    } else if (cyc < 2.6) {
+                        const p = (cyc - 1.7) / 0.9;    // отходит
+                        x = toward * (1 - p) - 2.2 * p;
+                        y = Math.sin(p * Math.PI) * -1.4;
+                        pose = function () {
+                            rig.poseRun(p * 0.45 + 0.1);
+                        };
+                    } else {
+                        pose = function (t) { rig.poseSit(t, 'content'); };
+                        x = -2.2;
                     }
                     break;
                 }
                 case 'climb': {
                     // Вылезает из рамки аватара и гуляет по верхней кромке карточки
                     const inScene = T % 9.2;
-                    if (inScene < 1.5) {
-                        // ещё в аватаре: смотрит вверх и «заносит лапу»
-                        const p = inScene / 1.5;
+                    if (inScene < 1.4) {
+                        // цепляется за край и подтягивается вверх
+                        const p = inScene / 1.4;
                         x = 0;
-                        y = -p * 3.2;
-                        rot = -0.3 * p;
-                        sy = 1 + p * 0.16;
-                        sx = 1 - p * 0.12;
-                    } else if (inScene < 2.4) {
-                        // перемах через край
-                        const p = (inScene - 1.5) / 0.9;
-                        opacity = 1 - p * 0.9;
+                        y = -p * 3.0;
+                        pose = function () {
+                            rig.poseClimb(p * 0.8);
+                            // смотрит вверх, тянется к краю рамки
+                            rig.setHead(-26 - p * 8, -2, 2);
+                        };
+                    } else if (inScene < 2.3) {
+                        // перемах через рамку — кот уходит на кромку карточки
+                        const p = (inScene - 1.4) / 0.9;
+                        opacity = 1 - p;
                         x = 0;
-                        y = -3.2 - p * 6;
-                        rot = -0.3 - p * 1.1;
-                        sy = 1.16 - p * 0.16;
-                        sx = 0.88 + p * 0.12;
-                        if (p > 0.55 && !this.walkerOn) {
+                        y = -3.0 - p * 5;
+                        pose = function () { rig.poseClimb(0.5 + p * 0.5); };
+                        if (p > 0.5 && !this.walkerOn) {
                             this.walkerOn = true;
                             if (this.walker) this.walker.classList.add('is-on');
                             if (this.board) this.board.classList.add('is-on');
                         }
-                    } else if (inScene < 7.6) {
-                        // гуляет по кромке карточки
+                    } else if (inScene < 7.7) {
+                        // гуляет по верхней кромке: настоящий цикл бега
                         opacity = 0;
                         if (!this.walkerOn) {
                             this.walkerOn = true;
                             if (this.walker) { this.walker.classList.add('is-on'); this.walker.style.opacity = '1'; }
                             if (this.board) this.board.classList.add('is-on');
                         }
-                        const p = (inScene - 2.4) / 5.2;
+                        const p = (inScene - 2.3) / 5.4;
                         const cardW = this.card.clientWidth || 600;
-                        const path = Math.max(60, cardW - 110);
-                        const pos = (Math.sin(p * Math.PI * 2 - Math.PI / 2) * 0.5 + 0.5) * path + 28;
+                        const span = Math.max(60, cardW - 110);
+                        const pos = (Math.sin(p * Math.PI * 2 - Math.PI / 2) * 0.5 + 0.5) * span + 28;
                         this.walkX = pos;
+                        const dir = Math.cos(p * Math.PI * 2) >= 0 ? 1 : -1;
                         if (this.walker) {
-                            const dir = Math.cos(p * Math.PI * 2) >= 0 ? 1 : -1;
-                            const bob = Math.abs(Math.sin(T * 9)) * 2.2;
-                            this.walker.style.transform = 'translate(' + pos.toFixed(1) + 'px, ' +
-                                (-bob).toFixed(1) + 'px) scaleX(' + dir + ') rotate(' + (dir * -2) + 'deg)';
-                            this.walker.style.transformOrigin = '50% 100%';
+                            this.walker.style.transform = 'translate(' + pos.toFixed(1) + 'px, -2px)';
+                            this.walkSvg.style.transform = 'scaleX(' + dir + ')';
+                            this.walkRig.poseRun(T * 1.8 % 1);
                         }
                         this.pawTimer += dt;
                         if (this.pawTimer > 0.16) {
                             this.pawTimer = 0;
                             this.dropPaw(pos + 14, 4);
                         }
-                    } else if (inScene < 8.4) {
-                        // возвращается в аватар
-                        opacity = (inScene - 7.6) / 0.8;
+                    } else if (inScene < 8.5) {
+                        // спрыгивает обратно в аватар
+                        const p = (inScene - 7.7) / 0.8;
+                        opacity = p;
                         if (this.walker) {
-                            const p = (inScene - 7.6) / 0.8;
                             this.walker.style.transform = 'translate(' + this.walkX.toFixed(1) + 'px, ' +
-                                (-Math.sin(p * Math.PI) * 8).toFixed(1) + 'px) scale(0.9)';
+                                (-Math.sin(p * Math.PI) * 8).toFixed(1) + 'px)';
                             this.walker.style.opacity = String(1 - p);
                         }
+                        pose = function () { rig.poseLeap(p); };
                         y = 4;
                     } else {
-                        // снова в аватаре
                         if (this.walkerOn) {
                             this.walkerOn = false;
                             if (this.walker) { this.walker.classList.remove('is-on'); this.walker.style.opacity = '1'; }
                             if (this.board) this.board.classList.remove('is-on');
                         }
                         y = 0;
+                        pose = function (t) { rig.poseSit(t); };
                     }
                     break;
                 }
@@ -2103,105 +2458,102 @@
                     let up = 0;
                     if (cyc < 1.1) up = 0;
                     else if (cyc < 1.9) up = (cyc - 1.1) / 0.8;
-                    else if (cyc < 4.2) up = 1 + Math.sin(T * 1.6) * 0.06;
+                    else if (cyc < 4.2) up = 1 + Math.sin(T * 1.6) * 0.05;
                     else if (cyc < 5.0) up = 1 - (cyc - 4.2) / 0.8;
-                    y = lerpNum(9, -1.2, up);
-                    x = Math.sin(T * 0.9) * 2.2 * up;
-                    rot = -0.14 * up;
-                    sy = 1 + (1 - up) * 0.08;
+                    y = lerpNum(9, -1.0, up);
+                    x = Math.sin(T * 0.9) * 2.0 * up;
+                    pose = function (t) {
+                        rig.poseSit(t);
+                        rig.setHead(-4 + Math.sin(t * 1.4) * 4, -1.5 * up, Math.sin(t * 0.8) * 2);
+                    };
                     break;
                 }
                 case 'play': {
-                    // Играет: гоняется за «волной» (точкой), прыгает на неё
+                    // Играет: гоняется за «волной», прыгает на неё лапами
                     const cyc = T % 3.2;
-                    const px = Math.sin(T * 2.1) * 7;
-                    const py = Math.cos(T * 2.7) * 4 - 2;
+                    const px = Math.sin(T * 2.1) * 6.5;
+                    const py = Math.cos(T * 2.7) * 3.5 - 1.6;
                     if (this.toy) {
                         this.toy.style.transform = 'translate(' + (px + 4).toFixed(1) + 'px, ' + (py + 6).toFixed(1) + 'px)';
                         this.toy.style.opacity = (0.35 + 0.55 * Math.abs(Math.sin(T * 4))).toFixed(2);
                     }
                     const chase = Math.min(1, cyc / 2.1);
                     x = px * chase;
-                    y = py * chase * 0.8 + (cyc > 2.1 ? -Math.sin((cyc - 2.1) / 1.1 * Math.PI) * 5 : 0);
-                    rot = Math.sin(T * 5) * 0.1 * chase;
-                    sy = 1 + (cyc > 2.1 ? Math.sin((cyc - 2.1) / 1.1 * Math.PI) * 0.1 : 0);
-                    sx = 1 / Math.max(0.8, sy);
+                    y = py * chase * 0.8;
+                    if (cyc > 2.1) {
+                        const p = (cyc - 2.1) / 1.1;
+                        y -= Math.sin(p * Math.PI) * 4.6;
+                        pose = function () { rig.poseLeap(p); };
+                    } else {
+                        pose = function () { rig.poseRun((T * 2.6) % 1); };
+                    }
                     break;
                 }
                 case 'sleep': {
-                    // Дремлет: медленно «дышит», изредка шевелит ухом/хвостом
-                    y = 3.4 + Math.sin(T * 1.1) * 0.5;
-                    sy = 1 - 0.055 - Math.sin(T * 1.1) * 0.02;
-                    sx = 1 + 0.05;
-                    rot = Math.sin(T * 0.6) * 0.04;
+                    // Дремлет: медленно дышит, ухо дёргается, хвост ходит
+                    y = 3.2;
+                    pose = function (t) { rig.poseSit(t, 'sleep'); };
                     this.zzzTimer = (this.zzzTimer || 0) + dt;
-                    if (this.zzzTimer > 1.8) {
-                        this.zzzTimer = 0;
-                        spawnZzz(this.scene);
-                    }
+                    if (this.zzzTimer > 1.8) { this.zzzTimer = 0; spawnZzz(this.scene); }
                     break;
                 }
                 case 'chase': {
-                    // Реагирует на курсор: бежит за ним внутри аватара
+                    // Реагирует на курсор: бежит за ним настоящим галопом
                     if (this.scene.dataset.pointerX) {
-                        const tx = clampNum(parseFloat(this.scene.dataset.pointerX), -9, 9);
-                        const ty = clampNum(parseFloat(this.scene.dataset.pointerY), -9, 9);
-                        this.cx = lerpNum(this.cx || 0, tx, 1 - Math.exp(-7 * dt));
-                        this.cy = lerpNum(this.cy || 0, ty, 1 - Math.exp(-7 * dt));
+                        const tx = clampNum(parseFloat(this.scene.dataset.pointerX), -7, 7);
+                        const ty = clampNum(parseFloat(this.scene.dataset.pointerY), -7, 7);
+                        this.cx = lerpNum(this.cx || 0, tx, 1 - Math.exp(-6 * dt));
+                        this.cy = lerpNum(this.cy || 0, ty, 1 - Math.exp(-6 * dt));
                     } else {
                         this.cx = Math.sin(T * 1.4) * 5;
-                        this.cy = Math.cos(T * 1.9) * 4;
+                        this.cy = Math.cos(T * 1.9) * 3.4;
                     }
                     x = this.cx || 0;
                     y = this.cy || 0;
-                    const sp = Math.abs(x - (this.px || 0)) + Math.abs(y - (this.py || 0));
+                    const moved = Math.abs(x - (this.px || 0)) + Math.abs(y - (this.py || 0));
                     this.px = x; this.py = y;
-                    const run = clampNum(sp * 0.5, 0, 1);
-                    sx = 1 + run * 0.12;
-                    sy = 1 - run * 0.08;
-                    rot = clampNum((x - (this.lastX || x)) * 0.05, -0.2, 0.2);
-                    this.lastX = x;
-                    break;
+                    this.gait = clampNum(moved * 0.35, 0, 1);
+                    this.speedPhase = ((this.speedPhase || 0) + dt * (1 + this.gait * 5)) % 1;
+                    this.facing = (x - (this.lastX || x)) < 0 ? -1 : 1;
+                    if (Math.abs(x - (this.lastX || x)) > 0.05) this.lastX = x;
+                    pose = (function (self) {
+                        return function () { self.rig.poseRun(self.speedPhase); };
+                    })(this);
+                    this.box.style.transform = 'translate(' + x.toFixed(2) + 'px,' + (y + 3).toFixed(2) + 'px) scale(' +
+                        ((this.facing || 1)).toFixed(2) + ',1)';
+                    pose();
+                    return;
                 }
                 case 'jump':
                 default: {
                     // Прыгает к кнопке лайка: приседает, взлетает, «давит» лапой
                     const cyc = T % 2.6;
                     if (cyc < 0.5) {
-                        const p = cyc / 0.5;
-                        sy = 1 - p * 0.18; sx = 1 + p * 0.16;
+                        pose = function () { rig.poseLand(1 - cyc / 0.5); };
                         y = 3;
                     } else if (cyc < 1.1) {
                         const p = (cyc - 0.5) / 0.6;
-                        y = 3 - Math.sin(p * Math.PI) * 12;
-                        sy = 1.12 - p * 0.2; sx = 1 / Math.max(0.85, sy);
-                        rot = 0.1 - p * 0.2;
+                        y = 3 - Math.sin(p * Math.PI) * 9;
+                        pose = function () { rig.poseLeap(p); };
                     } else if (cyc < 1.6) {
                         const p = (cyc - 1.1) / 0.5;
                         y = 3;
-                        sy = 0.84 + p * 0.16; sx = 1.14 - p * 0.12;
+                        pose = function () { rig.poseLand(p); };
                     } else {
                         y = 3;
+                        pose = function (t) { rig.poseSit(t); };
                     }
                     break;
                 }
             }
 
-            // моргание (лёгкое «прищуривание» через сквош по Y)
-            this.nextBlink -= dt;
-            if (this.nextBlink <= 0) {
-                this.nextBlink = 2.2 + Math.random() * 3.4;
-                this.blink = 1;
-            }
-            if (this.blink > 0) {
-                this.blink = Math.max(0, this.blink - dt * 5);
-                sy *= 1 - this.blink * 0.12;
-            }
+            // моргание: у рига это реальное смыкание век, а не сквош всего кота
+            rig.updateBlink(dt);
 
-            const el = this.sprite;
-            el.style.opacity = String(opacity);
-            el.style.transform = 'translate(' + x.toFixed(2) + 'px, ' + (y + 3).toFixed(2) + 'px) scaleX(' +
-                (sx * (this.facing || 1)).toFixed(3) + ') scaleY(' + sy.toFixed(3) + ') rotate(' + rot.toFixed(3) + 'rad)';
+            pose(phase);
+            this.box.style.opacity = String(opacity);
+            this.box.style.transform = 'translate(' + x.toFixed(2) + 'px,' + (y + 3).toFixed(2) + 'px)' +
+                (rot ? ' rotate(' + rot.toFixed(3) + 'rad)' : '');
         };
 
         /* Лёгкие «декоры» вокруг кота: ноты, «z-z-z» */
@@ -2270,6 +2622,284 @@
         };
 
         /* ==========================================================================
+           [V9] ГЕРОЙ-КОТ: выпрыгивание из капсулы → посадка на публикацию →
+           карабканье на место фото профиля (и обратный побег при сборе).
+           --------------------------------------------------------------------------
+           Почему переписано. Раньше кот был одной растровой картинкой в 3D-сцене,
+           которой меняли координаты: он «перетаскивался» как наклейка и не мог
+           ни оттолкнуться, ни перебрать лапами. Теперь весь путь идёт в DOM по
+           экранным координатам, а позы ставит векторный риг:
+
+             emerge  — кот вылезает из горлышка капсулы и приседает для толчка
+             leap    — толчок и полёт по дуге: в воздухе работает цикл бега
+             land    — приземление на карточку: сплющивание и оглядка
+             climb   — карабканье по левой кромке карточки к аватару:
+                       корпус наклонён, лапы по очереди перехватывают
+             flee    — обратный побег в капсулу при сборе страницы
+           ========================================================================== */
+        const HERO = (function () {
+            const S = {
+                el: null, svg: null, rig: null,
+                state: 'idle', t: 0,
+                x: 0, y: 0, scale: 0.5, facing: 1, tilt: 0,
+                phase: 0,
+                from: null, to: null, ctrl: null,
+                onDone: null, clawTimer: 0, home: false, climbP: 0
+            };
+            const BASE_W = 190;   // ширина кота в «натуральную величину»
+
+            function ensure() {
+                if (S.el) return;
+                const layer = document.getElementById('cat-fx-layer') || document.body;
+                const el = document.createElement('div');
+                el.className = 'hero-cat';
+                el.setAttribute('aria-hidden', 'true');
+                el.innerHTML = buildCatSVG();
+                layer.appendChild(el);
+                S.el = el;
+                S.svg = el.querySelector('svg');
+                S.svg.classList.add('cat-rig');
+                S.rig = new CatRig(S.svg);
+            }
+
+            function place() {
+                const w = BASE_W * S.scale;
+                const h = w * 0.87;
+                // на узких экранах кромка карточки почти у края окна: поджимаем кота,
+                // чтобы он не уезжал за левую границу и не обрезался
+                const px = Math.max(S.x, w * 0.5 + 4);
+                S.el.style.width = w.toFixed(1) + 'px';
+                S.el.style.height = h.toFixed(1) + 'px';
+                S.el.style.transform =
+                    'translate3d(' + (px - w * 0.5).toFixed(1) + 'px,' +
+                    (S.y - h).toFixed(1) + 'px,0)';
+                // rotate → scaleX: кот сначала поворачивается (наклон/карабканье),
+                // затем зеркалится. Так наклон читается одинаково при любом направлении.
+                S.svg.style.transform = 'rotate(' + S.tilt.toFixed(3) + 'rad) scaleX(' + S.facing + ')';
+            }
+
+            function bez(p) {
+                const u = 1 - p;
+                return {
+                    x: u * u * S.from.x + 2 * u * p * S.ctrl.x + p * p * S.to.x,
+                    y: u * u * S.from.y + 2 * u * p * S.ctrl.y + p * p * S.to.y
+                };
+            }
+
+            /* --- Старт: кот вылезает из капсулы --- */
+            function launch(opts) {
+                ensure();
+                const from = opts.from;
+                S.state = 'emerge';
+                S.t = 0;
+                S.phase = 0;
+                S.from = { x: from.x, y: from.y };
+                S.to = { x: opts.to.x, y: opts.to.y };
+                S.postW = opts.postW || 320;
+                S.orb = opts.orb || null;
+                S.scale = 0.16;
+                S.facing = S.to.x < S.from.x ? -1 : 1;
+                S.home = false;
+                S.climbP = 0;
+                S.el.style.opacity = '1';
+                S.el.classList.add('is-flying');
+                S.el.classList.remove('is-climbing');
+                S.rig.poseLand(0);
+                place();
+            }
+
+            /* --- Обратный побег: из аватара в капсулу --- */
+            function flee(from, to, onDone) {
+                ensure();
+                S.state = 'flee';
+                S.t = 0;
+                S.phase = 0;
+                S.from = { x: from.x, y: from.y };
+                S.to = { x: to.x, y: to.y };
+                S.ctrl = {
+                    x: (S.from.x + S.to.x) / 2,
+                    y: Math.min(S.from.y, S.to.y) - Math.max(70, Math.abs(S.from.y - S.to.y) * 0.3)
+                };
+                S.facing = S.to.x < S.from.x ? -1 : 1;
+                S.scale = 0.62;
+                S.onDone = onDone || null;
+                S.el.style.opacity = '1';
+                S.el.classList.add('is-flying');
+                S.el.classList.remove('is-climbing');
+            }
+
+            function finish(home) {
+                S.state = 'idle';
+                S.t = 0;
+                S.tilt = 0;
+                // «дома» — значит стоит в аватаре: по этому флагу движок понимает,
+                // что при сборе страницы кота надо уводить в капсулу
+                S.home = home === true;
+                S.el.style.opacity = '0';
+                S.el.classList.remove('is-flying', 'is-climbing');
+            }
+
+            function update(dt) {
+                if (S.state === 'idle' || !S.el) return;
+                S.t += dt;
+
+                if (S.state === 'emerge') {
+                    // 0.24 c: кот «вытягивается» из горлышка и приседает
+                    const p = Math.min(1, S.t / 0.24);
+                    S.scale = 0.16 + easeOutCubicLocal(p) * 0.26;
+                    S.x = S.from.x;
+                    S.y = S.from.y - easeOutCubicLocal(p) * 10;
+                    S.rig.poseLand(1 - p * 0.55);
+                    if (p >= 1) {
+                        S.state = 'leap';
+                        S.t = 0;
+                        S.scale = 0.42;
+                        const gy = Math.min(S.from.y, S.to.y);
+                        S.ctrl = {
+                            x: S.from.x + (S.to.x - S.from.x) * 0.42,
+                            y: gy - Math.max(80, Math.abs(S.to.y - S.from.y) * 0.3)
+                        };
+                        if (typeof FEED !== 'undefined' && FEED.onCatJumped) FEED.onCatJumped();
+                    }
+                } else if (S.state === 'leap') {
+                    // полёт: дуга + рост, в воздухе лапы продолжают бежать
+                    const p = Math.min(1, S.t / 0.72);
+                    const e = easeOutCubicLocal(p);
+                    const at = bez(e);
+                    const at2 = bez(Math.min(1, e + 0.02));
+                    S.x = at.x;
+                    S.y = at.y;
+                    const dxs = Math.abs(at2.x - at.x) > 0.3 ? (at2.x - at.x) : 0.3 * S.facing;
+                    S.tilt = clampNumLocal(Math.atan2(at2.y - at.y, Math.abs(dxs)) * 1.1, -0.42, 0.42);
+                    const landScale = clampNumLocal(S.postW / 300, 0.42, 0.9);
+                    S.scale = 0.42 + (landScale - 0.42) * easeOutQuintLocal(p);
+                    S.phase = (S.phase + dt * 3.6) % 1;
+                    S.rig.poseFly(S.phase * 0.6 + 0.2);
+                    if (p >= 1) {
+                        S.state = 'land';
+                        S.t = 0;
+                        S.tilt = 0;
+                        S.el.classList.remove('is-flying');
+                        S.rig.poseLand(0);
+                        if (typeof FEED !== 'undefined' && FEED.onCatLandedOnPost) FEED.onCatLandedOnPost();
+                    }
+                } else if (S.state === 'land') {
+                    // приземление: сплющивание, потом короткая оглядка
+                    const p = Math.min(1, S.t / 0.5);
+                    S.rig.poseLand(1 - easeOutCubicLocal(p));
+                    S.y += (S.to.y - S.y) * (1 - Math.exp(-12 * dt));
+                    if (p >= 1) {
+                        const orb = orbTarget();
+                        const card = document.querySelector('#page-dope .post-card[data-post="0"]');
+                        const cr = card ? card.getBoundingClientRect() : null;
+                        S.state = 'climb';
+                        S.t = 0;
+                        S.climbT = 0;
+                        S.from = { x: S.x, y: S.y };
+                        // кромка карточки: кот сначала подходит к ней, затем лезет вверх.
+                        // На узких экранах кромка почти у края окна — не даём коту
+                        // уехать за границу viewport, иначе он обрезается.
+                        const edge = cr ? cr.left - 12 : S.from.x - 120;
+                        S.edgeX = Math.max(edge, 38);
+                        S.mid = { x: S.edgeX, y: S.from.y - 30 };
+                        S.to = orb ? { x: orb.x, y: orb.y + orb.h * 0.3 } : { x: S.edgeX, y: S.from.y - 180 };
+                        S.dist = Math.abs(S.mid.x - S.from.x) + Math.abs(S.to.y - S.mid.y) + Math.abs(S.to.x - S.mid.x);
+                        S.dur = Math.max(1.1, S.dist / 210);
+                        S.facing = 1;       // голова вверх, лапы к кромке карточки
+                        S.el.classList.add('is-climbing');
+                        if (typeof FEED !== 'undefined' && FEED.onClimbStart) FEED.onClimbStart();
+                    }
+                } else if (S.state === 'climb') {
+                    // Карабканье по «стене» карточки: подход к кромке, затем подъём
+                    // по ней к аватару. Лапы перебирают синхронно с пройденным путём.
+                    const p = Math.min(1, S.t / S.dur);
+                    S.climbP = p;                          // прогресс подъёма (для отладки)
+                    const q1 = 0.34;                       // доля пути «подойти к кромке»
+                    let speed;
+                    if (p < q1) {
+                        const u = easeInOutCubicLocal(p / q1);
+                        S.x = S.from.x + (S.mid.x - S.from.x) * u;
+                        S.y = S.from.y + (S.mid.y - S.from.y) * u;
+                        speed = 0.55;
+                    } else {
+                        const u = easeInOutCubicLocal((p - q1) / (1 - q1));
+                        const jitter = Math.sin(p * Math.PI * 7) * 5 * (1 - p * 0.6);
+                        S.x = S.mid.x + (S.to.x - S.mid.x) * u + jitter;
+                        S.y = S.mid.y + (S.to.y - S.mid.y) * u - Math.abs(Math.sin(p * Math.PI * 6)) * 6;
+                        speed = 1;
+                    }
+                    S.scale = clampNumLocal(S.postW / 300, 0.42, 0.9) * (1 - p * 0.34);
+                    // перебор лап привязан к пути: на подъёме — быстрее
+                    S.phase = (S.phase + dt * (2.2 + speed * 3.4)) % 1;
+                    S.rig.poseClimb(S.phase);
+                    // кот «встаёт на стену»: доворачиваем риг к вертикали,
+                    // чтобы лапы были на кромке, а голова смотрела вверх
+                    S.tilt = -0.72 - Math.sin(p * Math.PI * 2) * 0.05;
+                    S.clawTimer += dt;
+                    if (S.clawTimer > 0.1) {
+                        S.clawTimer = 0;
+                        if (typeof FEED !== 'undefined' && FEED.onClimbTrail) {
+                            FEED.onClimbTrail({ x: S.x + 26, y: S.y - 4 });
+                        }
+                    }
+                    if (p >= 1) {
+                        finish(true);
+                        if (typeof FEED !== 'undefined' && FEED.onCatArrived) FEED.onCatArrived();
+                    }
+                } else if (S.state === 'flee') {
+                    // обратный побег: бег по дуге и «всасывание» в капсулу
+                    const p = Math.min(1, S.t / 0.95);
+                    const e = easeInOutCubicLocal(p);
+                    const at = bez(e);
+                    S.x = at.x;
+                    S.y = at.y;
+                    S.scale = 0.62 - e * 0.46;
+                    S.phase = (S.phase + dt * 4.2) % 1;
+                    S.rig.poseRun(S.phase);
+                    S.tilt = Math.atan2(S.to.y - S.from.y, Math.abs(S.to.x - S.from.x) + 1) * e * 0.5;
+                    if (p >= 1) {
+                        finish(false);
+                        const done = S.onDone;
+                        S.onDone = null;
+                        if (done) done();
+                    }
+                }
+                place();
+            }
+
+            function orbTarget() {
+                const orb = document.querySelector('#page-dope .profile-orb');
+                if (!orb) return null;
+                const r = orb.getBoundingClientRect();
+                return { x: r.left + r.width / 2, y: r.top + r.height / 2, w: r.width, h: r.height };
+            }
+
+            function reset() {
+                if (!S.el) return;
+                S.state = 'idle';
+                S.home = false;
+                S.t = 0;
+                S.el.style.opacity = '0';
+                S.el.classList.remove('is-flying', 'is-climbing');
+            }
+
+            return {
+                state: S,
+                ensure: ensure,
+                launch: launch,
+                flee: flee,
+                update: update,
+                reset: reset,
+                orbTarget: orbTarget
+            };
+        })();
+
+        function easeOutCubicLocal(t) { return 1 - Math.pow(1 - t, 3); }
+        function easeOutQuintLocal(t) { return 1 - Math.pow(1 - t, 5); }
+        function easeInOutCubicLocal(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+        function clampNumLocal(v, a, b) { return v < a ? a : (v > b ? b : v); }
+
+        /* ==========================================================================
            [V7] МОСТ МЕЖДУ 3D-ДВИЖКОМ И ЛЕНТОЙ
            --------------------------------------------------------------------------
            Движок капсул сообщает о ключевых кадрах, лента на них отвечает:
@@ -2310,9 +2940,6 @@
                     paws: null,
                     hero: true
                 });
-                actor.sprite.style.width = '62px';
-                actor.sprite.style.height = '62px';
-                actor.sprite.style.margin = '-31px 0 0 -31px';
                 actor.sprite.style.opacity = '0';
                 actor.setActive(false);
                 actor.frozen = true;
@@ -2348,10 +2975,6 @@
                         walker: q('[data-cat-walker="' + index + '"]', card),
                         paws: q('[data-cat-paws="' + index + '"]', card)
                     });
-                    // базовый размер кота под аватар 42px
-                    actor.sprite.style.width = '38px';
-                    actor.sprite.style.height = '38px';
-                    actor.sprite.style.margin = '-19px 0 0 -19px';
                     actor.sprite.style.opacity = '0';
                     actor.setActive(false);
                     actor.card = card;
@@ -2489,6 +3112,7 @@
                         hero.actor.t = 0;
                     }
                     hero.orb.classList.add('is-cat-home');
+                    hero.sprite.style.opacity = '1';
                     hero.orb.classList.remove('is-cat-landing');
                     void hero.orb.offsetWidth;
                     hero.orb.classList.add('is-cat-landing');
@@ -2503,6 +3127,18 @@
                     a.frozen = false;
                     a.setActive(true);
                 });
+                // [V9] IntersectionObserver мог погасить только что включённых котов
+                // (страница в этот момент ещё меняет прозрачность) — включаем ещё раз,
+                // когда лента уже проявилась.
+                setTimeout(function () {
+                    state.actors.forEach(function (a) { a.frozen = false; a.setActive(true); });
+                    // главный кот в орбе: включаем и снимаем «призрак» от наблюдателя
+                    const h = state.hero;
+                    if (h) {
+                        if (h.actor) { h.actor.frozen = false; h.actor.setActive(true); }
+                        h.sprite.style.opacity = '1';
+                    }
+                }, 420);
                 // главный кот в аватаре — танцует от радости
                 if (state.hero) {
                     const orbScene = state.hero.scene;
@@ -2684,8 +3320,6 @@
                 webgl: $('webgl-container'),
                 fallback: $('v3-fallback'),
                 floatBtn: $('dope-floating-pills'),
-                catSprite: $('cat-sprite'),
-                catShadow: $('cat-shadow'),
                 catPuff: $('cat-puff'),
                 catLayer: $('cat-fx-layer'),
                 orb: document.querySelector('#page-dope .profile-orb'),
@@ -3268,140 +3902,18 @@
             }
 
             /* ======================================================================
-               9. КОТ-ЛОГОТИП  [V4]
+               9. КОТ-ЛОГОТИП  [V10]
                ----------------------------------------------------------------------
-               Силуэт из логотипа (белый слой) + мягкая цветная подложка-обводка.
-               Бежит «галопом»: присед → прыжок, squash-stretch, наклон, шлейф.
+               Растрового спрайта и 3D-плоскости больше нет: кота целиком рисует
+               векторный риг в DOM (hero-cat.js + feed-rig.js). Здесь остаётся
+               только «держатель состояния», который читают движок и отладка.
                ====================================================================== */
-            const CAT_DATA_URL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AABRsElEQVR42u2dd5wsRbm/2d2zh5yTyCVJppCMAnIVEQUMYEJBFAQTUbmAIFHggmDimkBJoiIgSUQUQUmiJJGMKCIKIjlIPGHPbp9f1W/qdd+t7Zmdme6erp5+/ng+uxx2Z3t6uur91hvnMVt8aR4AAACoF9wEAAAABAAAAAAgAAAAAAABAAAAAAgAAAAAQAAAAAAAAgAAAAAQAAAAAIAAAAAAAAQAAAAAIAAAAAAAAQAAAAAIAAAAAEAAAAAAAAIAAAAAEAAAAACAAAAAAAAEAAAAAAIAAAAAEAAAAACAAAAAAAAEAAAAACAAAAAAAAEAAAAACAAAAABAAAAAAAACAAAAABAAAAAAgAAAAAAABAAAAAAgAAAAAAABUFkGLUOWAe4FAAAgAOrBNAw/AAAgAOrFkP/6ZsselpX8fyMIAAAAAdDHJ3/3dUfLS5a5lkP8vw1zfwAAAAHQn8xn+YrlZcsMLwAORgAAAAACoH/d/o79vdGfbZmJBwAAABAA/e/2P94b/FHLmBcBCAAAAEAA9LHxf6c3+GMeZ/hnIQAAAAAB0H9IVv9ylj+p07/7miAAAAAAAdDffMkb+hFl/PEAAAAAAqCPWUAZ+kQZfy0ADkUAAAAAAqB/sv7d1wu8kR8LjD8CAAAAEAB9HP+/J4j9a6QK4KuBaAAAAEAAVBA5yR+kjH+SIgDm+K+/sSwUCAcAAAAEQEXd/2cEyX8hUg7oWgKv5X9nkPsHAAAIgOoa/62D03+aByBR4mALBAAAACAAqi8Adgzi/M0QAbA5AgAiz2khPAWAAIA2BMAOSgAkTYx/ovIAPk4OAFQABCoAAgCmyP4/eor4vxYB7usTlnm5fxAZ0sr6R5azEakACABozVKWFwMDP5UAcD0BFuTeQYTG/53+GX3OshoiAAABAM1P/8uZ9M5/UwmABbiHECFnq+f1gqDUFQAQAJBRADg+zekKIov1r++fzZn+66/IBQBAAEA+AkB3CbwtSCSE9o3VkHdZT/On006Y5n9/CMPW9PQ/ZsZbV++FFwAAAQDpAmClDgWANARyeQNb11wEDDSB56ucHICX1LMsQvUmy2J4qwAQADBZALyjQwGg+wWc7F9jeg3KJYfVqX1al6+zgmV70xiodKblIu+mvqpNfuXj2u6+H2DZ1bIyHpUJlSz6OZay1fUIBQAgAGCyAPhMhwIgUV6AZy0b9OHmOuAN/vQW3g33/9byrG1Zw7KpZX/LeZYHfSb6s4qXVKllu2KrVS7GmH/NZyxPW16x7Bdkxdell8UtQYhKewHWRQAAIABgsgA41DQfAdzK+Igh+2QfbK4D/voHU9zEzsC8xb/PPS2fsOxmuTAIiXRiuMU4jfpTaieMqr+ZKOS0+781innLe9zHpLeylvt0OusdAAEAkwXANzoUAKG3wDUFWqJiJ8ahKe6Jc9V/23KO5adBbDk0MKMpjAU/OxVzO7zvSRPjf6dlvpo9v24y5W8Cl38ouF7g9A+AAIDJG+gFXZxkw4TAGyJ2Ow96d33oznedDF9jWdyyi+V+y98sD3h3euhqn+0zy4U5XeROFIH87Zdqlg8gn+Xbg7yUJOXePEcVAAACACYLgCu6FAD6BDrqE9JiEgGD/lq0S38hX7nwAcs1TTwfOoFstg91jEVi7NPuv8S5P1jTioyzg9h/s74VHycPAAABABMFwK0ZPAB64/2XSraaVoKxHww2d/n+rZZv+dj4T4MkMc1YQJJDsl7RSB7GaTU1buul5FaEAkA+78tqlhwJgACAKQXAnzMIgDDZ6inLqj3caIeCvzPoXb0uhv91y80+R0Ff44g/2cd4qu9GeN2iPsvp/v33uxdAhM71beSvSKjmOgQAAAIAJgqAhzJ6AMKaa5dwtaYptj/AcBDTXdOXI37MjLeCDeP34s6vwsm+EwHwO9No5rSKmdwYR3cP7Lfnd0nLI1M8uzpB8loEAAACACYKgL9nFABpIuAxy+vVaW0gh2tNe43NLSeqpL2xlFK7qp/02733zpNzkC/r3H6Ke17ljoUiKs8Mkv/mTuEBuKGmORIACAAoVABoQyQnU+dZ+KrPtpeNd7jDOLXuuifX+xpf9nWJaTTXkb854jf7pI+NfbPwy5zgPbuKgF/7uLfrHnhyi5PvtAqFDeTZWd5yT1D7P1WlivMWrE4iIAACAPIXAKEIGFEn0+3UyU3K8qY1OYXq/y/Cwbl7d/eJhs8EJ/ownj+3RoSVGFKqOJYiEp7y+RCOfS0r+qqIMLQSs4tcRMo+LUr/WvWsiK1SBQAQAH0jAEIRMKpcsC4T//2WjYK/rzP4tSBYzP/8nmZ8vKtufDOnxoa/Xa+A7h6Y5qW50rKzaXQ33MhM7owY4/O6opncmGmqeyJi9POmPl0SARAA0HMBEJZl6ba3c/3f+67lc5ZlUq5rG9PowndlENcfCzZ8jH7nn0NY8pgELvIfq3r5geBZGYrkeV3VTO753+7wqmMRAAAIAChWADSbHTA7MErOpX+/4i+mMdBGJ3DNwugXEjaYG4QNxKDO8p/Dfb6yYLEgj2N6yQmEt5jOh1eJADgGAQCAAIBxEfBIwQKgmdFJM+paLIxg+HseNgi7Hkr45lxfcRH2XxjosVh9b5txfzwAAAgAmCKZ6n1dbqh5uaXHTHoHPgx/ueGCtM/CPSen+rLL/0rJ4yhSDIjBvlx5hhAAAAgAyLChnt3lhgr1EgWjgUfGleBdobwCkjQ4XKBYdZUkr5rOJ1ciAAAQAJAiAM4zE3vKA7TyDMxWZZcSKviBZRPT6EY4TwGeACkfPUjlKHT6HhAAAAgACDbAc5UAwAMAneRxjAbZ+Hf6U/oCBcT+l7Pca9pr/IMAAEAAgJm6o9qvzMR2qQCdlhaOqaRN9+9r5+wJGAhKQru5XqoAABAAoGKqbkzuzB5UAEA9BIEYWZOzAHCn/xkZEkN1NcNBCAAABECdkTaoe5v2hqkAtDuZ8FbT6BuQhwCYFmT+j5nuwlSJur69EQAACIC6N/95reUfGTdWgFAAXG9ZOAcBIMZ/e3/6z+Klkt9zDabeEXjBAAABUDsBYIj9Q85hgLGcQgDyeytY/hQIjCzixHU3XKagSgUAQABUhiM5/UPOzMlJAMjp/zDT/sS/dq7ruuD1AQABUEsvwPMZN1WAZh6AUzIIAKlO+ULgvk9yECYIAAAEQO1L/95ret/+F+rVJ+A4/6zN20Flynz++0PMxN4UWZ9REQDXIgAAEAB1Pvm7rmq35RBXBWgmANyp/WXLh5UIaJV0N6z+/6H+tWbmKE7xAAAgAOj8ZzmK0j8oUACI237MP2PHBB6ogQDxSq3nfzacS5HkcE0idH+JAABAANQ1839R7wZl+A/0skvgZZZ3BeV38kwubhrteZ8OTutJTs+nfp2jKQEEQADUNfb/UcPgH+j98CD3/YuWv1r+rvib5TH1syMF5KUkSlhsSwkgAAKgjiyjXKEJp3/ooQiY0ySbP22wUFKQAHjJ5DukCAAQAJXp+39WjmVVAJ263xOVGxCSFPhMymu+oDxhAIAAqI3x38qfgBj6A3X1RPwbAQCAAKhb4p/L/r8qJcEK4wB1EgB4AAAQALVL/Ds6SPzD+EMdBcBDJP8BIADqZPyX94afuD/UfUrhUewLAAiAurCk5QHi/lBzJOy1BSWAAAiAfke6nP0C1z/AfwTAeoF3DAAQAH1p/N+n3J/U/AMCAAEAgACoQdb/xpYZnPoBEAAACID6CADnAXg0SH5CBAACAAEAgADo86z/z6qkP1z/AAgAAARADeL+n8D4AyAAABAA9Tr5b2SZZZoPXQFAACAAABAAfYbr93+podUvAAIAAAFQq0E/pxmm/AEgAAAQALVg2H/dw4zPWyfuD4AAAEAA1CDuv4Ll/qDkDwAQAAAIgD5mYcvvqfcHQAAAIADqdfrfxdDnH6ATAbCVYRgQAAKgosjGZSwvKsOP8QeYehzwCewhAAiAKhv/6ZZbgpMNADRHBPI/Of0DIACqnPW/t9/MZnP6B+hIALxA/B8AAVDVuP+alpeCmn8AaE8A/NuM984AAARApTifrH8APAAACIB68Trv9ifxD6A7AfCqZSU2UwAEQNVi/1eZiZP+2NgB2hcAsmYONvQCAEAAVACJV77TMoPYP0DXAkDCZr/0a2oamyoAAqAKIkAm/Y2wmQNkagZ0HQIAAAFQldP/tpT9AeTWDOhmQzdAAARA5MgGtS+nf4BcwgASPtsdLwAAAiB2lvYnl4TTP0BmpIrm2CDBFgAQANGd/nen7A8gNw+ACIBjEAAACIDYBcCDlP4B5O4BOIkQAAACIPbWvw9S+geQG7KOXEtgY+gHAIAAiNT4b2B5HgEAkCuSTPu2oNoGABAA0XT++4HasHD/A+RbCfBrcgAAEACxCoBzKP8DKGwugPu6GBsrAAIgRgHwIzwAAIUJAOcJWIqNFQABgAcAoH5hgMtJBARAACAAAOpXDXAviYAACAAEAED9BICrstkSLwAAAiAWpDnJBQgAgMKbAp3m19t0NlkABEAMPQDWtPzdTJxiBgD55wE8YdkYLwAAAiCW0/+efnOaRQUAQGGVALP8150NrYEBEACReACOpQQQoHARIN61Ky3zs8kCIADKHgC0mpk4ARABAFB8QuCqwToEAARAzwXAWsT+AXrmBRCBfQ6bLAACoGwBcL5hBDBArwXAs5bXsNECIADKiv1vo8qTMP4Avc0FONNM7MUBAAiAnjCv5Q/K/Y8AAOgNc/zXWyzzkQsAgADoFdKA5PCgNAkAel8SeCBeAAAEQC8YUpn/jxH7Byi9MdBTltfhBQBAAPQi6W850+hGRtwfoFwkF+AoNlwABEDRxt+5/28O4pCIAIDyQgGOVywLsukCIACKMv7DPutYJ/1h/AHiCAV8w9AeGAABkDOyoexlaPcLEHNZ4L4kBAIgAPJO+js4pdwPEQAQRxhARnBfxMYLgADIw+0vJ//dlJtxDOMPEKUIkIZce5mJzboAAAHQ8anfCYAvWmZ6w4/xB4i7RbDDtQhegg0YAAHQTYtfd/pf1PIldbLA+ANUJyHwNhICARAA3fT3X9FvIBLzx/gDVGtQ0KuW7QKPHgAgAFpm+ruOYo+oOn8S/gCqhQj2f1vegAgAQAC0E/NfyYx3+Bs16Q1HACD+hEBZvw9YlmYzBkAAtHL7u97+TwYlRTT6AaiuCJBOnXviBQBAADRz+69h+YehvS9AP1YFuP/+FCIAAAEQGv8VTGOqn+4mhvEH6J+qgFGfFLgtIgAAATCoEv6e4eQP0Pf5AO77p32oj7HBADUVAGL817Q8jPEHqFVS4A/ZmAHqKQBE9S9juQvjD1BLEfAdMz7am40aoCYCYMiLgJ+mZPuzUQL0vwiY6b+eiggAqI8AENf/e3xiEA1+AOonANzXWf77b5EPAND/AmCaMv6y+Meo8weopQhICwdQGQDQ5yGAS3D9AyAE/Fc5DHzTMDgIoC8FgLj+P20mzgzH+AMgBOZ4b+BBhAMA+tMDsLhpDAbppr2v/nlpKsKEQID+yQmQSqB1CAcA9I8AkNP/xUHcv9u+4qEYoIQQoPoiQMS8GwG+GBs3QPUFgLjy9JCfsS5O/zpn4HnLzZZbLX/F+AP03eCgWywLsXkDVFsASH3v2YER79Q9KKcD1ztgc/X6y1ruNBNbjbKhAlS/R8BRfo0Ps4kDVE8ASAzvrX5RJ12e/iVh8GvKq+Ayhef3/314kE0MANUeHOS+f9SyOkmBANXOATili9N/mBh0jXIJTgs2hVVVKAAvAED/eAOesizIJg5QLQEgxnmNLmr+w6SgB72RT8sMFvfgVUEMEQD6Y2bA+/ECAFRTAHy6w8Q/bfxFALypxQYg3oBz8QAA9GUo4H4EAEA1QwCPd3HyT5THYJcpaoLl3w8z3fUXAIBiSvpm+7ycbsp0kyAEeBwJgQDVEABS97+LcuMlHSx6Uf4fNlNPCpO/tbthsBBALK77UTOx3/9ol2tTfu/vlrWCNQ8AEQoAUelXmInNezqJ+327TcUvm8FuCACAaOr4ndv+WNNo7avHfnfT/0Oqe3YyzAoAiFoADKhFelObcfkw6e8+yyIdlhoeSggAIIqY/Y2WpYMDwdVBjX/SxeveQEUAQNwCQE7sB5nxoT+dxP9ftKzZQdIPSYAA8XgA/hmU605XazSs1OlknYoIWI2EQID4BcAhpr3mPHJil2Y/H+8w2WcaZYAApSPrbocUN732Cv4yCPW1ezgQAXAeGzpAvAJAFv4xHXgAZPO4Vrn0BzoUHAgAgHLH+brvN26SqCfreQkVGmzXExB2B8QDABChAJBFuYJpNO+ZG2QDtxrx68YEr99hlq/83Np+Y9CuQgDovQdg0xZreEit18dMd/1BXA7BB6gGAIhPAMiC3MK01/pXC4ALTeczwOX0f7jyNrAZA5TnAdhoCuMs6/vEQAC0IwJkP7mkwzAhAAKghwJg8zbKfsLM/+Uy5Bsc1mHCIQCUIwD0XnF7B1473RzsIgQAQLx9AL7QhvtfK/oDuozrhR4ApgECxJkDkBYqfIvpbE6I/I3fdZErBIAA6AGu7OevbSxonfn/ni7c/7Lwl7fc26bgAID8kRO8i+uv1KZhFvF+YAfiPa1LKE2BACISAAuoxZy0cWK4yv9Op2peThhbtplvAADFnP5l7Z3SwTqW9esSfx/vIBQge8t+hAEA4hMA87chAHTC3slm6n7/rTjS0AAIoExmBaG8do2y/Nylpr2W4dpreDyVAADV9ACI0n+1S/e//lvPtRk/BIDi2v+6U/wbuzTKK3ewjiXMd6tp9BQgDwCgYgJAFvFdGRfwwh0kEAFAcfX/l2Z0yV9h2usLoEsG18YLAFBdAXBbhtO/YyEEAEDp/f9nKU9ep8ZYxP/abQoALTo2QAAA1E8ADAbxfyYAAvTe+Mua+1uG/WJAhQHaSQRMEAAA9RYA8vN3UP4HUHr53ztyiMW7JOCL20wGRAAAIAD+00kMAQBQjgfAiYAVMgoAqeXf2bTX0RMBAIAAwAMAUHLt/4E5GGERALua9mZ6IAAAIu4DMBMBANDXiJHe2WTvyCcGfDXLQ22saQQAQB94AO7IsIDns/ylzcQhAMjXAyAC4EM5CABdPniWmbqzJwIAIFIB4DaCW6YwzIla5B/u0AugRw4/jwAAKC357xnLhjkZYekEelobYQAEAECEAkCSgPZsI5u321bAIhQ+SA8AgFKb/7ipfAvnUAGAAADoAwEgC3HzKdx4upb3WssiHWwi4io8wjADAKAMZF2fk5P7HwEA0EcC4PVtns5lke/YQRhABMCX1GaEAADofQLgaR167/IQADQCAog4B0BO8d+ZwkDrQSJXm/GRwO0KgC8jAABK9QCcafIbyYsHAKAPBIBsBoeYiaNCp2on+ok2wwDy+l9BAACUKgAuyyn+36kHQP7/mjn+fQAEQI4CYP/AQCdTCIAXLBu1oejxAADEkQSY50jedgSAdv//3JcCs8EDRCQANDcGG8ZUG8ov24gpigA4jCRAgFLLAJ34fnOHZbxZPQDy7wfnmIAIgADIEVmUZ7ZppHVr0eOmEAHy2vuY9seHAkC8nQC1B+GnLSqIdAOifXLMPwBAABSAc9E9Y1qP7E3UV+kQeHSLUAB9AADi6QS4Sw4CQNb0VsobONbC8/CUZRMSAAHiFgA6WW+szWRA2QCOURvLUMpJYSXLo228NgDE7QFImwbYKv5/Ge5/gLgFgBjqVQPDnrQhBGSY0InqhDAceBYYBgRQfiXA13LYK0Tg725ajwOWv3kx7n+A+D0AIgKOC5R9MkWJj3Yx/sSymdoo5lWnhXZEBQAUEwYQz9sqGSoB5HeWsTzSwqOnPQDfRwAAVEcAvMZyd5un9bScAOcR+IgZnzb4GcufOf0DRFENsHIOAmAV094AMZdTtAL1/wDVyAGQON0efnHPaZEQmLbg5edfttxl+VNKZQEeAIDyPAAH5nBI+MAUVT3ytx7F+ANURwBoEfCTIJbXrggYMxN7CYyqkz/GH6BcD8BjGfeHRXxm/1wzdcOwE9jQAaolAPSwoPPM5A5+iWk/JMDJHyAeL4D7+qTKzemma+g3TfN+IUkgNlbEAwBQTQEg2b4X+8U8A0MOUGkBIJ64b3dYmif1+6+z/K1FPo9O/juJzbyn+VvTPMOeaYa+CwiAjB4A93VZy687DAcAQLxzAX7WYWa+7AUntqgQku9loNhO1P8XfkCb3sb9lZ8bxhODAOhGWcpDc36Q6IcQAKimB+Bey2vbdM+L8d8xZf2HyOv/1TR6itD9L/+9OO3zcmWZ77bsZvm05VO+9HrNFq+BGEAAdPTgDSkRMBLU9SMEAKqBnNA/14YXYECdIh9MyfNpJjAO4fSfmxd2qMln4sqrL/TcrfIu9H78T9OY13CB5RTL8imij1ABAqCjGJPbOJ5VrsAxvAEAlSsH/IsyCINNkv5EHPwyOOEnLV73PpPPxMG6n/bnVYZ6fsuWptFN1Rn1h5SQ04mXI/7fZwWflU4Adb/r+rLs4PdzOdzRqAkBMOVDKYvaNRO5J6gQICwAUI1KgNHACzAYiIBpSgRcblp3Bk2C9X8Amf+ZT/1y79wQpY95URX2XRCDP6IqMpLgMxkNfiYUBG4P/7BlbTw2CIBOkwPdgJ+9LI8bmv0AVEkEaCNwaBMX827K+E+V9yP/5noMLMAmntnwu/yJk1XYZUx5WcYCIdBuf5a03xdRcKfl42Z8rDshAQRAWyEB9/3GZrwv+AgiAKAyIsAZgFe9odnRr+f1Lb/wRn/MtJ7hkQTVQe/n9N/1XipG93vqUDVSUJhVexFmqc/v5yp8gzcAATDlgztdhQaOVhsGeQEA8YcCErX5j3pjMEf990gbxl9i0cd2WFoIE0Mvrmzy4eCzKHof1S3cR1VY4SDyOBAAnQiBQZWZOpecAIBKiYCwq99ULuaw458b+rMpRqOruQrTfBgmdNP3au8Mn4OxQNDhzUEAdNQ58L2BkkUEAFRDCCSm/eFf8jNu+ucbMBYdIbH2t/gEv5mB8S2jtFp/9uIFOt2yIMIOAdAu0mP8jWZ8YMgYmyxA3wkGqQp4DxnkXQ1b20p5WmZHdEgKP9/7LasjAhAAnarbzzTJOgaAaht/OSFebxrTAdm4O/OSbqMMbGydVfW1yOd8s2UjvDwIgE5LBffBCwDQlyf/u0yjBS1GobODkTP+rwT7YmLiDQvp9s7/RZkgAqATFrL8NiWxCACqZ/xHlFt40SABGKYepfxmf6oeqUilVCj6LiDcgwDoNNb1/qBcCBEAUK1+Adrtf7cX9sSEO3P7b60So6tWJq3LRY/js0cAdFLmspx3FzabIQ4A8Z7+xtTm73rRL4sB6Nj4v9XyUkUro8JOgloE4P1BALTlBfhUieUtAND9zAA5+V9iWZqNv+M8qA0t/y6hvr/oMND+hsZPCIAO4l934AUAqNRGn/hy3jPMeNdPjH9nw9PODQxn1Q9AoySBIgC6cYPdYiYPDQKAeDO/3djvzZQ3j42+s/DngRV1+7dbBnqpGe/9AgiAlovhDab1YBEAiCfe/yvTGPSFm7e7A8+uqsa/n0KfoQj4JGEhBEC7JYEjCACAaDd2qdQ5Whkzkv26i/1fGRjKfvUWPW8a44v57BEALZnPcpuhJwBArBnezlW9nzJkGP/ujP8JQf18v+51Etr4oxlvdBSrF3oAAVD+wtgqSIgBgHjKuz6BOzdzqHNNVevfz1VP8t5kLz8g8nDRwma8fwUCoCQBsIblabwAANEYf9nA9zATW9ZCd9xZwKk//Lxmee+CMKvE8Kp4AXSPiNhO2+uaRvvlo0wFOhn2ezvMw83EzoAAUG53N5n9Pj8GPNPp3yVNzjT59jzRSXcjU4iD2aa3w4XChMCjIvxc3OHzOXXNHzSRN7LqdwFwkIqP0RgIoLwmP+7rdRGf3KqW+X9jzqXOSeApdd9faPmC5Yve4LqEzcPMeL+BRJVy9qLxUBI8U4tE9pnsHoS5nFj5UMyhrjokytxqaAoEUKbr332dYcYnvEG2g80+ysBkPdiknfpPsrzesmCT63Demy0se1leUL/faxFwdgTGVVz871XeCd2J0YWhN4nVE1AHpXxizm4yAOhss3ab4aZViIlWxP3/w5wSnEO3+h8smwd/b7oXHsL0wHuzrK+4ekoZv6JFgPyNBywLlOxNEjvzraAaQ99XdwhdIkbPV10WzrOIAIDSsrYPx/jnPukvr7I/MVK/UkmZ7ZRlDpnxFsQyhOhF05tuhPrZ+kaJFQHiedjSTGxpnaSEv/4XAVAeRwTKEQCKFQBiWG5ShoW4f3bOzjH2L5/RVabRO6Xb+QtifN+ihEnRIkD28mcsG5UYCnAC6MoU+5IEuP/37thCAXVxma1l+mtIBkDsp/+5Pkt9G+r9c2OVFPd9loQ/9/09vmZ9MONnJN6dLfw+W2ROQBJUd+1UoofpA01yXtLutQtZLB2TGK5T16yzEAEAPRUA52L8c3U132Ky9zVJgkz/rXM8lYqn578tLxfsddWDpM4swaDK/bqrzc9E7M7FMa2HOi0e5wV4hIoAgJ7Vaq+C6z9XY3NvRgEQxqVPKuDz0TkBr/Qg90oExsY9fNbkPe5oJvZimOpaxWOxXSyhgLosIFGmpwfJGmzaAPkiJ53DOP3nWmb2hRxi/zom7QzXOgV9RnLNBxScD6CFxU0lCLILOqjG0Nf6kGm0C8YDUIIn4MEc3GgA0Lzkb07OrmUEwHjyX9bSPzmFHtyD7HnXR+DmgkMB8rqP9sgDIJ/HTirPpR1xkwTXe2gM3rE61tD+Tw/rVQHqhGSAf8/Q6z/Pk+ablDs9i/t/VJ1AVyvYQyOv61zzLxUoAnRC4I498jo50XSh6XwEs04I/EsMHrK6LqzvkBAIUMhJ7KmSy7L68fS/s5ncZCZL2d/lPaqdHw7226JGFusEuyLflxwiV8xwiNQi4LAefQ4IgBRFHbZsBIDsAuBeXP+5GptlLP/IIZlOJwDu1UOBNhBky4+a/KcXzgkEwLSC38snMn4eYyp88OYy10udVfUuZuIcbbwAANmTsb7D6T9XY7NyTu5z+XyeKOnQdUyBFQFjysOwbcEGdSkzPmY+SyWG5GIcgAAoTwT8LHCNIQIAut/U3Ea8GMY7VwGwQU5Jy2IkLynp/SygEuaK2GvFoO5XkFtdbMYpOVZjuO9dm/rly0oIrPsiW9YrYpICAfKZ/LcExjtXfp+DB0DHndcvwdjI39q9i8S5bpLrlivgPYaHxpEcrluSMrchB6C8skCXDfscIgAgc0e2C3H9596/5Mmc9iT5jFYtQQDIM7G6afTuL6oMW4TFhjmHocQ9/x4zcQRz1nbMiUqcRQCUgLiJPm4mT3NicwfoLAub2v98T5sn5mQsEyXUVirJ3Sx77SGBy76IZMANchYAcu375Xzt+jP9dBm5Myy28YVwafDhIgIA2jcubvPdlATAXA3OZTm5zEWgfS0CUfMZ9Z7yPmzJfdo8x+dQ7IMbmPTrAioZ5JqvKKMkkMU2ketICgToyricU1YiUx8LgEsCY5m1QdOuBZfJtSsCriwoF0BCuDcXEL7YsIBr1l6L3+ABKN8LsID/IPJYdAB16v53bBknmD7OTdpIxf+zJgDKZ/TRSATA9wo4SesD20sFvMdLCspd0Dk0u/X682HBTRQBjvktvyUcAIAAKPH0f0CO8eZYBICwpOX5AvZWea0Xc36P08x4O+MicsTk8zmp1zk0LLjJImCaV+G/NbQLBkAAlCMAPqvub5KTB2CXSASA4+8FCgDnvX1LjiGpeS0vFGQHtKB42bJuL0MBLLjmLji3EK8hJwCgLQFwnGEAUJ4nzgtyijmPKbf45hFUaYhB3qGAMIDuB3B+Du9VbMHxBZ7+w1yazREA8eQEuHGWV6eEAxACAOkegOlUAWQ2OOvmGG+W+PKfLCtEUKUhe+sawfXlhbzeDTl4O+R3b8j5WpMUWyLC5TySAOMRAUPeE3CDEgEJ3gCAVLfrW9XGSS+AbCN088o4l9e4WoUXBiIQAKsFIifJ6VkUI/3bjAJAN4r7R5NrHTUTOwImHayXMf/7cwK7MssfPBEAkYgAeRCuMRObBSECACafZL5veV0EruYqc1iO7nExUGdGFKKR5+Igk8+Y4zQPwL3KkHYjeEQsHZeSi5H4+9pt59hEvebs4HOa6RPREQCRqfKFTaPVaag0CQkAHoDGZiinzQcs66j1Q2+AztzOj+R4wIhRAMip/CMph6q8egG413xfBiE6PYj/z/Z7/pja+3+vSho79QC41zjcsrNpNGjSn9eKCIA4SwSdonyjafRuDnsFIAIAD8D4Zu5Gpn4+xZMGUxueV/pcAIgg1CXXc3J8FrNWpsj1LWK5Xp3M5fNwFQH7WhY1jd4xnXgCxpRIlr83n2VNy9n+/23Sq1ANC67zEsF5vEJ7rIlrCIMAdfcGjKpN+DfqBEaJYHslZy/3uQDQz8KZBXgB5Nk7vsv3LM/rNur1RnwuwKmWxdXPLhp4g9sVAH9Rn/ewuicL9dJjxoLr3n21kg8JzFblJwgBQARMDgk4V+l6ESSg4QGITwD8wOQ3Xjf0ABzfpfAMBYALyRzjT/thaHiRLgXAA8HrDJWxNlhw2ZIDB32cSWfcjiICABEwwRvgvn/WcqQyQiQIprudNzb5Nh+LVQCI4dvW8mrOe2ZWD4B8FkubRnvedYLKMP2zi2T0AJQaGmPhZXuA5WFY3/K7lNIQRADgDWgIY1kTJ6oTDyJg8qnz9Bx7AMQsALTx+4vJPvMgTQCckGPoqdlrIAAICfxnAbvN7TkzPuUpISwAiID/bHzSTMv1PH99DBtghPvIjSbfpjN1FgDHZ3zPujV8s59ZFAEAOnbjsjl1G8+xDPWiAP0kAnT5rBvYsoWJpzc9AqA8AfBAQQLg/wp8vmTP37HDMkAEQB8zrMpb9rc8o4QAXQQBITCxptp9/36VDY0AqJcAECN6osm3p4okn16m7utAQeLlrA5DNgiAGsTydNnT530ClLR5pIEQwERvwE54Av5joO4oSADkMRynKJbq8BTdrpH9l2X1ggyt3Me7Ovi89LCi2xEA/d84SD7cd1i+qVxTCaEBoELgP8+/2zx3jthA9cr4r2Qm9p2fm+Np+JcRv/+8BUCiBOamBQuAuzsUAPL+9oihLBZj3RuPwID3BmzohYA8MNIwBSEAdRUCiVoH+wYCum4VAFv53IgiBMCNPmM9xl4MLmR6W47vO1Hve6uChGW3HgD5ftkY7j0GuncLXMfeNrPcYnlcPfQMGQIqBLb40sGmfjMEJPSxn8lvCFDoDnedS9eNsPJCruXDJt+GQOJtfXtBAkCu+54uBcBSCID6egPk4XFZ0OdYHlaLdcxMHjuJIIA6iADZRL+qNuw6iIDpQTLc7BzXvI47bxdhmEWuZTuT32TApGABIIJtjw5DF7o5FgKg5jkCQ0oIuNLBYwK3qLix6CwIdSwTdFnrC0Z4Yi1SAJyUoxFMM4a7RJhsKYZ5+5zfe5ECQD6vUzq8Znm2L4/lM8AYl+/+mldVDPyXz1q904z3Axf3KEOHoC4iQDbU01Vp7UDNPAB53lt5vV0jFgDbVUgAyLP4E9P+IKNEhTd2ikXYYoTjKx2Uh8L1BL/IjHfJEo/AGCWEUCNPwPl4AHLzAFRFACQRCwB5nbd3WP+vrymaUAzGN87yQf1vq1kO8KeDl1PKXKgggH4VAWPKE7BQH4cDihQA+vU+igcgt/j/Tl26/x+0rIIHANoRA+EACjeV6gIzceDQKOEB6GMxIM/5qUocDyAA+kYAiBF0FQrP5lgKWGQIYD7LLzqo2NBemBNNRB0ZMbTVyBOYrhaKLN4DLX9QpYSzzcQphAgB6BdPgDzXJyhPAAKgP3IAtKD7cY6lgEUIALnOFTsUKmkCYBgBAN2q5XmCUsKfWmYExp/QAPRjTsDpMW2gFREAYlCPitSDUsT7L1IArJMh/n8SHgDISwwMKUXvWl4eaSb2E5htmD0A/dMxcE5QzjYfAqDjZkDLRigChismAK7r0AMge/BfLUvHdP8xpP1RQTCoNpIFvRB4PMWFigCAqnsCRATsFqk7O7ZGQKERWjVCAVAFD4DssfuYzpv/yL2/OrZnFgPaf0JAFvYalh+pMsI5gcsKMQBV7RgoJ68P9UllQNEeAB0SRABk81Jc3EHtv35u3c9vFtuzh+Hs706D7vvXWY4LYlZ0F4Sqi4C5Pu/l3bHUVOdgXI7s0Lh04wFYFwHQdanimyzPdxj/l595JZa4PwKgPiJAdxlcW5WujChXKrkBUGVPwAum0TSryiJAXMIfKdBDJ6Lp5JqEQPIUAPL5fKFDgaL31scQAFB2sqBjT8v9KixASACqKgJExF5jWaAPqnvWszyRYy182j17ImIPyLE5ekDyEgDy2awfVFS0e/qXZ3TjGMNVGMh6eQTk4VvG8scgNwARAFUUAeLa/r8K5wOIO96JmD+Z9sfLdnO/nrMsF6kAODwnAVDENMCLuqj914IBAQBRuRuXtHxHiQDyAqDqnoATKlwZIAbqpgIFgLzmjyK7TyIADjTtd9frZQjAlZu+3EXIdCQIu0TXwRKDWN+wgCz+HXxiyxgiACoqAvSJb8+K5gPIevx9QQJAC6XLTVzNlOQ6PpuTANClz1tneB7kM7m2w+sKm7F9MFZhijGkUsB9/wbLM8HGgwiAKlYGuH7y0Qxb6cLY3NgDD4ALMywf0alUBMAROYUAdJXIhl0+C/J5fLTLZGkRW5eaiDr/IQCgmetxE1+qggiAqouAKyqcCHhAwdU5s/zXgyLyAsg1fC4nD4DsX4+YxjTVTgWA/Oxalie7SMrUYuuUmMNSGEDQD+f6KtZFYiBUOR/glxXNB5iuhHhiivMC3OGTgWPwAgwH4ierAJBn4Baf69Tpe5SGamcFr5d0+Cw+Gfvzh/GDsBbXNbt4taBSJIBe5gN8LrJYdwwCQCenvT2SUIl8Psfl1AdA3t8l6r0NdHj6/1CX3lAd+z8s1uQ/BAC005FrjqFREFQP2bQftKxUsXyAIgVAGFq4I5ITat6dAOX3T+0wAVB+bpsus/5DL9QqCACoamvSO03nIy8BYssHeNiyWMVE+MsFh99086/tIxBIeXcCnB2UhbbjAZKk6HlV1v+cDN6HQ6ogPDF20KwpyZJNNg2AquUDnF6xfICDc6yHn8pN/bcIcgGK8gAc30EG/oAXCj/JEPeXe/qyD6VGX46KwYNWIuD4DEoYIIZ8gLk+p2W7CmzIclrcuEfrTk6rF5Z8Wh0uWAAMt3nfT0zxeiZd/N3vxVz6hwCAdmNhWwQnEbwAUDXkVOaaXW0auQgQ4b2U5VZTXEMgLZBEBLy3RKNVpgdABqZ9qcuTf3j6f9SyQuyxfwQAtKvKv5zTogQoKxQgte9HViAuK+tu/5zi4Z2ESzYrSSBJaOYbPRYAofCY0eVBRwuA71Yp6RRDB1NtRP9DRQD0UT7AWyM/nYU18bN6mDD5kmXLHosAMZRr+NNzHl6PdgSAfP4nmMndBzs9/etQ06JV2ucxdNDOAr2jYHckQK/yAe42jeEuseffuMS8uwpOBkwTAS9YNlcn86JPsiI0tjX5jwJOEwADKTkHc7oo+dP3Tv7eflVx/SMAoJPFeVKXCwQgJhEQTsOLNUlLDNTPepQMqEcrj/qT7N7q/gz3YI/ZLif3f9JCAAypvycJfzO7rHIKjf+3qpD1jwCAbjeklygHhIoLAF2mtVXEG7Zc07E9FN5aBIjg+LUZHxpUlDcgTQDk7QEYNuPtfRdQeU2zunT7h5/JiEqinIYAgH6cFYAAgH7IBdC98JeugMv2sRJEQKJEwAOW/0vxlgzmdN9EALwzRw+AVDYc4V9bQj5u6ulNKWGVbo2/CMqvVPH0jwAABADUOSHwqArkArzD9LYjZxLcpzneWLq2ynulhASGM4YIiggByLV/QP2dD6j7OJJhLwtzJh63LFiluD8CABAAQKvgRvx3tcgFwCqmnBHd2mMyO7iGb5pGs6JFA4/AsN8rhjs4DUtYYW8zsTlR1r4P7prf5b08VwV5IEkOAknuxXpVKvtDAEC3Kv05BAD0YULgLyKP3brrOsd036Qmz/uVBB6C35hGb4VP+dh6t+9xyZwFjogAN8/kYSVexnIIp+gQw6lVy/pHAEC3pYB/QwBAn5YGfjxSEaCn0+kwQBkCoFmioJzaXefCK/xp23G05bVteDhc17zLcsxzSIKkz8R039q31Sjl36rnBQEAfS8AHkAAQJ/mAtxsWSLSzVyS787KyUWed6LgrJSYunx1YcNnLM96D+ITltst11gutdzjwzB5GOhm4YuxAjwL//LGf6DKxh8BAJ0IgEcQANCHIkDi23tHGsuV63mjacwziGlEdxKECOYo2jHoiSm+0VGe79Hh2gXvW+W4PwIAuolDvoAAgD4OAzzrY9ExTwm8PDIB0M69DRlThDkFMYsAacl8UL8YfwQAUAUAiIBx1+71kW/uK3iXesJa7KmIkVDRaab4zogIAEAAAJTgBXDGde1IcwEkIXBrM3FIEOuxNzMSrjH5NkBCAACtgAEiQRLZYp0TIEZnccvvTG9mBGD8xz1E61Q94x8BAHgAAFo3d3Gb/bsiLQsU47Ow5d4KJNBV3fiLKNypH40/AgDaxbW6fBkBAH2OnKgvMdka2/QiFLC9N1BjrMtCxKBUh+weqUcIAQA9yz4+2DAOGOrVG2DtiE99ck3fM9kH20C62999/6lIPUEIAOiZ638enx2NuxHqlBB4WeRrU0TA6WbyaFvo3vjLyX9PU9EJfwgAyHODca6vu83EYSAAdfAEfCDy2K+4pS8yE5saIQS6M/5SWSGtoeft930eQwdTnf735vQPNTMIEga4KvK6bwnRLW+5JUWks16nNvyh2/+T/RzzRwBAp6eL400+c7oBqtYY6FXTmFMfsytYvBMrWm5QJY3kBLTfwjgJ3P6DddnnMXTQqvbfff1fJQDYTKAuiOD9YuReAC1OVrLcYWgU1OkciKcs21bgc0YAQE9di+5U8QDxf6hpMqDjFcvrK3AylGtz5Ys/DioaqN6ZfB90mGfVOhp/BABMdaJ4O+5/qDESCriogmv4u6aYkbj9kOwnxv/bKaEUBAAgAPzXbVJiigB1Oy2653+hClXvSALv19Vpd6TG3oAk5T58S92vwbru9Rg7aMZ8lmuDkxBAXUXAcRVLEBN39g6W+5SQqZM3QCf7SQ7TXy2fU4nOA3Xe5zF00IwlIi0nSlI2Z7wTUBSS+/InbyyqZDBErCxq+W0QEkj6uFwwCSo6xOV/nWm0NZ+nzqd+BAC0U1b09QhdhglxTSjhmRMR8IUKJouJoVvaZ7o/EcTC+2kd6fcwRxl+N8fkWMuykZd0IgAgmg3j/kjd/7LIH7e8kwoF6AHhqOChCop6yQtYxDQ63WlxM7tPvGlJSs7Sjb6aSZqbDbDHIwBgagFwX2QCQDdoedryVsvWCADokVGRuvoPmmoOiBERIOLlTZYLfA28rKHRoAQyb0FQVPhOX7O8j3ssh/tcJtnXMP4IAGgj+/+TkcUHw034SH+djxAGgB49f1IK+76KCoB5mpS8bWz5iuXfgeDXIYK8jLW8Zt7GPwzVuOZlC6v3iuFHAEAbSPvfMwPXZ0xx2Ft8DNaJlRcRANAjxDA+ZlmyTzx9w+r7FSwf8yL7+cCrNuL/fUQJgla5Qdooy+/qMIP7/pWc1q5cx0wzsXPjkKlhYx8EAGQ9FbiFc4VKpEkiMP5yDa43+/r+Oj9f47pmKFcE7GX6p3nMUJDTIJ6NL1tu8rk2aX0RZvuvzZhtJnYiFPF0u2lMWVw7h/Bd2NlvZ8r7EACQzf3/LhPP9L8k2CSOU9f6R+L/UFIOysN9JADmaeIql+/XsRztOcXybBvCW3fdu9hyhHfLb6Jef42c1u+YqWafBgQARDn+d1cTR/vfME7oTv9r+mv8n8BDgQcAeukBeKgGxmYopdph0K/BrdvgbZYtLPOb9AZFa2UUAFqQ3W1ZjD0cAQDZcE0yro3EA5AEsf8Pq+v8UiQiBernBRC39vdNPQbISK7A9C7LHwf87w4Hmfh5eABk/e/cB4mZCAAoPf6/amRudUlCPE9dq4sd6mYmnP6hl4gAuNzUs6nMoPIOtEOz1zkwQ5mxPv0/Y9kQ9z8CAPITAGORnP7d989Z1lPXunVkFQpQzzHBjndz8uyapzNWAcjp/5SgggkQANClAFgrEg+AVvg/Ca7zxxElKUI9EeNzAAKga57MIAB0XtB7a+qJQQBA7lyawS1XhPG/0zRal8r1LWkYAARxdaRcuQ8rAoo+aGycsQ+AHFDuwvgjACA/nijZuIYd/3YM3HunE/uHyHIB1iP+3HGl0RkZvHhagJ3LvUcAQH48HsHpWtT9/ep0JRvHvRF4KAB0dcrWeADaRiomrghEVLcDf17LPUUAQD7Dfz5gJnfuKiPBSq7hqOD074Z6PIAAgIhEgCSpcgJt3/3v+gL8IaMHQH53Ee4rAgDyUeXnmnLb/ybB6X96IABOKvn6ANIM0UsYoo72mb0zrGPt/v8dmf8IAMhvYf4ig1suzw3V8VHlnRD3/zmU/0GEJYHu+6+QjNb2PnNokOfTbW+QrbnnCADIb2H+vMQTtv57bqrXAsHifpuZ2PYXDwDElAh4HeWAbe8zh6hSyk7XsZ4IuiS5FwgAyC82d33JHgBZ3GelZA3vbGj9C/EmAj5oGuN0MUit95jFvOu+m30mUev/SFOPNswIAOhJWc77THmjdfXffNk0po/p0/+ipjFClPI/iLkp0HEYpSkTjTfPGMaTe3009xoBAPm55Q7KGJfLaxM9VgmTtPbEGByIzQsgz+4xGKUpBcBmXYYZdfKf61VC738EABQkAMrwAIg7cC91XSIAVuL0DxELADnN/pj9ZEouybCWZY+4mnwLBAD0jwCQhX1zoOhFAHwdDwBUJBdgSzLTm7KA8jAmGQ4JVyIAEADQHyEAvXme22RhP4YAgMihNG1qXAOgGRkEgFQIvZ1kSwQA5CsAPl+iAJCZ3trwywZ6YInJiQCdithzMExNKwB2bVL228k+8Tz3EwEA+S/OUzNm52adqnZNE2Hys5JLEwE6MVDu6+LsKxMQMX+b6X7UuOwTF3A/EQCQr/Ff2nJHhsWZx8lpo+CaRAD8tMusYYAyBMCYr3Vnf5ksAG413fX/1/uEwf2PAIB8S3PWK9HNLgt7DbWw5brWJ/4PFRMAjjdjpCYdMpay/C3DWp6DAEAAQDEC4A0luf/F+P/CJwiF7v8DSspLAMgSzrqdGvVJa/kktcd0evqXn3/RsgoCAAEAxQmAXnoAxLDvHmT/i8vwONN9z3CAXiMC4F4EwKROo9813bfylt85lAoLBADkLwDe2GMPgD4tubKgt6mFLcr+tX4j7XVeAkBeAmCI/eX/f93UNFp8d9MAKFEHhU8ZOi0iAKAvQgBh97RpwTVtTPY/VFQAPGJZBlf1fwTQjl2e/nWY8A7uKQIAihEAb+uxsdVdvb4RqHpZ3Pt0mTEMEEM/gC9yWk0VAEmXB4XzuJ8IACgmQ3f3HgsAfVJauEni0HOmu4YhADFMBjzNP8vTa77HLGF5qMvsf31QOAsBgACAYgTAXiUJgD81SZZyFQGvIgCggh4AObF+39S7X73sLctlKDGWfeJJnxOE+x8BAAVwWI+T7WRhP9BEALhT0ysIAKhwHsBzPo+lrsmAYqi3yEEA/B3jjwCA4jiuhwJAbwSfDhZ2GJJAAECVwwA719gLIGv5li7d//p37kcAIACgOL7cYwEg3y/VpGb4Rsr/oMJhAATAeLz+nxni/7JXfBwBgACA4ji6BAEwM0UADAWnBgQAVFkA7FJTASCJemeY7ud4aAGwHAIAAQDFcUSPDK7O6j2mifF/h4r/0/8fCAFUVwCcZ7rvLyJr/x7LIuzRCAAojoN6KABkc9wuMPzDQTiC9r9QVUTknlFj17/7eoHpvv+/7BM71TiREgEAPUnU2aOHZYCysN8ZLGyplz7RdN8zHCCWMIAYvBVr5r4Wb8eHTLZGXrL+d0AAIACgWAGwY48EgHgY/qw2xsHg6xldnhoAYiwHXLlmAkDe58kZ3P+J4r8RAAgAKLYV8OYZFms3qv4rgatQFveWpruBIQCxjgau0/haeY9rBuu4U/f/SBBCwfgjAKBAAdCLYUA6rndi4PaXBb497n/AA1B5AbB+xpwiWf8nG9opIwCgpwIg6YEH4KQmHoBtSQCEPhMAa9ewhO2nGTx5ulLoCEP/fwQA9I0HQBb2IcHCluvYrUehCIBeCYDP1DAH4HnTfRdP8Rrcj+FHAEBvBMBGGTN2O50AuKqZPAPADQC6jfp/6DMB8POaJf+tZ3m5SwGgxyn/nvg/AgB6s2hXMt237OxU2d9o0pujLGPo/w/9JwAerVn539UZKooSde+2YH9GAEBvBMCilhsKLgWcSgAshQCAPhQAj9VgH5FT+vtU+G4sgwCYZVmA/RkBAL0TAacUGH/XpUCHBO5/+fsfMt2PDQVAAJTf+e+ojFU8WgAsyN6MAIDeLd6D1OIragDQDMviTfIQfk8PAEAAVPoQkaWJl47/n8m+jACA/hMAr6TU9IoAeIAEQEAAVNb9/5YcPIjyu5unJAkDAgD6WAD8BQEAfYQ880/VJJ59cMZKIt09cWMEAAIAyhMASUGb4csIAKiZAHjRsq7p714AC1tmZkjgTWv/CwgA6HMPgBj/N1teogIA+lAAuKqaD/fpiVYEzeE5JPDOMulNwgABAD0QAJ81xbXhlde7N9gE5W+fniF5CCD2gUAnNyl97Zf4/10Z3f9yn56wbIj7HwEAvV/E78pYw9tOD4D9g5ODeAPOLrAEEaAsASA9NS7tw1OtGOg3WZ7NUMGj79PlnP4RAFCOG8/F8W432aZ4NWNOk+Se4RQBgAcA+gV57n/Wh4ZtOKX0L+t9+hUCAAEA5S3my00x3QDl9TYJBAAeAKiDAOg3D4B4DTfzeT1Z+nfovIEjDf3/EQDQVwIgaeIBGFCL/eqChAcAHoDiBMBnTLbOfzo/6GlTr5HJCACotQCQTcSNIn6eEkBAAFQqZPhfQbiw29CdrPlj2YcRAFCuAPh5wSEALQAkI3oX4v+AAKicAHh/DqJdt/9d3fR3rwQEANTSAyAbhGsCtEaKANjdFNd/AAABUEz2/98yxv7DCqE1EQAIAChXAJyvNq4k503w12Z8wtdAigCYjQcAEABRI2v2axnr/uX0L7kDB5D8hwCA8pN6PpWSnJMVWeTHN1nk36ACABAAlXH9z2fGJ3dm9RSK129305+NkhAAUKnFvaVpjOzNUwDMClT+sPp7ywSuRIwGIADi9hLuFXjssg7+ecGMT//DA4AAgBJZXmXk90IArJ6DKxGAPgC9OSC81vJQToJdPH4/6rMSSQQAVDrB56keCoA1TDGdBwEQAPmzR/C+ssT/ZW/YkdM/AgDi4YkcBUCiBMDn8AAAIYBKJwDqiZ1Z1qt4D/5iGPyDAIC+FQB4AKDOw4Dkuf5OhZPc5GR+dE7GX8f/H0AAIACgvz0AUgWwPwIAaiYA5LS7e0Xd3LJOF7f8Oae1qgXEmuy3CADoXwEwphJ+3qk2QQQA1EUAOLf5+qaaTW7EY/HNoKQ3ycH4/9OyCPstAgD6XwC419zATB4EhACAfhcAT1Y09i9u+U2Dkr+s+4Jk/38M9z8CAPpbAIhh/6tl5ZQFfyA9AKBPkWf6sYrvB6fl7PqX19mK7H8EANRDANxlWSLFDXolAgAQANHG/ncM3kvW5D8JIXyV2n8EAPS/AJAyqOuaxEAfz7niAAABkJ/7/36Tz8CfJMghOMm//nT2WwQA9L8AuKyJ4n8aAQAIgChb/h5l8u3RId7Aey3zVjQpEgEACIAuBECzRihPRSoAEkQJ5CQA7qlgzf8bTKNHf17hOV37fy6xfwQAIABi8wAkgfFPgn/DqEE3AuD8iq3/+S2/Mvm0/A3X1quU/iEAIG6erKkASNuwaFEMWQXA/hVxd8uJ/JOByz7J8fT/Y/ZXBADgAYjVAyCbnptQ9kbLvwkJQEYBsHYFBIBc2wqWZ3J85pOg9n9jav8RABAvi1qe7ZEAGA42m1g2bCdK1vDXeE5OWdBQvyZA8jytHLkAkOtaynJ3TjX/acl/91mWJfkPAQDxlv18JEfXXzMBIIt/VcuLEQqAB9V9WRwvAPS5AJCM/IPMxOFdeZ3+Z5nJs0DYcxEAEBHS8/uMnGPfrQSAc7HPiFgAyD3ZOXBjAnTyPMUsAET4b2GZafJr9xuu/6vJ/EcAQPy1v5cHC7dIAbCV33RiFQByTzYnDABdPkv/siwTuQfgdWbykJ+8JoHK6xyJAEAAQPwC4Oc9EABy6nhvjmVGRQiAQXWtpykvACIA2h14c3jExn9asOZHCzL+/yLujwAAPAChANgzsjr7NAEgrUqPNxNbmQK0Qp6TnQNjGwvyXB9cYLmrrKfj2F8RABB//e/2auMaK1AAyN/bLyVhKIakrYvUiUWudWuVsMjgImh36M0uEQqAcP2NFOj6f7QCIRAEADeB0786DczKcTNsJQAOiii7Xl/DzsGGJdf7+wJKpAAPQBklf1un5LXkZfz1HhKrBwQQABAIgAPV5pX0QAAcFakAeG2TWOkNCADo0AMQkwEcVEl/D5rJba/zrvv/q2V1Q+MfBABE3wHM1bvfWICBSxMAshl+JaLser0JLttk4/zfiAQLxGv8Zf3crcRkDAZQ4v4Xq7WZFPj+D6fuHwEA1WgA9Oack//aEQBnFpiAlMV1uXSTe+U281cjSlqEuN3/pwWGt2yh7/h+AV6+tDyaeyn7QwBAdZIAby7oNN5KAFxY4EmkW7flVS02bHfdLyEAYAojKM/8lyM4AQ8okf/9FA9fkrOAFgGwE4l/CACoBvOZ4jrytRIAF0UkAOQ6vzhFrsTLCABoo/TNzdPYIAL3v4jZHwTeiaTA934FSX8IAKiO+3//AsvxWgmACyISALIx7tjCdYkHANo1gjG4wGWd/dBfU1EiX7v+3XAvQ+IfAgCqIwLuKTC7vSohABEA70IAQI4CoAwjqN3uZ6assaTA9XMsiX8IAKhO6d+hwQZRRw9AggCAPvEADCi3/9lmYlvipKC1o8f9LknsHwEA1XD9b6Ky2ovqbtdKAPwkoioABADkWUr65RI8AIMpbv+ZBRt/+TpD5Txg/BEAUIHa/6N6cEKoggDQmdvbtBAAQz65CwEArQziXF9W20tjmOb2n12g2z8JwoZnYPwRAFAd47+GmdgFLCnBA/DDSASAbGK3m6n7lv+mYI8J9IcH4GM9NIiynpa3XBasu6RA4y9/w7XIXhQBgACA6pT93dUjQ9ZKAHzLxNEJUNz/J7dIYJKNbZ8CEyah+gJA1tMdPQoBzOu/fsTygl9vRXr0dK7DmA8hbhVBxQMgAKDNxL9ze1AT3M4sgKMLPKV0IwC+app3bpONfANTTMdE6M8kwKLq4XWDn33V3y46oTYJhM4BBb9PQABAjsZ/K1UP3As3disBUGT/gW4qANoRABtGVLoIcecBfKIA46gN/6Cq4klM/pP9por7f496fwQAxI9sQGt6N2EvDW6aAJAN45MRCIAsHgAEALTyAriKkTfmKAKmqddZ28fexeVfdC5PGPe/xbIweysCAKpR8reO5cVAwSclC4DdCz6xtLuxScz0hDZyAFZVIopEQGhmKOWZOl95vIYynPrlmXQDqfZSa3ikB2tI9/kf9aWFmxH3RwBANU7+61seT8kOLtsDsEOPEpbaOa25Te3dbWxqLoHy53gBoANXuat2WdxMnMo3YKae3DcQlKD+t0reHe2Byz9tyM/LU5TKAgIAIij1Ezf26panSjj5txIAsrHpRkRlGVK5Jw+0UcokgupAU9xIVegvETDmn5N/ecGrn6MhVRUzLaiQ0c/h5qYxpfKlHgvPJKVKh4x/BABEbvyHVZzwBTOxXWevDVaaAJhH1S2/EIkAuKWNWK1c+37+d2Zh6KCDuLkzpN/063KZFs/Z4j5k53J2fhC434us75+qtPEQMv4RABAvQypO6DLsnyzJ7Z8mAH6RsnksaHmuQgJgUAmrh008bYwhbgGQKJe9GNM/m0ZPiY/7agFhD8tNKc/WHPW7SQ+vW07/R3HyRwBAnEZ/MDCqN/YwQajdFrs/a5Jg93TJ1ycC4Po2Nzi5/ouDZC+Adg3qaAtjrvMHdJw/KeFa5dn+LcYfAQDxGPxhH+MfDsrWTrM8743u7B6eGLoNAcQgAOTvHt1mTXMoAEgEhCy5AbNSGO2xmz/N+EtprJvYyYQ/BACUGNOXJKHBlAShjU2jG9dLZmI3sLI77IXlUD+NVADINa7Twech953JgNCPXgpZs9d4jyLNfhAAEIkY2MJyouXrlpNUed9YEGNMTBxxTykd2qjJKSIGATDDl/d1OlDppgiEFkDepX4zfLLiChh/BACUm9C3jU8YutNyv5ncv38kglh/s9i/XMv2LVyIMQgA1wNg/i4EwCaGhkDQP8ZfTv6nqoRY3P4IACgByUbf1fKE5VGfeX6fV+gjEcX5kyBbWeKYr1jeYZq313U8VWEPwFKWf+AFgIobf0k4dD053t8kuRgQAFAirknNYv77+0o+eYZZzTpTWf7fWabRNneq7OE7S3wv3QoALdB2MhN7AiACoGrliTK34G1k+yMAIN4kQPffny45Q3hUhR1GUq7F5Sa8xYzPKZ/qFPGNCATAYy08FFN5AZaz3G4m9hQAqFKynxtdvCXGHwEAcQ/0WdcbK90LfMSfPkcKEAZhWdCs4PXd3/+n5zjT6GA23KYLUQzoViUaT/mb3+nyc5H3eoShKRBUL97v1vN1lteZ5kOwAAEAkeQD7K5c1mMpBr+b4SBJ8DqJmdiwJBw6co/l+6Yx5exUMz7kJPRYtCtq1ihRAEi55LszZDvLe70rEAEIAYjJ8CdmYkdC9+//Q7wfEADVYBHLzYGx/Lt3oe9iGk2AQhHQ7mlgjkmfFaDnmrsT/scsqzQx5gNTGPuhwL04ULIA0F0K35BBAMj7eE/KvQWIKdFvTIW8PkmJHyAAqpED4L6upE6tB3u33bLq/7uvm5pGJ8BWLUa1O39WYHhn+rI8Z/C/7Y39uv5v678z3UzsRBiWL8r/m95kg1nINLqLOVHzxxJzACRs8saMm6Hcm91ICIQIY/06RPhDn58z3TDUBxAAlWIPn2CnjdWgSri7wkxsT6uZ4zeB0cDgOoN/rWl06tukRb3+oDfqgy2SFIeauMg3sGznr/1YyyORlC6KB2CTHE5D7j7Mrz6DEUQAlFySq2v7XYjqg+pZJdkPEAAV9goMKNe7+3q2GZ9RP5qSD6BL3k4xjZn2J1je3qbrfrANV7/jzf51HV+0/NjXFzfzSpTVx0CE0IOmMZY4a69z2VA3NONTGEcRAVBSaZ+sq2f9el+xzXAdIAAg4mqAtMX7TZM+9ndM5Qrsbflvb6CGU07pw+q1p7Vw38t1yM+4BLpLTWMC4e/MxPG+YdhhtpnYIbDMZDk5GZ1ZULXGjOAzQARAL+L8en25DP/XqzVNvB8QAH2EG9TxNmVsZnhXn2uu48bb7ujd0vM2idNPT3EFDgXfr2UaffydG38905hhfr/PF3gxRXRoYz/bG9oYjaDE6Q/KuQRK4qrHlpjbAPWM8yfe2/YPXzGkvXgYf0AA9JEnYB6fCPgPf/r+lk9CG2gRNmh3I/iEZS+fCDirjaTCUVVJMBbB6b6djVNmKhxYQA205EX8QHkb8ABA3nH+MVWu6/79btOYDJq2VwAgAPoQJwKWCE7tQiexPjn5fybFUM4w6b0HkhRXf1U20aI8ADpHY8i7YaXCoor3qW6Jc2GnS82ckj7DMKlvJMifech7+1ZUzzJxfkAA1CgpMK+ynmV8tcHzKZujGz38Ncu/Ku7e1gmAKxd0UhpQlQE/UTka5ATE5z6XAVbNhmvp7+cE5bNFebrClr2zVLhNGnSdZ1nNsnRKCAoAAVDjxMCs4QVXG/8Lv8k4rjSNpj0rK3EwVtGNXzbSnxVw+k+7ly5X4wYzuV0wIqAcg69LY8eCZ9mdpi8IuNCvgVvN5E6Sc8zkYVhJm8IgacFo8Nru55/wYvInZrx3xQBJfoAAgCKaD6Vxax8kt4kAuLxgAaDv5YK+LHImJYKllselVaBcbBpDtva1rN3is3Shtl39z13fxAOQlhvTjNEWHqFElfW6XJz9VMnuYOBlYs8CBAAUElYQ3L+dX3HjpTdrV664Qg/vpYiMfb0IGPObO96A4uPm2n3uvn/Z8rAviV3bTJ4EOZzC9MDYLuF/d2vLHf4zdZ6xF1RVTqvPVT+L7tpe8r/7vF9fR/nXXyu4vmnE+AEBAL1CDNdXVDLbXDN5uEjshiwJ6v8PK0FQSaLlmpZn1AmvXZcxtC/w5qTcWzdL44NNvD5i6KeaYDktJc4+oMrt5PM91IeYrmvCb/3//6rlHd5D1Gwwj3ThpHsfIACg5+WG6/qTSVJiJnQe7l85BbrchvlKuqdDKsfi56ockdyAbJ/vWOBSl68Pe7F3QIrRHzTZ5j8U2VWv6NcHQADAlCzms+XTutq5Dfcyy1WRZLeHBn/EjLdGFuP/G+VCLWtz1d6AXYISrzmIgI4z5EeCz32uP1lvZsY74fUyUU6M97Q2GMLIAwIAYk0E/IhpDO9x3QXvs/zI8ibLAqYx0c+dpD9sGj3Hi0wOTDvNz05hVooRddf2J38KHIxk0x1SruStLH8w410TR/AGTPkMhG2ln/Kf8f/5Z3N6kMsyzJoGQABAvpxhJs8hCBnLkVaGUXsm/uyv7VzTaJIyjzL8MZ24tJvXJX793kzsGZDUVAyE2fppz4L7/7/2Rn/9lAx5WuACIAAgB3d1OBXQ/b8zzfgMgpGUuug8jZYWFLd5T4QbcLSTd6Pv7HEeix3M+IS/ovol5H2PxRuwqOV7gaAarVHZYJISEklSSuNcXP89lkUMPe8BEADQ0yS2g6eog3YGyw0Lcs1LHgv4l//3ay1HWLazrG4aTYZW8V/TcP9vJb/pt5MRLRMLq5I9Paxc1q81jYFCs5uUs/VT1YB+ZmZ5tIh0ZXtuxPIXLEv550A/j9OJowMgAKB3lQGuKcnFvpTpUs/P/L+dbPmoZZ2UGusi4uhpDFb4/mpvhWv1erZpDH3SnQzHKlg+mDQJE42qvAfd9c4lmLqud1s2uU/TMPwACACodoihU+p0X+ZRpZif8THvuYEAGDVxTmJMUsIYad3v5Ostls9aPm/ZYopnhbUDgACAEk+qw02gvCn/LoJyL5fw5W03+1PzjCBuLtUQZZVlhjH82SlVGWP+ul8xjcZSXzKNjnevMZ035wEABABA3wuu6coYStLbKj6X4lafc6HDBLo8csSMNxvKE91vQRMKDzdk53rL7ZazTKPz3bBp3oaXrncACAAAMJObzKT1bNje8mXTGB7zlGnelyHpoGSzm+l2c70YOdOf7l3y3orBtc5ToSoNAAQAAERJWtLjhr5MblvT6DXvSiTP9xn2WUMD8rvOhe/6LHzI/43tfUXHOy3rNSl1nMbpHgABAAD5V0VMN5OH1ehTtuveuLQvp3ud5W2mMaHwJNMY+PRjn3nvTu/fMo2Wusdb9jeNyXfL+N91r7H4FMZcwhZMrwNAAABAD3MGwgZOvfpbNOQBQAAAQAXLMAdrXoIJgAAAAAAABAAAAAAgAAAAAAABAAAAAAgAAAAAQAAAAAAAAgAAAAAQAAAAAIAAAAAAAAQAAAAAIAAAAAAAAQAAAAAIAAAAAEAAAAAAAAIAAAAAEAAAAAAIAG4CAAAAAgAAAAAQAAAAAIAAAAAAAAQAAAAAIAAAAAAAAQAAAAAIAAAAAEAAAAAAAAIAAAAAEAAAAACAAAAAAAAEAAAAACAAAAAAAAEAAAAArfl/T19FFGlmr9gAAAAASUVORK5CYII=';
-
-            /**
-             * Готовим два спрайта кота из одного PNG с альфой:
-             *  • ink   — «чернильный» силуэт бренда (для светлой ленты Dope);
-             *  • plate — тот же силуэт, раздутый в белую стикерную обводку
-             *            (рисуем его 12 раз со сдвигом, потом кладём ink сверху).
-             */
-            function makeCatTextures(onReady) {
-                const img = new Image();
-                img.onload = function () {
-                    const S = 512;
-                    const canvasFor = function (draw) {
-                        const cv = document.createElement('canvas');
-                        cv.width = cv.height = S;
-                        const x = cv.getContext('2d');
-                        x.clearRect(0, 0, S, S);
-                        draw(x, cv);
-                        const t = new THREE.CanvasTexture(cv);
-                        if ('encoding' in t) t.encoding = THREE.sRGBEncoding;
-                        t.minFilter = THREE.LinearFilter;
-                        t.anisotropy = 4;
-                        return t;
-                    };
-
-                    const ink = canvasFor(function (x) {
-                        x.drawImage(img, 0, 0, S, S);
-                        x.globalCompositeOperation = 'source-in';
-                        x.fillStyle = '#2b3a86';
-                        x.fillRect(0, 0, S, S);
-                    });
-
-                    const plate = canvasFor(function (x) {
-                        const steps = 20;
-                        const r = 9;
-                        for (let i = 0; i < steps; i++) {
-                            const a = i / steps * Math.PI * 2;
-                            x.drawImage(img, Math.cos(a) * r, Math.sin(a) * r, S, S);
-                        }
-                        x.globalCompositeOperation = 'source-in';
-                        x.fillStyle = '#ffffff';
-                        x.fillRect(0, 0, S, S);
-                        x.drawImage(img, 0, 0, S, S);
-                    });
-
-                    onReady({ ink: ink, plate: plate });
-                };
-                img.src = CAT_DATA_URL;
-            }
-
-            function buildCat() {
-                const root = new THREE.Group();
-                root.visible = false;
-                scene.add(root);
-
-                const rig = new THREE.Group();       // squash / stretch / наклон
-                root.add(rig);
-
-                // цветная подложка (обводка + мягкая тень)
-                const halo = new THREE.Mesh(
-                    new THREE.PlaneGeometry(1, 1),
-                    new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 1, depthWrite: false })
-                );
-                halo.position.set(0.006, -0.006, -0.002);
-                rig.add(halo);
-
-                // ink-силуэт: изображение уже нужного цвета, множитель белый
-                const sprite = new THREE.Mesh(
-                    new THREE.PlaneGeometry(1, 1),
-                    new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, depthWrite: false })
-                );
-                sprite.renderOrder = 9;
-                rig.add(sprite);
-
-                // шлейф скорости
-                const ghosts = [];
-                for (let i = 0; i < 3; i++) {
-                    const g = new THREE.Mesh(
-                        new THREE.PlaneGeometry(1, 1),
-                        new THREE.MeshBasicMaterial({
-                            color: 0xffffff,
-                            transparent: true,
-                            opacity: 0.34 - i * 0.1,
-                            depthWrite: false
-                        })
-                    );
-                    g.renderOrder = 8;
-                    g.visible = false;
-                    rig.add(g);
-                    ghosts.push(g);
-                }
-
-                // тень на «полу»
-                const shTex = shadowTexture('40,55,110');
-                const shadow = new THREE.Mesh(
-                    new THREE.PlaneGeometry(1, 0.24),
-                    new THREE.MeshBasicMaterial({ map: shTex, transparent: true, opacity: 0.5, depthWrite: false })
-                );
-                shadow.position.z = -0.05;
-                root.add(shadow);
-
-                return {
-                    root: root, rig: rig, sprite: sprite, halo: halo, ghosts: ghosts, shadow: shadow,
-                    ready: false,
-                    state: 'idle',
-                    t: 0,
-                    pos: new THREE.Vector3(),
-                    from: new THREE.Vector3(),
-                    to: new THREE.Vector3(),
-                    ctrl: new THREE.Vector3(),
-                    scale: 0.5,
-                    baseScale: 0.5,
-                    facing: -1,
-                    trail: [],
-                    ghosts: ghosts
-                };
-            }
-            const catRig = buildCat();
-            makeCatTextures(function (tex) {
-                catRig.halo.material.map = tex.plate;
-                catRig.halo.material.needsUpdate = true;
-                catRig.sprite.material.map = tex.ink;
-                catRig.sprite.material.needsUpdate = true;
-                catRig.ghosts.forEach(function (g) {
-                    g.material.map = tex.ink;
-                    g.material.needsUpdate = true;
-                });
-                catRig.ready = true;
-            });
+            const catRig = {
+                ready: true,
+                state: 'idle',
+                pos: new THREE.Vector3(),
+                root: { visible: false }
+            };
 
             /* ======================================================================
                10. КАПСУЛЫ
@@ -3877,6 +4389,7 @@
                 catRig.state = 'idle';
                 catRig.root.visible = false;
                 catLaunched = false;
+                if (typeof HERO !== 'undefined') HERO.reset();
 
                 dom.caption.classList.add('is-hidden');
                 setPillsHidden(true);
@@ -3939,15 +4452,27 @@
                 }
                 // Кот возвращается в капсулу (синяя ветка)
                 if (p.id === 'blue') {
-                    const orb = measureOrb() || feedTargets().orb;
-                    if (orb) {
-                        catRig.state = 'return';
-                        catRig.t = 0;
-                        catRig.from.copy(screenToWorld(orb.x, orb.y, 0.8));
-                        catRig.pos.copy(catRig.from);
-                        catRig.root.visible = true;
-                        catRig.scale = catBaseScale * 0.55;
-                        catRig.squash = 1;
+                    // [V9] Кот убегает из аватара в пасть капсулы — тем же ригом,
+                    // с работающими лапами, а не «уезжающей картинкой».
+                    // страница уже скрыта — измерять орб поздно, поэтому берём
+                    // последнюю известную точку героя (он стоит в аватаре)
+                    const orb = measureOrb() || feedTargets().orb || {
+                        x: HERO.state.x, y: HERO.state.y, r: 46
+                    };
+                    const mouth = worldToScreen(pillWorldMouth(p, new THREE.Vector3()));
+                    // страница уже закрыта, поэтому «дома ли кот» знает сам риг
+                    const catHome = HERO.state.home;
+                    if (orb && (catHome || HERO.state.state !== 'idle')) {
+                        HERO.flee(
+                            { x: orb.x, y: orb.y + (orb.r || 40) * 0.4 },
+                            { x: mouth.x, y: mouth.y + 14 },
+                            function () {
+                                catRig.state = 'gone';
+                                catRig.root.visible = false;
+                            }
+                        );
+                    } else {
+                        catRig.state = 'gone';
                     }
                     if (typeof FEED !== 'undefined' && FEED.onCatLeaving) FEED.onCatLeaving();
                 }
@@ -4352,235 +4877,43 @@
                16. КОТ: ПРЫЖОК ИЗ КАПСУЛЫ → БЕГ → АВАТАР  [V4]
                ====================================================================== */
             function launchCat(pill) {
-                if (!catRig.ready) {
-                    catRig.ready = true;
-                }
-                const mouth = pillWorldMouth(pill, new THREE.Vector3());
+                // [V9] Кот выпрыгивает не 3D-плоскостью, а живым векторным ригом
+                // в DOM: у него работают лапы, хвост и корпус на всём пути.
+                if (!catRig.ready) catRig.ready = true;
+                const mouthScreen = worldToScreen(pillWorldMouth(pill, new THREE.Vector3()));
                 const target = feedTargets();
-                catRig.state = 'leap';
                 catLaunched = true;
-                catRig.t = 0;
-                catRig.from.copy(mouth);
-                catRig.pos.copy(mouth);
-                catRig.facing = -1;
-                // [V7] Первая цель — первая публикация: кот приземляется на неё,
-                // затем карабкается наверх, к месту фото профиля.
-                catRig.post = target.post;
-                catRig.orb = target.orb;
-                catRig.to = target.post
-                    ? screenToWorld(target.post.x, target.post.y, 0.85)
-                    : (target.orb ? screenToWorld(target.orb.x, target.orb.y, 0.85) : screenToWorld(W * 0.5, H * 0.7, 0.85));
-                catRig.landScale = target.post
-                    ? pxToWorld(Math.min(target.post.w || 90, 132) * 0.92)
-                    : (target.orb ? pxToWorld(target.orb.r * 2.1) : catBaseScale * 0.8);
-                catRig.ctrl.set(
-                    lerp(mouth.x, catRig.to.x, 0.42),
-                    Math.max(mouth.y, catRig.to.y) + 0.9,
-                    lerp(mouth.z, catRig.to.z, 0.5)
-                );
-                catRig.root.visible = true;
-                catRig.alpha = 1;
-                catRig.scale = catBaseScale * 0.35;
-                catRig.retTo = null;
-                catRig.trail.length = 0;
-                catRig.ghosts.forEach(function (g) { g.visible = false; });
+                catRig.state = 'gone';          // 3D-кот больше не рисуется
+                catRig.root.visible = false;
+                const to = target.post
+                    ? { x: target.post.x, y: target.post.y }
+                    : (target.orb ? { x: target.orb.x, y: target.orb.y } : { x: W * 0.5, y: H * 0.7 });
+                HERO.launch({
+                    from: { x: mouthScreen.x, y: mouthScreen.y + 18 },
+                    to: to,
+                    postW: target.post ? Math.min(target.post.w || 320, 420) : 320,
+                    orb: target.orb
+                });
                 dom.catPuff.classList.remove('is-on');
                 void dom.catPuff.offsetWidth;
                 if (typeof FEED !== 'undefined' && FEED.onCatLeap) FEED.onCatLeap();
             }
 
             function updateCat(dt, now) {
-                const cat = catRig;
-                if (cat.state === 'idle') {
-                    cat.root.visible = false;
-                    return;
+                // [V9] Весь путь кота (полёт, посадка, карабканье) ведёт HERO.
+                // 3D-объект кота остаётся только как «погашенный» держатель
+                // состояния для обратной совместимости вызовов FEED.
+                catRig.root.visible = false;
+                HERO.update(dt);
+
+                const trail = document.getElementById('cat-light-trail');
+                if (!trail) return;
+                const st = HERO.state.state;
+                if (st === 'leap' || st === 'climb' || st === 'land' || st === 'flee') {
+                    trail.style.background =
+                        'radial-gradient(circle at ' + (HERO.state.x / W * 100).toFixed(1) + '% ' +
+                        (HERO.state.y / H * 100).toFixed(1) + '%, rgba(150, 168, 255, 0.26), transparent 34%)';
                 }
-                cat.t += dt;
-
-                if (cat.state !== 'land' && cat.state !== 'gone') cat.alpha = 1;
-                if (cat.state === 'leap') {
-                    // Выпрыгивание: короткая дуга вверх-вперёд + рост
-                    const p = clamp(cat.t / 0.42, 0, 1);
-                    const e = easeOutCubic(p);
-                    cat.pos.lerpVectors(cat.from, cat.ctrl, e * 0.55);
-                    cat.scale = lerp(catBaseScale * 0.3, catBaseScale * 1.02, easeOutQuint(p));
-                    cat.facing = cat.to.x < cat.from.x ? -1 : 1;
-                    if (p >= 1) {
-                        cat.state = 'run';
-                        cat.t = 0;
-                        cat.runFrom = cat.pos.clone();
-                        cat.runCtrl = cat.ctrl.clone();
-                        cat.runDur = CFG.timing.catRunDuration;
-                        cat.trail.length = 0;
-                    }
-                } else if (cat.state === 'run') {
-                    const p = clamp(cat.t / cat.runDur, 0, 1);
-                    const e = easeInOutCubic(p);
-                    const u = 1 - e;
-                    // квадратичная дуга «бег с прыжками»
-                    cat.pos.x = u * u * cat.runFrom.x + 2 * u * e * cat.runCtrl.x + e * e * cat.to.x;
-                    cat.pos.y = u * u * cat.runFrom.y + 2 * u * e * cat.runCtrl.y + e * e * cat.to.y;
-                    cat.pos.z = lerp(cat.runFrom.z, cat.to.z, e);
-                    // галоп: 4 отталкивания за пробег
-                    const gait = Math.abs(Math.sin(p * Math.PI * 3.4));
-                    cat.pos.y += gait * 0.16 * (1 - p * 0.55);
-                    cat.scale = lerp(catBaseScale, catRig.landScale, easeInOutCubic(p));
-                    if (cat.to.x < cat.runFrom.x) cat.facing = -1; else cat.facing = 1;
-
-                    // шлейф
-                    cat.trailTimer = (cat.trailTimer || 0) + dt;
-                    if (cat.trailTimer > 0.045) {
-                        cat.trailTimer = 0;
-                        cat.trail.unshift({ x: cat.pos.x, y: cat.pos.y, s: cat.scale });
-                        if (cat.trail.length > 3) cat.trail.pop();
-                    }
-                    if (p >= 1) {
-                        cat.state = 'land';
-                        cat.t = 0;
-                        cat.trail.length = 0;
-                        onCatLand();
-                    }
-                } else if (cat.state === 'land') {
-                    // [V7] Кот приземлился на первую публикацию: приседает, оглядывается,
-                    // затем карабкается вверх — к месту фото профиля.
-                    const settle = 0.42;
-                    if (cat.t < settle) {
-                        const p = easeOutCubic(cat.t / settle);
-                        const squash = 1 - 0.26 * Math.sin(p * Math.PI) + Math.sin(cat.t * 22) * 0.02 * (1 - p);
-                        cat.scale = catRig.landScale * (0.94 + 0.06 * p);
-                        cat.squash = squash;
-                        cat.pos.x += (catRig.to.x - cat.pos.x) * (1 - Math.exp(-14 * dt));
-                        cat.pos.y += (catRig.to.y - cat.pos.y) * (1 - Math.exp(-14 * dt));
-                    } else {
-                        // старт карабканья: цель — аватар (фото профиля)
-                        const orb = feedTargets().orb || catRig.orb;
-                        catRig.climbFrom = catRig.pos.clone();
-                        catRig.climbTo = orb ? screenToWorld(orb.x, orb.y, 0.85) : catRig.to.clone();
-                        catRig.climbDur = 1.05;
-                        cat.state = 'climb';
-                        cat.t = 0;
-                        cat.squash = 1;
-                        cat.scale = catRig.landScale;
-                        if (typeof FEED !== 'undefined' && FEED.onCatLandedOnPost) FEED.onCatLandedOnPost();
-                    }
-                } else if (cat.state === 'climb') {
-                    // Карабканье: зигзаг «по стене» карточки — два толчка лапами,
-                    // лёгкое покачивание, «когти» цепляются за край.
-                    const p = clamp(cat.t / catRig.climbDur, 0, 1);
-                    const e = easeInOutCubic(p);
-                    const from = catRig.climbFrom, to = catRig.climbTo;
-                    const zig = Math.sin(p * Math.PI * 3.2) * 0.11 * (1 - p * 0.4);
-                    cat.pos.x = lerp(from.x, to.x, e);
-                    cat.pos.y = lerp(from.y, to.y, e) + zig;
-                    cat.pos.z = lerp(from.z, to.z, e);
-                    const stroke = Math.abs(Math.sin(p * Math.PI * 6));
-                    cat.pos.y += stroke * 0.045;
-                    cat.facing = (p > 0.62) ? 1 : -1;
-                    cat.scale = lerp(catRig.landScale, catRig.landScale * 0.78, e);
-                    cat.squash = 1 + Math.sin(p * Math.PI * 6) * 0.05;
-                    cat.rig.rotation.z = Math.sin(p * Math.PI * 3.2) * 0.12;
-                    // когти цепляются за карточку: оставляем следы по траектории
-                    catRig.clawTimer = (catRig.clawTimer || 0) + dt;
-                    if (catRig.clawTimer > 0.1) {
-                        catRig.clawTimer = 0;
-                        if (typeof FEED !== 'undefined' && FEED.onClimbTrail) FEED.onClimbTrail(worldToScreen(cat.pos));
-                    }
-                    if (p >= 1) {
-                        // забрался: кот «входит» в аватар — дальше живёт 2D-кот в ленте
-                        cat.state = 'idle';
-                        cat.t = 0;
-                        cat.alpha = 1;
-                        cat.root.visible = false;
-                        cat.rig.rotation.z = 0;
-                        cat.squash = 1;
-                        if (typeof FEED !== 'undefined' && FEED.onCatArrived) FEED.onCatArrived();
-                    }
-                } else if (cat.state === 'return') {
-                    // Обратный путь: из аватара в пасть капсулы
-                    const dur = 0.95;
-                    const p = clamp(cat.t / dur, 0, 1);
-                    const e = easeInOutCubic(p);
-                    if (!cat.retTo) {
-                        cat.retTo = pillWorldMouth(pillById.blue, new THREE.Vector3());
-                        cat.retCtrl = new THREE.Vector3(
-                            lerp(cat.from.x, cat.retTo.x, 0.5),
-                            Math.max(cat.from.y, cat.retTo.y) + 0.85,
-                            lerp(cat.from.z, cat.retTo.z, 0.5)
-                        );
-                    }
-                    const u = 1 - e;
-                    cat.pos.x = u * u * cat.from.x + 2 * u * e * cat.retCtrl.x + e * e * cat.retTo.x;
-                    cat.pos.y = u * u * cat.from.y + 2 * u * e * cat.retCtrl.y + e * e * cat.retTo.y;
-                    cat.pos.z = lerp(cat.from.z, cat.retTo.z, e);
-                    const gait = Math.abs(Math.sin(p * Math.PI * 3));
-                    cat.pos.y += gait * 0.14;
-                    cat.facing = cat.retTo.x < cat.from.x ? -1 : 1;
-                    cat.scale = lerp(catBaseScale * 0.4, catBaseScale * 0.42, p) * (1 - p * 0.75);
-                    cat.trailTimer = (cat.trailTimer || 0) + dt;
-                    if (cat.trailTimer > 0.05) {
-                        cat.trailTimer = 0;
-                        cat.trail.unshift({ x: cat.pos.x, y: cat.pos.y, s: cat.scale });
-                        if (cat.trail.length > 2) cat.trail.pop();
-                    }
-                    if (p >= 1) {
-                        cat.state = 'gone';
-                        cat.root.visible = false;
-                        cat.trail.length = 0;
-                        cat.retTo = null;
-                    }
-                }
-
-                if (cat.state === 'gone') {
-                    cat.root.visible = false;
-                    return;
-                }
-
-                // --- применяем трансформ ---
-                cat.root.position.copy(cat.pos);
-                const bob = Math.sin((cat.t || 0) * 2) * 0.01;
-                cat.root.position.y += bob;
-                cat.rig.scale.set(cat.facing * cat.scale, cat.scale, 1);
-                // squash-stretch по вертикали: капсула «дышит» в беге.
-                // [V7] В посадке/карабканье сквош задаёт сам стейт (cat.squash).
-                const squash = cat.squash !== undefined ? cat.squash : 1 + Math.sin((cat.t || 0) * 13) * 0.035;
-                cat.rig.scale.y *= squash;
-                cat.rig.scale.x *= (1 / Math.max(0.6, squash * 0.5 + 0.5));
-                if (cat.state === 'run') {
-                    cat.rig.rotation.z = Math.sin((cat.t || 0) * 13) * 0.045 - cat.facing * 0.03;
-                } else if (cat.state !== 'climb') {
-                    cat.rig.rotation.z = 0;
-                }
-                if (cat.state === 'run' || cat.state === 'land' || cat.state === 'climb') {
-                    const sc = worldToScreen(cat.pos);
-                    const trail = document.getElementById('cat-light-trail');
-                    if (trail) {
-                        trail.style.background =
-                            'radial-gradient(circle at ' + (sc.x / W * 100).toFixed(1) + '% ' +
-                            (sc.y / H * 100).toFixed(1) + '%, rgba(150, 168, 255, 0.26), transparent 34%)';
-                    }
-                }
-                const mat = cat.sprite.material;
-                mat.opacity = cat.alpha === undefined ? 1 : cat.alpha;
-                cat.halo.material.opacity = 0.92 * (cat.alpha === undefined ? 1 : cat.alpha);
-                cat.halo.scale.set(1.02, 1.02, 1);
-
-                // шлейф-призраки
-                cat.ghosts.forEach(function (g, i) {
-                    const tr = cat.trail[i];
-                    if (!tr || cat.state === 'land') { g.visible = false; return; }
-                    g.visible = true;
-                    g.position.set(tr.x - cat.pos.x, tr.y - cat.pos.y, -0.01 - i * 0.005);
-                    g.scale.set(cat.facing * tr.s, tr.s, 1);
-                    g.material.opacity = (0.26 - i * 0.075) * (cat.alpha === undefined ? 1 : cat.alpha);
-                });
-
-                // тень на «полу» страницы (для climb — тень прижата к карточке)
-                const floorY = cat.to ? Math.min(cat.to.y - 0.35, cat.pos.y) : cat.pos.y - 0.35;
-                cat.shadow.visible = true;
-                cat.shadow.position.set(0, floorY - cat.pos.y + 0.04, -0.02);
-                const d = clamp(1 - (cat.pos.y - floorY) * 0.5, 0.35, 1);
-                cat.shadow.scale.set(cat.scale * 1.1 * d, d, 1);
-                cat.shadow.material.opacity = 0.42 * d * (cat.alpha === undefined ? 1 : cat.alpha);
             }
 
             function onCatLand() {
@@ -4991,8 +5324,6 @@
                 }
 
                 // --- спецэффекты кадра ---
-                dom.catSprite.style.opacity = '0';
-                dom.catShadow.style.opacity = '0';
 
             }
 
@@ -5075,6 +5406,8 @@
                 worldToScreen: worldToScreen,
                 pills: pills,
                 cat: catRig,
+                hero: HERO,
+                rig: { buildCatSVG: buildCatSVG, CatRig: CatRig },
                 glyphs: glyphs,
                 rain: rain,
                 open: function (which) { resetAll(); openPill(pillById[which]); },
