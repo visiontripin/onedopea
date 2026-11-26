@@ -15,13 +15,6 @@
                                    первую публикацию и карабкается на место фото
                                    профиля; при сборе капсулы кот убегает обратно.
            ========================================================================== */
-        // Спрайт кота появляется в движке позже — берём его лениво.
-        let CAT_URL = '';
-        function catUrl() {
-            if (!CAT_URL) CAT_URL = typeof CAT_DATA_URL !== 'undefined' ? CAT_DATA_URL : '';
-            return CAT_URL;
-        }
-
         const ICONS = {
             heart: '<path d="M20.8 4.7a5.4 5.4 0 0 0-7.6 0L12 5.9l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6l1.2 1.2L12 21l7.6-7.5 1.2-1.2a5.4 5.4 0 0 0 0-7.6Z"/>',
             comment: '<path d="M20 11.5a7.5 7.5 0 0 1-8 7.5 8.6 8.6 0 0 1-3.5-.7L4 20l1.4-3.8A7.2 7.2 0 0 1 4 11.5 7.5 7.5 0 0 1 12 4a7.5 7.5 0 0 1 8 7.5Z"/>',
@@ -114,17 +107,25 @@
         }
 
         /* ======================================================================
-           2. КОТ В АВАТАРЕ: спрайт + сценарии поведения
+           2. КОТ В АВАТАРЕ: векторный риг + сценарии поведения
+           ----------------------------------------------------------------------
+           Раньше здесь был спрайт-картинка, которой двигали transform: кот
+           «переезжал» по аватару, не двигая лапами. Теперь в аватар вставляется
+           SVG-риг (feed-rig.js), а сценарий задаёт ПОЗУ: цикл бега, карабканье,
+           приседание, танец, сон. Лапы, хвост, корпус и голова живут отдельно,
+           поэтому движение читается как движение животного.
            ====================================================================== */
-        function makeSprite(cls, parent) {
-            const el = document.createElement('div');
-            el.className = cls;
-            el.style.setProperty('--cat-url', 'url("' + catUrl() + '")');
-            parent.appendChild(el);
-            return el;
-        }
-
         const CAT_SCRIPTS = ['dance', 'scratch', 'climb', 'peek', 'play', 'sleep', 'chase', 'jump'];
+
+        function makeRig(host, cls) {
+            const box = document.createElement('div');
+            box.className = cls || 'cat-rig-box';
+            box.innerHTML = buildCatSVG();
+            host.appendChild(box);
+            const svg = box.querySelector('svg');
+            svg.classList.add('cat-rig');
+            return { box: box, svg: svg, rig: new CatRig(svg) };
+        }
 
         function CatActor(opts) {
             this.card = opts.card;
@@ -136,10 +137,20 @@
             this.door = opts.card.querySelector('.cat-door');
             this.scratch = opts.card.querySelector('.cat-scratch');
             this.board = opts.card.querySelector('.cat-board');
+            this.hero = !!opts.hero;
 
-            this.sprite = makeSprite('cat-sprite-inline', this.scene);
-            // кот-путешественник по кромке карточки: тот же спрайт
-            if (this.walker) this.walker.style.setProperty('--cat-url', 'url("' + catUrl() + '")');
+            const made = makeRig(this.scene, 'cat-rig-box');
+            this.box = made.box;
+            this.svg = made.svg;
+            this.rig = made.rig;
+            this.sprite = this.box;          // совместимость с мостом (opacity)
+
+            // кот-путешественник по кромке карточки — тоже векторный
+            if (this.walker) {
+                const walk = makeRig(this.walker, 'cat-rig-box cat-rig-box--walk');
+                this.walkSvg = walk.svg;
+                this.walkRig = walk.rig;
+            }
             if (this.script === 'play') {
                 this.toy = document.createElement('i');
                 this.toy.className = 'cat-toy';
@@ -148,14 +159,13 @@
             this.t = Math.random() * 6;      // разные фазы — коты не синхронны
             this.phase = 0;
             this.visible = false;
-            this.heroMode = false;           // «прибыл из капсулы» — сценарий доигрывает вход
+            this.heroMode = false;
             this.frozen = false;
             this.blink = 0;
             this.nextBlink = 1 + Math.random() * 3;
             this.pawTimer = 0;
             this.walkX = 0;
             this.walkDir = 1;
-            this.jumpT = 0;
             this.lastTimer = Math.random() * 2;
             this.ready = true;
         }
@@ -163,12 +173,12 @@
         CatActor.prototype.setActive = function (on) {
             this.visible = on;
             if (!on) {
-                this.sprite.style.opacity = '0';
+                this.box.style.opacity = '0';
                 if (this.toy) this.toy.style.opacity = '0';
                 if (this.walker) this.walker.classList.remove('is-on');
                 if (this.board) this.board.classList.remove('is-on');
             } else {
-                this.sprite.style.opacity = '1';
+                this.box.style.opacity = '1';
             }
         };
 
@@ -178,135 +188,140 @@
             dot.style.left = x.toFixed(1) + 'px';
             dot.style.top = y.toFixed(1) + 'px';
             this.paws.appendChild(dot);
-            const self = this;
             setTimeout(function () { dot.remove(); }, 1500);
         };
 
-        /* Универсальный апдейт: каждый сценарий возвращает {x, y, sx, sy, rot}
-           в координатах сцены аватара (центр = 0,0, радиус ~21px). */
+        /* Универсальный апдейт: сценарий возвращает позу в координатах сцены
+           аватара (центр = 0,0). Каждый кадр выбирается ПОЗА рига:
+             run / climb / sit / leap / land / idle  (см. CatRig). */
         CatActor.prototype.update = function (dt) {
             if (!this.visible || this.frozen) return;
             this.t += dt;
             const T = this.t;
-            let x = 0, y = 0, sx = 1, sy = 1, rot = 0;
-            let opacity = 1;
-
-            const breathe = 1 + Math.sin(T * 3.1) * 0.03;
+            const rig = this.rig;
+            let x = 0, y = 0, sc = 1, rot = 0, sy = 1, opacity = 1;
+            let pose = rig.poseSit.bind(rig), phase = T;
 
             switch (this.script) {
                 case 'dance': {
-                    // Танцует: покачивание в такт, подпрыгивания «диско», поворот
-                    const beat = T * 5.4;
+                    // Танцует в такт: перенос веса с лапы на лапу + подскоки,
+                    // иногда крутится вокруг себя и «хлопает» передними лапами.
+                    const beat = T * 5.2;
                     const hop = Math.max(0, Math.sin(beat));
-                    x = Math.sin(beat * 0.5) * 3.0;
-                    y = -hop * 2.6;
-                    rot = Math.sin(beat) * 0.22;
-                    sy = (0.94 + hop * 0.14) * breathe;
-                    sx = 1 / sy;
-                    // иногда крутится вокруг себя (флип)
+                    const side = Math.sin(beat * 0.5);
+                    x = side * 2.6;
+                    y = -hop * 2.4;
+                    rot = side * 0.18;
+                    sy = 1 + hop * 0.06;
+                    pose = function () { rig.poseDance(T); };
                     const cyc = T % 4.6;
-                    if (cyc > 3.4) rot += (cyc - 3.4) / 1.2 * Math.PI * 2;
-                    // музыкальные ноты
-                    this.noteTimer = (this.noteTimer || 0) + dt;
-                    if (this.noteTimer > 0.7) {
-                        this.noteTimer = 0;
-                        spawnNote(this.scene);
+                    if (cyc > 3.4) {                      // флип раз в цикл
+                        const f = (cyc - 3.4) / 1.2;
+                        rot += f * Math.PI * 2;
+                        y -= Math.sin(f * Math.PI) * 9;
                     }
+                    this.noteTimer = (this.noteTimer || 0) + dt;
+                    if (this.noteTimer > 0.65) { this.noteTimer = 0; spawnNote(this.scene); }
                     break;
                 }
                 case 'scratch': {
-                    // Царапает окошко с логотипом: подходит к двери, «молотит» лапой
-                    const toward = 1.4;
-                    x = toward + Math.sin(T * 12) * 1.0 * (Math.sin(T * 2.2) > 0.1 ? 1 : 0.12);
-                    y = 1.6 + Math.cos(T * 12) * 0.9;
-                    rot = 0.2 + Math.sin(T * 12) * 0.1;
-                    sx = 1 + Math.sin(T * 12) * 0.05;
-                    sy = 1 - Math.sin(T * 12) * 0.05;
+                    // Царапает окошко с логотипом: подходит, встаёт на задние,
+                    // «молотит» передней лапой по двери, потом отходит и садится.
+                    const toward = 1.5;
                     const cyc = T % 3.9;
-                    if (cyc < 0.55) {
+                    const scratching = cyc < 1.7;
+                    if (scratching) {
+                        const fast = Math.sin(T * 17);
+                        x = toward + fast * 0.9;
+                        y = 1.4 + Math.cos(T * 17) * 0.7;
+                        rot = 0.16;
+                        pose = function () { rig.poseScratch(T * 2.6); };
                         if (this.scratch && !this.scratch.classList.contains('is-on')) {
                             this.scratch.classList.remove('is-on');
                             void this.scratch.offsetWidth;
                             this.scratch.classList.add('is-on');
                         }
-                    }
-                    // между «сессиями» кот отходит и садится
-                    if (cyc > 2.5) {
-                        const back = (cyc - 2.5) / 1.4;
-                        x = toward * (1 - back) - 2.4 * back;
-                        y = 1.6 - Math.sin(back * Math.PI) * 1.6;
-                        rot = 0.2 * (1 - back);
+                    } else if (cyc < 2.6) {
+                        const p = (cyc - 1.7) / 0.9;    // отходит
+                        x = toward * (1 - p) - 2.2 * p;
+                        y = Math.sin(p * Math.PI) * -1.4;
+                        pose = function () {
+                            rig.poseRun(p * 0.45 + 0.1);
+                        };
+                    } else {
+                        pose = function (t) { rig.poseSit(t, 'content'); };
+                        x = -2.2;
                     }
                     break;
                 }
                 case 'climb': {
                     // Вылезает из рамки аватара и гуляет по верхней кромке карточки
                     const inScene = T % 9.2;
-                    if (inScene < 1.5) {
-                        // ещё в аватаре: смотрит вверх и «заносит лапу»
-                        const p = inScene / 1.5;
+                    if (inScene < 1.4) {
+                        // цепляется за край и подтягивается вверх
+                        const p = inScene / 1.4;
                         x = 0;
-                        y = -p * 3.2;
-                        rot = -0.3 * p;
-                        sy = 1 + p * 0.16;
-                        sx = 1 - p * 0.12;
-                    } else if (inScene < 2.4) {
-                        // перемах через край
-                        const p = (inScene - 1.5) / 0.9;
-                        opacity = 1 - p * 0.9;
+                        y = -p * 3.0;
+                        pose = function () {
+                            rig.poseClimb(p * 0.8);
+                            // смотрит вверх, тянется к краю рамки
+                            rig.setHead(-26 - p * 8, -2, 2);
+                        };
+                    } else if (inScene < 2.3) {
+                        // перемах через рамку — кот уходит на кромку карточки
+                        const p = (inScene - 1.4) / 0.9;
+                        opacity = 1 - p;
                         x = 0;
-                        y = -3.2 - p * 6;
-                        rot = -0.3 - p * 1.1;
-                        sy = 1.16 - p * 0.16;
-                        sx = 0.88 + p * 0.12;
-                        if (p > 0.55 && !this.walkerOn) {
+                        y = -3.0 - p * 5;
+                        pose = function () { rig.poseClimb(0.5 + p * 0.5); };
+                        if (p > 0.5 && !this.walkerOn) {
                             this.walkerOn = true;
                             if (this.walker) this.walker.classList.add('is-on');
                             if (this.board) this.board.classList.add('is-on');
                         }
-                    } else if (inScene < 7.6) {
-                        // гуляет по кромке карточки
+                    } else if (inScene < 7.7) {
+                        // гуляет по верхней кромке: настоящий цикл бега
                         opacity = 0;
                         if (!this.walkerOn) {
                             this.walkerOn = true;
                             if (this.walker) { this.walker.classList.add('is-on'); this.walker.style.opacity = '1'; }
                             if (this.board) this.board.classList.add('is-on');
                         }
-                        const p = (inScene - 2.4) / 5.2;
+                        const p = (inScene - 2.3) / 5.4;
                         const cardW = this.card.clientWidth || 600;
-                        const path = Math.max(60, cardW - 110);
-                        const pos = (Math.sin(p * Math.PI * 2 - Math.PI / 2) * 0.5 + 0.5) * path + 28;
+                        const span = Math.max(60, cardW - 110);
+                        const pos = (Math.sin(p * Math.PI * 2 - Math.PI / 2) * 0.5 + 0.5) * span + 28;
                         this.walkX = pos;
+                        const dir = Math.cos(p * Math.PI * 2) >= 0 ? 1 : -1;
                         if (this.walker) {
-                            const dir = Math.cos(p * Math.PI * 2) >= 0 ? 1 : -1;
-                            const bob = Math.abs(Math.sin(T * 9)) * 2.2;
-                            this.walker.style.transform = 'translate(' + pos.toFixed(1) + 'px, ' +
-                                (-bob).toFixed(1) + 'px) scaleX(' + dir + ') rotate(' + (dir * -2) + 'deg)';
-                            this.walker.style.transformOrigin = '50% 100%';
+                            this.walker.style.transform = 'translate(' + pos.toFixed(1) + 'px, -2px)';
+                            this.walkSvg.style.transform = 'scaleX(' + dir + ')';
+                            this.walkRig.poseRun(T * 1.8 % 1);
                         }
                         this.pawTimer += dt;
                         if (this.pawTimer > 0.16) {
                             this.pawTimer = 0;
                             this.dropPaw(pos + 14, 4);
                         }
-                    } else if (inScene < 8.4) {
-                        // возвращается в аватар
-                        opacity = (inScene - 7.6) / 0.8;
+                    } else if (inScene < 8.5) {
+                        // спрыгивает обратно в аватар
+                        const p = (inScene - 7.7) / 0.8;
+                        opacity = p;
                         if (this.walker) {
-                            const p = (inScene - 7.6) / 0.8;
                             this.walker.style.transform = 'translate(' + this.walkX.toFixed(1) + 'px, ' +
-                                (-Math.sin(p * Math.PI) * 8).toFixed(1) + 'px) scale(0.9)';
+                                (-Math.sin(p * Math.PI) * 8).toFixed(1) + 'px)';
                             this.walker.style.opacity = String(1 - p);
                         }
+                        pose = function () { rig.poseLeap(p); };
                         y = 4;
                     } else {
-                        // снова в аватаре
                         if (this.walkerOn) {
                             this.walkerOn = false;
                             if (this.walker) { this.walker.classList.remove('is-on'); this.walker.style.opacity = '1'; }
                             if (this.board) this.board.classList.remove('is-on');
                         }
                         y = 0;
+                        pose = function (t) { rig.poseSit(t); };
                     }
                     break;
                 }
@@ -316,105 +331,102 @@
                     let up = 0;
                     if (cyc < 1.1) up = 0;
                     else if (cyc < 1.9) up = (cyc - 1.1) / 0.8;
-                    else if (cyc < 4.2) up = 1 + Math.sin(T * 1.6) * 0.06;
+                    else if (cyc < 4.2) up = 1 + Math.sin(T * 1.6) * 0.05;
                     else if (cyc < 5.0) up = 1 - (cyc - 4.2) / 0.8;
-                    y = lerpNum(9, -1.2, up);
-                    x = Math.sin(T * 0.9) * 2.2 * up;
-                    rot = -0.14 * up;
-                    sy = 1 + (1 - up) * 0.08;
+                    y = lerpNum(9, -1.0, up);
+                    x = Math.sin(T * 0.9) * 2.0 * up;
+                    pose = function (t) {
+                        rig.poseSit(t);
+                        rig.setHead(-4 + Math.sin(t * 1.4) * 4, -1.5 * up, Math.sin(t * 0.8) * 2);
+                    };
                     break;
                 }
                 case 'play': {
-                    // Играет: гоняется за «волной» (точкой), прыгает на неё
+                    // Играет: гоняется за «волной», прыгает на неё лапами
                     const cyc = T % 3.2;
-                    const px = Math.sin(T * 2.1) * 7;
-                    const py = Math.cos(T * 2.7) * 4 - 2;
+                    const px = Math.sin(T * 2.1) * 6.5;
+                    const py = Math.cos(T * 2.7) * 3.5 - 1.6;
                     if (this.toy) {
                         this.toy.style.transform = 'translate(' + (px + 4).toFixed(1) + 'px, ' + (py + 6).toFixed(1) + 'px)';
                         this.toy.style.opacity = (0.35 + 0.55 * Math.abs(Math.sin(T * 4))).toFixed(2);
                     }
                     const chase = Math.min(1, cyc / 2.1);
                     x = px * chase;
-                    y = py * chase * 0.8 + (cyc > 2.1 ? -Math.sin((cyc - 2.1) / 1.1 * Math.PI) * 5 : 0);
-                    rot = Math.sin(T * 5) * 0.1 * chase;
-                    sy = 1 + (cyc > 2.1 ? Math.sin((cyc - 2.1) / 1.1 * Math.PI) * 0.1 : 0);
-                    sx = 1 / Math.max(0.8, sy);
+                    y = py * chase * 0.8;
+                    if (cyc > 2.1) {
+                        const p = (cyc - 2.1) / 1.1;
+                        y -= Math.sin(p * Math.PI) * 4.6;
+                        pose = function () { rig.poseLeap(p); };
+                    } else {
+                        pose = function () { rig.poseRun((T * 2.6) % 1); };
+                    }
                     break;
                 }
                 case 'sleep': {
-                    // Дремлет: медленно «дышит», изредка шевелит ухом/хвостом
-                    y = 3.4 + Math.sin(T * 1.1) * 0.5;
-                    sy = 1 - 0.055 - Math.sin(T * 1.1) * 0.02;
-                    sx = 1 + 0.05;
-                    rot = Math.sin(T * 0.6) * 0.04;
+                    // Дремлет: медленно дышит, ухо дёргается, хвост ходит
+                    y = 3.2;
+                    pose = function (t) { rig.poseSit(t, 'sleep'); };
                     this.zzzTimer = (this.zzzTimer || 0) + dt;
-                    if (this.zzzTimer > 1.8) {
-                        this.zzzTimer = 0;
-                        spawnZzz(this.scene);
-                    }
+                    if (this.zzzTimer > 1.8) { this.zzzTimer = 0; spawnZzz(this.scene); }
                     break;
                 }
                 case 'chase': {
-                    // Реагирует на курсор: бежит за ним внутри аватара
+                    // Реагирует на курсор: бежит за ним настоящим галопом
                     if (this.scene.dataset.pointerX) {
-                        const tx = clampNum(parseFloat(this.scene.dataset.pointerX), -9, 9);
-                        const ty = clampNum(parseFloat(this.scene.dataset.pointerY), -9, 9);
-                        this.cx = lerpNum(this.cx || 0, tx, 1 - Math.exp(-7 * dt));
-                        this.cy = lerpNum(this.cy || 0, ty, 1 - Math.exp(-7 * dt));
+                        const tx = clampNum(parseFloat(this.scene.dataset.pointerX), -7, 7);
+                        const ty = clampNum(parseFloat(this.scene.dataset.pointerY), -7, 7);
+                        this.cx = lerpNum(this.cx || 0, tx, 1 - Math.exp(-6 * dt));
+                        this.cy = lerpNum(this.cy || 0, ty, 1 - Math.exp(-6 * dt));
                     } else {
                         this.cx = Math.sin(T * 1.4) * 5;
-                        this.cy = Math.cos(T * 1.9) * 4;
+                        this.cy = Math.cos(T * 1.9) * 3.4;
                     }
                     x = this.cx || 0;
                     y = this.cy || 0;
-                    const sp = Math.abs(x - (this.px || 0)) + Math.abs(y - (this.py || 0));
+                    const moved = Math.abs(x - (this.px || 0)) + Math.abs(y - (this.py || 0));
                     this.px = x; this.py = y;
-                    const run = clampNum(sp * 0.5, 0, 1);
-                    sx = 1 + run * 0.12;
-                    sy = 1 - run * 0.08;
-                    rot = clampNum((x - (this.lastX || x)) * 0.05, -0.2, 0.2);
-                    this.lastX = x;
-                    break;
+                    this.gait = clampNum(moved * 0.35, 0, 1);
+                    this.speedPhase = ((this.speedPhase || 0) + dt * (1 + this.gait * 5)) % 1;
+                    this.facing = (x - (this.lastX || x)) < 0 ? -1 : 1;
+                    if (Math.abs(x - (this.lastX || x)) > 0.05) this.lastX = x;
+                    pose = (function (self) {
+                        return function () { self.rig.poseRun(self.speedPhase); };
+                    })(this);
+                    this.box.style.transform = 'translate(' + x.toFixed(2) + 'px,' + (y + 3).toFixed(2) + 'px) scale(' +
+                        ((this.facing || 1)).toFixed(2) + ',1)';
+                    pose();
+                    return;
                 }
                 case 'jump':
                 default: {
                     // Прыгает к кнопке лайка: приседает, взлетает, «давит» лапой
                     const cyc = T % 2.6;
                     if (cyc < 0.5) {
-                        const p = cyc / 0.5;
-                        sy = 1 - p * 0.18; sx = 1 + p * 0.16;
+                        pose = function () { rig.poseLand(1 - cyc / 0.5); };
                         y = 3;
                     } else if (cyc < 1.1) {
                         const p = (cyc - 0.5) / 0.6;
-                        y = 3 - Math.sin(p * Math.PI) * 12;
-                        sy = 1.12 - p * 0.2; sx = 1 / Math.max(0.85, sy);
-                        rot = 0.1 - p * 0.2;
+                        y = 3 - Math.sin(p * Math.PI) * 9;
+                        pose = function () { rig.poseLeap(p); };
                     } else if (cyc < 1.6) {
                         const p = (cyc - 1.1) / 0.5;
                         y = 3;
-                        sy = 0.84 + p * 0.16; sx = 1.14 - p * 0.12;
+                        pose = function () { rig.poseLand(p); };
                     } else {
                         y = 3;
+                        pose = function (t) { rig.poseSit(t); };
                     }
                     break;
                 }
             }
 
-            // моргание (лёгкое «прищуривание» через сквош по Y)
-            this.nextBlink -= dt;
-            if (this.nextBlink <= 0) {
-                this.nextBlink = 2.2 + Math.random() * 3.4;
-                this.blink = 1;
-            }
-            if (this.blink > 0) {
-                this.blink = Math.max(0, this.blink - dt * 5);
-                sy *= 1 - this.blink * 0.12;
-            }
+            // моргание: у рига это реальное смыкание век, а не сквош всего кота
+            rig.updateBlink(dt);
 
-            const el = this.sprite;
-            el.style.opacity = String(opacity);
-            el.style.transform = 'translate(' + x.toFixed(2) + 'px, ' + (y + 3).toFixed(2) + 'px) scaleX(' +
-                (sx * (this.facing || 1)).toFixed(3) + ') scaleY(' + sy.toFixed(3) + ') rotate(' + rot.toFixed(3) + 'rad)';
+            pose(phase);
+            this.box.style.opacity = String(opacity);
+            this.box.style.transform = 'translate(' + x.toFixed(2) + 'px,' + (y + 3).toFixed(2) + 'px)' +
+                (rot ? ' rotate(' + rot.toFixed(3) + 'rad)' : '');
         };
 
         /* Лёгкие «декоры» вокруг кота: ноты, «z-z-z» */

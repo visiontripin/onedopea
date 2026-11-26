@@ -1,0 +1,155 @@
+<body>
+
+    <!-- ==================== 1. ФОНОВЫЕ СЛОИ ТЕМ ==================== -->
+    <div id="theme-red-layer">
+        <canvas id="glyph-seed-layer"></canvas>
+        <canvas id="matrix-canvas"></canvas>
+        <div class="matrix-scanlines"></div>
+    </div>
+    <div id="theme-blue-layer"></div>
+    <!-- [V4] Световой шлейф, бегущий за котом по светлой теме -->
+    <div id="cat-light-trail"></div>
+
+    <!-- [V4] 2D-персонаж: кот выпрыгивает из синей капсулы и бежит к фото профиля -->
+    <div id="cat-fx-layer" aria-hidden="true">
+        <div class="cat-puff" id="cat-puff"></div>
+    </div>
+
+    <!-- ==================== 2. СТРАНИЦА ONE (ПОЯВЛЯЕТСЯ ПОСЛЕ КРАСНОЙ ПИЛЮЛИ) ==================== -->
+    <section id="page-one" class="page-stage" aria-hidden="true">
+        <div class="one-topbar stage-item">
+            <button type="button" class="one-nav-btn" data-action="back-to-pills" data-frag="chip">
+                <i class="pills-mini-icon" aria-hidden="true"></i>
+                <span>К пилюлям</span>
+            </button>
+            <button type="button" class="one-nav-btn" data-action="switch-to-blue" data-frag="chip">✦ Dope</button>
+        </div>
+
+        <article class="one-crt-card stage-item" data-frag="panel">
+            <div class="one-kicker" data-frag="lines">
+                <span>ONEDOPEA // ONE</span>
+                <span id="one-ch-index">КАНАЛ 01 / 07</span>
+            </div>
+            <h2 class="one-title" id="one-ch-title" data-frag="lines">BOTCONTROL</h2>
+            <p class="one-lead" id="one-ch-lead" data-frag="lines">
+                Автономная среда сборки и круглосуточного запуска Telegram-ботов со смартфона или ПК без аренды VPS: шифрование ключей Android Keystore, визуальные сценарии, локальные модели LiteRT-LM и совместимость с Python.
+            </p>
+            <div class="one-channels" id="one-ch-list">
+                <button type="button" class="one-ch-btn active" data-ch="0" data-frag="chip">01 BotControl</button>
+                <button type="button" class="one-ch-btn" data-ch="1" data-frag="chip">02 ТИТАН</button>
+                <button type="button" class="one-ch-btn" data-ch="2" data-frag="chip">03 Vision Audio</button>
+                <button type="button" class="one-ch-btn" data-ch="3" data-frag="chip">04 Подработка.МСК</button>
+                <button type="button" class="one-ch-btn" data-ch="4" data-frag="chip">05 Лесное·Афиша</button>
+                <button type="button" class="one-ch-btn" data-ch="5" data-frag="chip">06 Перекур+</button>
+                <button type="button" class="one-ch-btn" data-ch="6" data-frag="chip">07 EX</button>
+            </div>
+            <div class="one-actions">
+                <a class="one-link" id="one-ch-url" data-frag="chip" href="https://visiontripin.github.io/Bot-Control/" target="_blank" rel="noreferrer">Открыть проект ↗</a>
+                <a class="one-link ghost" data-frag="chip" href="https://t.me/onedopea" target="_blank" rel="noreferrer">Telegram ↗</a>
+            </div>
+        </article>
+    </section>
+
+    <!-- ==================== 3. СТРАНИЦА DOPE (ПОЯВЛЯЕТСЯ ПОСЛЕ СИНЕЙ ПИЛЮЛИ) ==================== -->
+    <section id="page-dope" class="page-stage" aria-hidden="true">
+        <div class="dope-shell">
+            <header class="bio-header stage-item">
+                <div class="bio-topline">
+                    <a class="brand" href="#page-dope" data-frag="chip">
+                        <span class="brand-orb">O.</span>
+                        <span>ONEDOPEA</span>
+                    </a>
+                    <div class="bio-actions">
+                        <button type="button" class="pills-back-btn" data-action="back-to-pills" data-frag="chip">
+                            <i class="pills-mini-icon" aria-hidden="true"></i>
+                            <span>К пилюлям</span>
+                        </button>
+                        <button type="button" class="matrix-link" data-action="switch-to-red" data-frag="chip">↶ One</button>
+                    </div>
+                </div>
+                <div class="bio-main">
+                    <div class="profile-orb" data-cat="hero">
+                        <span class="orb-letter">O.</span>
+                        <div class="cat-scene" data-cat-scene="hero"></div>
+                    </div>
+                    <div>
+                        <div class="bio-title-line">
+                            <h1 data-frag="lines">onedopea</h1>
+                            <span class="verified" data-frag="dot">✦</span>
+                        </div>
+                        <div class="profile-stats" data-frag="lines">
+                            <span><b id="bio-posts-count">8</b> публикаций</span>
+                            <span><b>7</b> проектов</span>
+                            <span><b>∞</b> идей</span>
+                        </div>
+                        <p class="bio-description" data-frag="lines">
+                            <strong>Цифровые продукты, сервисы и эксперименты</strong><br />
+                            BotControl · ТИТАН · Vision Audio · Подработка.МСК · Лесное·Афиша · Перекур+ · EX
+                        </p>
+                    </div>
+                </div>
+                <div class="bio-divider" data-frag="lines"><span>ЛЕНТА ПУБЛИКАЦИЙ</span><i></i></div>
+            </header>
+
+            <div class="feed-column" id="dope-feed"><!-- карточки собирает JS из DOPE_POSTS --></div>
+
+            <div class="feed-end">Это весь текущий край вселенной · новые посты появятся здесь же</div>
+            <footer class="feed-footer">
+                <span>ONEDOPEA · 2025</span>
+                <a href="https://t.me/onedopea" target="_blank" rel="noreferrer">Telegram ↗</a>
+                <a href="https://github.com/visiontripin" target="_blank" rel="noreferrer">GitHub ↗</a>
+                <a href="https://soundcloud.com/onedopea" target="_blank" rel="noreferrer">SoundCloud ↗</a>
+            </footer>
+        </div>
+    </section>
+
+    <!-- Плавающая верхняя кнопка «К пилюлям» при прокрутке ленты Dope -->
+    <button type="button" class="dope-floating-pills-btn" id="dope-floating-pills" data-action="back-to-pills">
+        <i class="pills-mini-icon" aria-hidden="true"></i>
+        <span>К пилюлям</span>
+    </button>
+
+    <!-- ==================== 4. СЛОЙ 3D-КАПСУЛ И НАДПИСЬ «ВЫБИРАЙ!» ==================== -->
+    <div id="webgl-container"></div>
+
+    <div id="v3-fallback">
+        <div class="v3-fb-grid">
+            <button type="button" class="v3-fb-pill" id="fb-red" aria-label="Красная капсула">
+                <span class="v3-fb-cap red"></span>
+            </button>
+            <button type="button" class="v3-fb-pill" id="fb-blue" aria-label="Синяя капсула">
+                <span class="v3-fb-cap blue"></span>
+            </button>
+        </div>
+    </div>
+
+    <div id="choose-caption">
+        <span id="caption-text">Выбирай!</span>
+        <b id="caption-hint" hidden>вернуть</b>
+    </div>
+
+    <button type="button" id="download-concept" title="Сохранить автономный концепт одним HTML-файлом">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3v12m0 0 4.5-4.5M12 15l-4.5-4.5M4 20h16" />
+        </svg>
+        <span>Скачать концепт</span>
+    </button>
+
+    <!-- [V6] Панель отладки таймлайна: включается через ?debug=1 -->
+    <aside id="debug-panel" aria-hidden="true">
+        <b>ТАЙМЛАЙН · V2</b>
+        <div class="dbg-row"><span>сцена</span><span id="dbg-scene">pills</span></div>
+        <div class="dbg-row"><span>red</span><span id="dbg-red">closed</span></div>
+        <div class="dbg-row"><span>blue</span><span id="dbg-blue">closed</span></div>
+        <div class="dbg-row"><span>кот</span><span id="dbg-cat">—</span></div>
+        <div class="dbg-row"><span>глифы</span><span id="dbg-glyphs">0</span></div>
+        <div class="dbg-row"><span>fps</span><span id="dbg-fps">—</span></div>
+        <div class="dbg-actions">
+            <button type="button" data-dbg="open-red">Red</button>
+            <button type="button" data-dbg="open-blue">Blue</button>
+            <button type="button" data-dbg="collect">Собрать</button>
+            <button type="button" data-dbg="slow">×0.35</button>
+        </div>
+    </aside>
+
+        
